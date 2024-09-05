@@ -1,0 +1,18 @@
+.header-container{
+    width: 100%;
+    height: 45px;
+    display: flex;
+    justify-content: space-between;
+}
+.header-logo{
+    height: 100%;
+    margin-left: 40px;
+    margin-right: 60%;
+    cursor: pointer;
+}
+.header-userinfo-container{
+    display: flex;
+}
+.header-welcome-text{
+    width: 100px;
+}
