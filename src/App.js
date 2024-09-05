@@ -4,7 +4,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <div>ㅎㅇㅎㅇ~</div>
+      <div>dev브랜치 개시합니다~</div>
     </div>
   );
 }
