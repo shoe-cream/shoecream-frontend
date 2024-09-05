@@ -3,7 +3,6 @@ node_modules/
 
 HELP.md
 .gradle
-.github/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
