@@ -1,0 +1,106 @@
+/* src/components/pages/LoginPage.css */
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f9f9f9; /* 배경색 */
+}
+
+.app-container {
+    display: flex;
+}
+
+.app-content-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 화면 전체 높이 */
+}
+
+.login-container {
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff; /* 흰색 배경 */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-logo {
+    width: 300px;
+    margin-bottom: 30px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #bebebe;
+    font-size: 16px;
+    color: #555;
+    outline: none;
+    box-sizing: border-box;
+     font-family: 'Montserrat', sans-serif; 
+}
+.form-group input::placeholder {
+    font-family: 'Montserrat', sans-serif; /* 플레이스홀더에 글꼴 적용 */
+    color: #999; /* 플레이스홀더 텍스트 색상 */
+}
+
+.form-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.checkbox-label {
+    vertical-align: middle;
+    font-size: 14px;
+    color: #555;
+}
+
+.login-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #6c8ae4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.login-button:hover {
+    background-color: #5871c7;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.option-button {
+    width: 48%;
+    padding: 10px;
+    background-color: #e0e0e0;
+    color: #555;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.option-button:hover {
+    background-color: #d4d4d4;
+}
