@@ -1,11 +1,25 @@
 import Header from '../../components/header/Header';
-import React from 'react';
+import React, { useState } from 'react';
 import SalesChart from '../../components/chart/SalesChart';  // 방금 만든 차트 컴포넌트
 import MonthSalesChart from '../../components/chart/MonthSalesChart'
 import CircleSalesChart from '../../components/chart/CircleSalesChart'
 import Sidebar from '../../components/sidebar/Sidebar';
+import Table from '../../components/Table/TableExample';
 
 const LandingPage = () => {
+    const [selectedRows, setSelectedRows] = useState([]);
+    const columns = ['Name', 'Age', 'Location'];
+    const data = [
+      { Name: 'John Doe', Age: 30, Location: 'New York' },
+      { Name: 'Jane Smith', Age: 25, Location: 'Los Angeles' },
+      { Name: 'Sam Green', Age: 35, Location: 'Chicago' },
+    ];
+  
+    const handleSendData = (selected) => {
+      setSelectedRows(selected);
+      console.log('Selected Rows in LandingPage:', selected);
+      // 선택된 데이터를 다른 컴포넌트로 전달하거나 API 호출 등을 할 수 있습니다.
+    };
     return (
         <div>
             <Header></Header>
@@ -31,6 +45,10 @@ const LandingPage = () => {
                         <CircleSalesChart /> {/* 차트 컴포넌트 추가 */}
                     </div>
 
+                    <div style={{ width: '80%', margin: '0 auto', marginTop: '20px' }}>
+                        <h2>판매 데이터</h2>
+                        <Table columns={columns} data={data} onSendData={handleSendData} />
+                    </div>
                 </div>
             </div>
         </div> 
