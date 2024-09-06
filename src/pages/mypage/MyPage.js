@@ -1,10 +1,16 @@
 import Header from '../../components/header/Header';
+import Sidebar from '../../components/sidebar/Sidebar';
 
 const MyPage = () => {
     return (
         <div>
             <Header></Header>
-            <div>마이페이지~</div>
+            <div className='app-container'>
+                <Sidebar></Sidebar>       
+                <div className='app-content-container'>
+                    <div>마이페이지~</div>
+                </div>
+            </div>
         </div>
     );
 }

@@ -5,8 +5,12 @@ const LoginPage = () => {
     return (
         <div>
             <Header></Header>
-            <div>로그인 페이지~</div>
-            <Sidebar></Sidebar>
+            <div className='app-container'>
+                <Sidebar></Sidebar>
+                <div className='app-content-container'>
+                    <div>로그인 페이지~</div>
+                </div>
+            </div>
         </div>
     );
 }
