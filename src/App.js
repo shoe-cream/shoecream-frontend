@@ -14,13 +14,15 @@ import CancelledOrdersPage from './pages/OrderManagement/CancelledOrdersPage';
 import OrderApprovalPage from './pages/OrderManagement/OrderApprovalPage';
 import OrderPostPage from './pages/OrderManagement/OrderPostPage';
 import RegistrationPage from './pages/registration/RegistrationPage';
+import BuyerPostPage from './pages/buyer/BuyerPostPage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage/>}/>
+        <Route path='/' element={<LandingPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>
+        <Route path='/buyer' element={<BuyerPostPage/>}/>
         <Route path='/buyer-item' element={<BuyerItemPostPage/>}/>
         <Route path='/manufacture-history' element={<ManufactureHistoryPage/>}/>
         <Route path='/sales-history' element={<SalesHistoryPage/>}/>

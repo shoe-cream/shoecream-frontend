@@ -1,0 +1,16 @@
+.sidebar{
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-search {
+    resize: none;
+    background-color: #f2f4f7;
+    border-radius: 25px;
+    text-align: center;
+    align-content: center;
+}
+.sidebar-search::placeholder{
+    /* padding-left: 20px; */
+}
