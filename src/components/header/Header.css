@@ -17,3 +17,9 @@
 .header-welcome-text{
     width: 100px;
 }
+.header-profile-icon{
+    cursor: pointer;
+}
+.header-logout-icon{
+    cursor: pointer;
+}
