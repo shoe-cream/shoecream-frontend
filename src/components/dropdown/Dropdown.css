@@ -10,6 +10,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor:pointer;
 }
 .dropdown-title-text{
     margin-left: 15px;
@@ -25,6 +26,9 @@
     border: none;
     margin-left: 20px;
     height: 30px;
+    /* border-top: 1px solid #ecf0f5;
+    border-bottom: 1px solid #ecf0f5; */
+    cursor:pointer;
 }
 .dropdown-content:hover{
     background-color: #d1dae7;
