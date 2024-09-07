@@ -6,10 +6,22 @@
 
 .input-window{
     height: 50px;
-    background-color: rgb(223, 223, 223);
+    background-color:#eeeeee;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    padding-left: 25px;
 }
 
 .input-error-message{
     color: rgb(230, 115, 115);
     font-size: 12px;
+    margin-left: 15px;
+}
+.input-lower-container{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

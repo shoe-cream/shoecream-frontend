@@ -1,0 +1,13 @@
+.check-button{
+    background-color: var(--check-button-color);
+    border: none;
+    border-radius: 3px;
+    width: 100px;
+    height: 25px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
+.check-button:hover{
+    background-color: #9bb8ee;
+}
