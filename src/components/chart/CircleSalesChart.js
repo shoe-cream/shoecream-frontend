@@ -13,7 +13,7 @@ const COLORS = ['#82ca9d', '#8884d8', '#ff7300'];
 
 // 차트 컴포넌트
 const SalesPieChart = () => (
-  <ResponsiveContainer width="50%" height={400}>
+  <ResponsiveContainer width="100%" height={400}>
     <PieChart>
       <Pie
         data={data}
