@@ -12,7 +12,7 @@ const data = [
 
 // 차트 컴포넌트
 const SalesBarChart = () => (
-  <ResponsiveContainer width="50%" height={400}>
+  <ResponsiveContainer width="100%" height={400}>
     <BarChart data={data}>
       <XAxis dataKey="model" /> {/* X축에 신발 모델명 */}
       <YAxis /> {/* Y축에 판매 금액 */}
