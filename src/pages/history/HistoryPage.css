@@ -5,6 +5,7 @@
     flex-direction: column;
     /* justify-content: center; */
     align-items: center;
+    border-radius: 8px;
 }
 .condition-container{
     margin-top: 20px;
