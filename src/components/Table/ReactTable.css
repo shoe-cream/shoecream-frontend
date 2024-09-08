@@ -1,6 +1,9 @@
 table {
-    width: 100%;
+    width: 95%;
+    margin-top: 50px;
+    margin-bottom: 50px;
     border-collapse: collapse; /* 테이블 셀 사이에 중복된 경계를 제거 */
+    background-color: white;
 }
 
 th, td {
