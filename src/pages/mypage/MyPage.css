@@ -1,0 +1,46 @@
+.mypage-container{
+    display: flex;
+}
+.profile-image-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+}
+.profile-image{
+    border-radius: 5px;
+}
+.profile-upload-button{
+    margin-top: 10px;
+    background-color: #769adc;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    height: 30px;
+}
+.profile-upload-button:hover{
+    background-color: #93b4f0;
+}
+.mypage-chart{
+    display: flex;
+    flex-direction: column;
+    margin-left: 100px;
+    width: 900px;
+}
+.mypage-column{
+    background-color: #f2f4f7;
+}
+.chart-modify-button{
+    width: 80px;
+    height: 30px;
+    margin-left: auto;
+    margin-right: 50px;
+    background-color: #769adc;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+.chart-modify-button:hover{
+    background-color: #93b4f0;
+}
