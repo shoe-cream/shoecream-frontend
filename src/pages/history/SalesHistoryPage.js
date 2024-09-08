@@ -113,7 +113,7 @@ const SalesHistoryPage = () => {
             <div className='app-container'>
                 <Sidebar></Sidebar>
                 <div className='app-content-container'>
-                <div className='history-container'>
+                <div className='app-background'>
                       <div className='condition-container'>
                         <DateRangePicker></DateRangePicker>
                         <div className='condition-search-box'>
