@@ -1,0 +1,14 @@
+table {
+    width: 100%;
+    border-collapse: collapse; /* 테이블 셀 사이에 중복된 경계를 제거 */
+}
+
+th, td {
+    border: 1px solid black; /* 테이블 셀에 경계 추가 */
+    padding: 8px;
+    text-align: left;
+}
+
+thead {
+    background-color: #f2f2f2; /* 헤더에 배경색 추가 */
+}
