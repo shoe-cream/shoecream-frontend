@@ -5,7 +5,7 @@ body {
     background-color: #f9f9f9; /* 배경색 */
 }
 
-.app-container {
+/* .app-container {
     display: flex;
 }
 
@@ -14,8 +14,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* 화면 전체 높이 */
-}
+    height: 100vh; 
+} */
 
 .login-container {
     text-align: center;
@@ -25,6 +25,7 @@ body {
     background-color: #fff; /* 흰색 배경 */
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
 }
 
 .login-logo {
