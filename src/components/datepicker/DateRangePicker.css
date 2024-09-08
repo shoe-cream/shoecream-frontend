@@ -1,0 +1,24 @@
+.date-range-picker-container{
+    display: flex;
+    height: 21px;
+    background-color: #769adc;
+    border-radius: 5px;
+    align-items: center;
+}
+.date-range-picker-label{
+    display: flex;
+    height: 100%; 
+    font-size: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    align-items: center;    
+}
+.date-range-picker{
+    width: 200px;
+    height: 100%;
+    text-align: center;
+    /* margin-right: 15px; */
+    outline: none;
+    box-sizing: border-box;
+}
