@@ -4,7 +4,6 @@ import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import ReactTable from '../../components/Table/ReactTable';
 import './HistoryPage.css';
-import DatePicker from 'react-datepicker';
 import DateRangePicker from '../../components/datepicker/DateRangePicker.js';
 
 const ManufactureHistoryPage = () => {
