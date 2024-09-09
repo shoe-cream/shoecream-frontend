@@ -3,9 +3,10 @@ import './Header.css';
 import { useAuth } from "../../auth/AuthContext";
 import { useEffect, useState } from "react";
 import sendGetMyInfoRequest from "../../requests/GetMyInfoRequest";
+import sendLogoutRequest from '../../requests/LogoutRequest';
 
 const Header = ()=> {
-    const { state } = useAuth();
+    const { state, logout } = useAuth();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [myData, setMyData] = useState({data:{}});
@@ -21,7 +22,10 @@ const Header = ()=> {
                 <button className="header-login-button" onClick={() => navigate('/login')}>로그인</button>}
                 {state.isAuthenticated ? <img src="icons/profile-icon.png" className="header-profile-icon"
                 onClick={() => navigate('/mypage')}></img> : <div></div>}
-                {state.isAuthenticated ? <img src="icons/logout-icon.png" className="header-logout-icon"></img> : <div></div>}
+                {state.isAuthenticated ? 
+                <img src="icons/logout-icon.png" className="header-logout-icon"
+                onClick={() => sendLogoutRequest(state, logout, navigate)}
+                ></img> : <div></div>}
             </div>
         </div>
     );
