@@ -63,13 +63,13 @@
 .manufacturer-list-container{
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     width: 800px;
 }
 .manufacturer-tool-container{
     display: flex;
     justify-content: space-between;
-    
+    height: 30px;
 }
 .manufacturer-button-container{
     
