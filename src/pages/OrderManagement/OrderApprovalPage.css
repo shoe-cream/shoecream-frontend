@@ -1,0 +1,41 @@
+.app-container {
+    display: flex;
+}
+
+.app-content-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin-top: 5%;
+    padding: 10px;
+}
+
+/* OrderApprovalPage.css */
+.tab-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 탭 리스트와 버튼 사이에 공간을 추가 */
+
+    margin: 0 auto;
+}
+
+.tab-list-container {
+    display: flex;
+    flex: 1;
+}
+
+.order-date-select{
+    display: flex;
+}
+
+
+.tab-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 버튼 사이 여백 */
+}
+
+.tab-actions button {
+    margin-left: 10px; /* 탭 리스트와 버튼 사이 여백 */
+}
+

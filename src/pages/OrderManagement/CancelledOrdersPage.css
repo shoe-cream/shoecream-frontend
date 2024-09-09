@@ -1,0 +1,62 @@
+/* CancelledOrdersPage.css */
+.app-container {
+    display: flex;
+}
+
+.app-content-container {
+    padding: 20px;
+    flex: 1;
+    position: relative; /* 상대 위치를 설정하여 버튼을 절대 위치로 배치할 수 있습니다 */
+    margin : 0 auto;
+}
+
+.actions-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px; /* 버튼 간 간격 */
+}
+.date{
+    display: flex;
+    flex-direction: row;
+}
+.date input{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.date button{
+    background-color: white;
+}
+
+.miscBtn{
+    display: flex;
+    flex-direction: row;
+    background-color: #769aDC;
+    width: 120px;
+    height: 40px;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    color: white;
+}
+
+table {
+    width: 2000px;
+    border-collapse: collapse;
+    height: 50px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 18px;
+}
+
+th {
+    background-color: #f4f4f4;
+}
