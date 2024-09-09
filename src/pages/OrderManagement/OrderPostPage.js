@@ -11,14 +11,7 @@ const OrderPostPage = () => {
     const [orderData, setOrderData] = useState([]);
 
     const handleAddOrder = (newOrder) => {
-        // 새로운 주문 데이터를 기존 데이터에 추가
-        const orderWithId = {
-            ...newOrder,
-            id: Date.now(), // 고유한 ID 생성 (실제 앱에서는 서버에서 제공)
-            registrationDate: new Date().toISOString().split('T')[0], // 현재 날짜를 등록일자로 설정
-            deliveryDate: '' // 납기일은 빈 문자열로 초기화
-        };
-        setOrderData(prevData => [...prevData, orderWithId]);
+        setOrderData(prevData => [...prevData, newOrder]);
     };
 
     return (

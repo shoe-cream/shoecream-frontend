@@ -1,9 +1,10 @@
 .date-range-picker-container{
     display: flex;
-    height: 21px;
+    height: 30spx;
     background-color: #769adc;
     border-radius: 5px;
     align-items: center;
+    width: 300px;
 }
 .date-range-picker-label{
     display: flex;

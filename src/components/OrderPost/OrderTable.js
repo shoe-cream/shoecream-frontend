@@ -17,6 +17,7 @@ const OrderTable = ({ data }) => {
         { Header: "수량", accessor: "quantity" },
         { Header: "단위", accessor: "unit" },
         { Header: "금액", accessor: "amount" },
+        { Header: "계약 기간", accessor: "contractPeriod" }, // 새 열 추가
       ],
       []
     );
