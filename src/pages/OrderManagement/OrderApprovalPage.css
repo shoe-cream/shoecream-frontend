@@ -3,10 +3,7 @@
 }
 
 .app-content-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    margin-top: 5%;
+
     padding: 10px;
 }
 
@@ -15,7 +12,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between; /* 탭 리스트와 버튼 사이에 공간을 추가 */
-
     margin: 0 auto;
 }
 
@@ -38,4 +34,3 @@
 .tab-actions button {
     margin-left: 10px; /* 탭 리스트와 버튼 사이 여백 */
 }
-

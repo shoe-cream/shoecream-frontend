@@ -4,13 +4,12 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs';
 import './OrderApprovalPage.css';
 import 'react-tabs/style/react-tabs.css';
-import ReactTable from '../../components/Table/ReactTable';
+import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import OrderDatepickerSelect from '../../components/OrderPost/OrderDatepickerSelect';
 
 const BaseTable = ({ data }) => {
     const columns = React.useMemo(
         () => [
-            { Header: "선택", accessor: "selection", Cell: () => <input type='checkbox' /> },
             { Header: "담당자", accessor: "member" },
             { Header: "주문번호", accessor: "orderId" },
             { Header: "주문상태", accessor: "orderStatus" },
@@ -26,7 +25,7 @@ const BaseTable = ({ data }) => {
         []
     );
 
-    return <ReactTable columns={columns} data={data} />;
+    return <ReactTableWithCheckbox columns={columns} data={data} />;
 }
 
 const OrderApprovalPage = () => {
