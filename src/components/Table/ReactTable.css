@@ -7,9 +7,14 @@ table {
 }
 
 th, td {
-    border: 1px solid black; /* 테이블 셀에 경계 추가 */
+    border: 1px solid #eeeeee; /* 테이블 셀에 경계 추가 */
+    background-color: white;
     padding: 8px;
     text-align: left;
+    color: #1d1d1d;
+    /* border-collapse: collapse; */
+    border-left: none;
+    border-right: none;
 }
 
 thead {
