@@ -5,21 +5,7 @@ import ReactTable from '../../components/Table/ReactTable';
 import './ManufacturerPostPage.css';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import { columnData, data } from '../../data/ManufacturerData';
-
-const ManufacturerContent = ({ leftContent, rightContent }) => {
-    return (
-        <div className='manufacturer-content-container'>
-            <div className='manufacturer-content'>
-                <div className='manufacturer-content-name'>{leftContent}</div>
-                <input className='manufacturer-content-input'></input>
-            </div>
-            <div className='manufacturer-content'>
-                <div className='manufacturer-content-name'>{rightContent}</div>
-                <input className='manufacturer-content-input'></input>
-            </div>
-        </div>
-    );
-}
+import PostContainer from '../../components/postcontainer/PostContainer';
 
 
 const ManufacturerPostPage = () => {
@@ -35,9 +21,9 @@ const ManufacturerPostPage = () => {
                                 <div className='manufacturer-input-text'>제조사 정보 등록</div>
                                 <button className='manufacturer-input-button'>등록</button>
                             </div>
-                            <ManufacturerContent leftContent='제조사 명' rightContent='담당자 연락처'></ManufacturerContent>
-                            <ManufacturerContent leftContent='제조사 코드' rightContent='담당자 이메일'></ManufacturerContent>
-                            <ManufacturerContent leftContent='사업자 구분' rightContent='주소'></ManufacturerContent>
+                            <PostContainer leftContent='제조사 명' rightContent='담당자 연락처'></PostContainer>
+                            <PostContainer leftContent='제조사 코드' rightContent='담당자 이메일'></PostContainer>
+                            <PostContainer leftContent='사업자 구분' rightContent='주소'></PostContainer>
                         </div>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
