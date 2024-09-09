@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-import ReactTable from '../../components/Table/ReactTable';
+import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import './CancelledOrdersPage.css';
 import DateRangePicker from '../../components/datepicker/DateRangePicker';
 
@@ -9,7 +9,6 @@ const CancelledOrdersPage = () => {
     // 테이블의 열 정의
     const columns = React.useMemo(
         () => [
-            { Header: "선택", accessor: "selection", Cell: () => <input type='checkbox' /> },
             { Header: "담당자", accessor: "member" },
             { Header: "주문번호", accessor: "orderId" },
             { Header: "주문상태", accessor: "orderStatus" },
@@ -66,7 +65,7 @@ const CancelledOrdersPage = () => {
                         <button className='miscBtn' onClick={handlePrint}>인쇄</button>
                     </div>
                     <h2>취소된 주문</h2>
-                    <ReactTable columns={columns} data={data} />
+                    <ReactTableWithCheckbox columns={columns} data={data} />
                 </div>
             </div>
         </div>
