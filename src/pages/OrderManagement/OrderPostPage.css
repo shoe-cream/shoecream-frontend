@@ -86,3 +86,27 @@
     background-color: #007bff; /* 버튼 배경색 설정 */
     color: white; /* 버튼 글자 색상 설정 */
 }
+
+.search-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-search search-icon {
+    width: 16px; /* 아이콘 크기 조절 */
+    height: 16px;
+    border: none;
+}
+.divSearch{
+    display: flex;
+}
+
+.product-search td.title{
+    background-color: #769ADC;
+    color: white;
+}
