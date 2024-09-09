@@ -7,19 +7,15 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const initialState = JSON.parse(sessionStorage.getItem('authState')) || {
         isAuthenticated: false,
-        email: null,
         token: null,
-        memberId: null
     }
     const [state, setState] = useState(initialState);
 
-    const login = (token, email, memberId) => {
+    const login = (token) => {
         /* console.log('login 함수 호출') */
         const newState = {
             isAuthenticated: true,
-            email,
             token,
-            memberId,
         }
         setState(newState);
         sessionStorage.setItem('authState', JSON.stringify(newState));
@@ -28,9 +24,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         const newState = {
             isAuthenticated: false,
-            email: null,
             token: null,
-            memberId: null,
         }
         setState(newState);
         sessionStorage.removeItem('authState');

@@ -21,9 +21,11 @@
 }
 .header-profile-icon{
     cursor: pointer;
+    height: 100%;
 }
 .header-logout-icon{
     cursor: pointer;
+    height: 100%;
 }
 .header-login-button{
     font-size: 15px;
