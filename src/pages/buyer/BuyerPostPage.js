@@ -2,21 +2,8 @@ import Header from "../../components/header/Header";
 import Sidebar from '../../components/sidebar/Sidebar';
 import ReactTableWithCheckbox from "../../components/Table/ReactTableWithCheckbox";
 import { columnData, data } from "../../data/ManufacturerData";
+import PostContainer from "../../components/postcontainer/PostContainer";
 
-const BuyerContent = ({ leftContent, rightContent }) => {
-    return (
-        <div className='manufacturer-content-container'>
-            <div className='manufacturer-content'>
-                <div className='manufacturer-content-name'>{leftContent}</div>
-                <input className='manufacturer-content-input'></input>
-            </div>
-            <div className='manufacturer-content'>
-                <div className='manufacturer-content-name'>{rightContent}</div>
-                <input className='manufacturer-content-input'></input>
-            </div>
-        </div>
-    );
-}
 const BuyerPostPage = () => {
     return (
         <div>
@@ -30,9 +17,9 @@ const BuyerPostPage = () => {
                                 <div className='manufacturer-input-text'>바이어 정보 등록</div>
                                 <button className='manufacturer-input-button'>등록</button>
                             </div>
-                            <BuyerContent leftContent='바이어 명' rightContent='담당자 연락처'></BuyerContent>
-                            <BuyerContent leftContent='바이어 코드' rightContent='담당자 이메일'></BuyerContent>
-                            <BuyerContent leftContent='사업자 구분' rightContent='주소'></BuyerContent>
+                            <PostContainer leftContent='바이어 명' rightContent='담당자 연락처'></PostContainer>
+                            <PostContainer leftContent='바이어 코드' rightContent='담당자 이메일'></PostContainer>
+                            <PostContainer leftContent='사업자 구분' rightContent='주소'></PostContainer>
                         </div>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
