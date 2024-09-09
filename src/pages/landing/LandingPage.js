@@ -5,8 +5,10 @@ import MonthSalesChart from '../../components/chart/MonthSalesChart'
 import CircleSalesChart from '../../components/chart/CircleSalesChart'
 import Sidebar from '../../components/sidebar/Sidebar';
 import Table from '../../components/Table/TableExample';
+import { useAuth } from '../../auth/AuthContext';
 
 const LandingPage = () => {
+    const { state } = useAuth();
     const [selectedRows, setSelectedRows] = useState([]);
     const columns = ['Name', 'Age', 'Location'];
     const data = [

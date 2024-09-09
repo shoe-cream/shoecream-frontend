@@ -3,8 +3,15 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import { columnData, data } from '../../data/ManufacturerData';
 import PostContainer from '../../components/postcontainer/PostContainer';
+import { useEffect, useState } from 'react';
 
 const ItemPostPage = () => {
+    const [items, setItems] = useState({data:[]});
+
+    useEffect(() => {
+        
+    }, []);
+
     return (
         <div>
             <Header></Header>
