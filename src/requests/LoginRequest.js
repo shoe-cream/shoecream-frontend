@@ -15,8 +15,8 @@ const sendLoginRequest = async(emailInput, passwordInput, navigate, login) => {
             }
         );
         if(response.status === 200){
-            console.log('로그인 성공');
-            login();
+            console.log('로그인 성공', response);
+            login(response.headers.authorization);
             navigate('/');
         }else{
             console.log('로그인 요청 실패: ', response.status);
