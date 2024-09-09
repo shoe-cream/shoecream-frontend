@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
+import getBuyerRequest from '../../requests/GetBuyerRequest';
+import { useAuth } from '../../auth/AuthContext';
 
 const ProductSearch = ({ onAddOrder }) => {
+    // State 변수들
     const [searchParams, setSearchParams] = useState({
         buyerNm: '',
         buyerCd: '',
@@ -11,7 +14,7 @@ const ProductSearch = ({ onAddOrder }) => {
         itemNm: '',
         size: '',
         itemCd: '',
-        contractPeriod: '', // Initialize contractPeriod as an empty string
+        contractPeriod: '', 
         unit: '',
         unitPrice: '',
         quantity: '',
@@ -19,10 +22,14 @@ const ProductSearch = ({ onAddOrder }) => {
         tel: '',
         category: ''
     });
-
     const [dateRange, setDateRange] = useState([null, null]);
+    const [buyers, setBuyers] = useState({ data: {} });
+    const [isLoading, setIsLoading] = useState(true);
+
+    const { state } = useAuth();
     const [startDate, endDate] = dateRange;
 
+    // 이벤트 핸들러들
     const handleChange = (e) => {
         const { id, value } = e.target;
         setSearchParams(prevState => ({ ...prevState, [id]: value }));
@@ -35,16 +42,18 @@ const ProductSearch = ({ onAddOrder }) => {
             ? `${formattedStartDate} to ${formattedEndDate}`
             : '';
 
-        console.log('Fetching with contractPeriod:', contractPeriod); // For debugging
+        console.log('Fetching with contractPeriod:', contractPeriod);
 
         onAddOrder({
             ...searchParams,
+            buyerNm: buyers.data.buyerNm,  // 고객사 이름을 추가
+            tel: buyers.data.tel,  // 고객사 연락처를 추가
             registrationDate: new Date().toISOString().split('T')[0],
             deliveryDate: '',
-            contractPeriod // Add contractPeriod to the payload
+            contractPeriod
         });
 
-        // Reset form fields
+        // 폼 필드 초기화
         setSearchParams({
             buyerNm: '',
             buyerCd: '',
@@ -61,47 +70,47 @@ const ProductSearch = ({ onAddOrder }) => {
             category: ''
         });
 
-        // Reset date range
+        // 날짜 범위 초기화
         setDateRange([null, null]);
     };
 
-    const DateRangePicker = () => {
-        return (
-            <DatePicker
-                selectsRange
-                startDate={startDate}
-                endDate={endDate}
-                onChange={(update) => setDateRange(update)}
-                isClearable
-                dateFormat="yyyy/MM/dd"
-                placeholderText="기간 선택"
-            />
-        );
+    const handleBuyerSearch = () => {
+        getBuyerRequest(state, searchParams.buyerCd, setBuyers, setIsLoading);
     };
 
-    const getBuyer = async () => {
-        try {
-            console.log(searchParams.buyerCd);
-            const response = await axios.get(`http://localhost:8080/buyers/search?buyerCd=${searchParams.buyerCd}`, 
-                {
-            });
-            console.log(response.data);
-            // 응답 데이터를 활용하여 필요한 작업을 수행합니다.
-        } catch (error) {
-            console.error('Error fetching buyer data:', error);
-        }
-    };
+    // 컴포넌트들
+    const DateRangePicker = () => (
+        <DatePicker
+            selectsRange
+            startDate={startDate}
+            endDate={endDate}
+            onChange={(update) => setDateRange(update)}
+            isClearable
+            dateFormat="yyyy/MM/dd"
+            placeholderText="기간 선택"
+        />
+    );
 
     return (
         <div className='product-search'>
             <table>
                 <tbody>
                     <tr>
-                        <td className='title'>고객사</td>
+                        <td className='title'>고객코드</td>
                         <td>
                             <div className='divSearch'>
-                                <input type='text' id='buyerNm' className='orderPostInput' value={searchParams.buyerNm} onChange={handleChange} />
-                                <button id='searchBuyer' className='search-button' onClick={getBuyer}>
+                                <input
+                                    type='text'
+                                    id='buyerCd'
+                                    className='orderPostInput'
+                                    value={searchParams.buyerCd}
+                                    onChange={handleChange}
+                                />
+                                <button
+                                    id='searchBuyer'
+                                    className='search-button'
+                                    onClick={handleBuyerSearch}
+                                >
                                     <img src='/icons/zoom.png' alt='Search' className='search-icon' />
                                 </button>
                             </div>
@@ -109,7 +118,13 @@ const ProductSearch = ({ onAddOrder }) => {
                         <td className='title'>제품코드</td>
                         <td>
                             <div className='divSearch'>
-                                <input type='text' id='itemCd' className='orderPostInput' value={searchParams.itemCd} onChange={handleChange} />
+                                <input
+                                    type='text'
+                                    id='itemCd'
+                                    className='orderPostInput'
+                                    value={searchParams.itemCd}
+                                    onChange={handleChange}
+                                />
                                 <button id='searchItem' className='search-button'>
                                     <img src='/icons/zoom.png' alt='Search' className='search-icon' />
                                 </button>
@@ -127,8 +142,8 @@ const ProductSearch = ({ onAddOrder }) => {
                         <td><input type='text' id='qty' className='orderPostInput' value={searchParams.qty} onChange={handleChange} /></td>
                     </tr>
                     <tr>
-                        <td className='title'>고객코드</td>
-                        <td><input type='text' id='buyerCd' className='orderPostInput' value={searchParams.buyerCd} onChange={handleChange} /></td>
+                        <td className='title'>고객사</td>
+                        <td><input type='text' id='buyerNm' className='orderPostInput' value={buyers.data.buyerNm} onChange={handleChange} /></td>
                         <td className='title'>품목</td>
                         <td><input type='text' id='category' className='orderPostInput' value={searchParams.category} onChange={handleChange} /></td>
                         <td className='title'>제품 단가</td>
@@ -136,7 +151,7 @@ const ProductSearch = ({ onAddOrder }) => {
                     </tr>
                     <tr>
                         <td className='title'>고객사 연락처</td>
-                        <td><input type='text' id='tel' className='orderPostInput' value={searchParams.tel} onChange={handleChange} /></td>
+                        <td><input type='text' id='tel' className='orderPostInput' value={buyers.data.tel} onChange={handleChange} /></td>
                         <td className='title'>색상</td>
                         <td><input type='text' id='color' className='orderPostInput' value={searchParams.color} onChange={handleChange} /></td>
                         <td className='title'>수량 단위</td>
