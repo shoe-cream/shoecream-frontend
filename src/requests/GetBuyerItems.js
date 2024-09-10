@@ -2,10 +2,10 @@ import axios from 'axios';
 import Swal from 'sweetalert2'; 
 
 
-const getBuyerRequest = async (state ,buyerCd, setBuyer, setIsLoading) => {
+const getBuyerWithItemsRequest = async (state ,buyerCd, setBuyerItems, setIsLoading) => {
     try {
         console.log('buyerCd:', buyerCd);
-        const response = await axios.get(`http://localhost:8080/buyers/search`, {
+        const response = await axios.get(`http://localhost:8080/buyers/search/items`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${state.token}`
@@ -17,7 +17,7 @@ const getBuyerRequest = async (state ,buyerCd, setBuyer, setIsLoading) => {
 
         if (response.status === 200) {
             console.log('Buyer data fetched successfully:', response.data);
-            setBuyer(response.data);
+            setBuyerItems(response.data);
             setIsLoading(false);
         } else {
             console.log('Failed to fetch buyer data:', response.status);
@@ -29,4 +29,4 @@ const getBuyerRequest = async (state ,buyerCd, setBuyer, setIsLoading) => {
     }
 };
 
-export default getBuyerRequest;
+export default getBuyerWithItemsRequest;
