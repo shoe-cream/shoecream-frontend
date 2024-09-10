@@ -8,6 +8,7 @@ import sendPostItemRequest from '../../requests/PostItemRequest';
 import { useAuth } from '../../auth/AuthContext';
 import sendGetItemsRequest from '../../requests/GetItemsRequest';
 import PageContainer from '../../components/page_container/PageContainer';
+import sendDeleteItemRequest from '../../requests/DeleteItemRequest';
 
 const ItemPostPage = () => {
     const { state } = useAuth();
@@ -17,10 +18,20 @@ const ItemPostPage = () => {
     const [nameInput, setNameInput] = useState('');
     const [codeInput, setCodeInput] = useState('');
     const [unitInput, setUnitInput] = useState('');
-    const [unitpriceInput, setUnitpriceInput] = useState(0);
+    const [unitpriceInput, setUnitpriceInput] = useState('');
     const [colorInput, setColorInput] = useState('');
     const [sizeInput, setSizeInput] = useState('');
     const [categoryInput, setCategoryInput] = useState('');
+
+    const [checked, setChecked] = useState([]);
+
+    const handleRowSelect = (rowId) => {
+        setChecked(prev => 
+        prev.includes(rowId)
+            ? prev.filter(id => id !== rowId)
+            : [...prev, rowId]
+        );
+    };
 
     const addItem = () => {
         if(nameInput === ''){
@@ -63,7 +74,7 @@ const ItemPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetItemsRequest(state, 1, 10, setItems, setIsLoading);
+        sendGetItemsRequest(state, page, 10, setItems, setIsLoading);
     }, []);
 
     return (
@@ -107,10 +118,19 @@ const ItemPostPage = () => {
                                 </select>
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button'>수정</button>
-                                    <button className='manufacturer-button'>삭제</button>
+                                    <button className='manufacturer-button'
+                                        onClick={() => {
+                                            console.log('checked: ', checked);
+                                            sendDeleteItemRequest(state, items.pageInfo, checked, setChecked, () => sendGetItemsRequest(state, page, 10, setItems, setIsLoading));
+                                        }}>삭제</button>
                                 </div>
                             </div>
-                            <ReactTableWithCheckbox columns={columnData} data={items.data}></ReactTableWithCheckbox>
+                            <ReactTableWithCheckbox 
+                                columns={columnData} 
+                                data={items.data} 
+                                checked = {checked} 
+                                setChecked={setChecked}>
+                            </ReactTableWithCheckbox>
                         </div>
                         {isLoading ? <div/> : <PageContainer 
                             currentPage={page} 
@@ -119,6 +139,7 @@ const ItemPostPage = () => {
                             getPage={(page) => {
                                 sendGetItemsRequest(state, page, 10, setItems, setIsLoading)
                             }}
+                            setChecked={(value) => setChecked(value)}
                         ></PageContainer>}
                     </div>
                 </div>
