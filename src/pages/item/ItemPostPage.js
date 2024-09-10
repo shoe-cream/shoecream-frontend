@@ -63,7 +63,7 @@ const ItemPostPage = () => {
             return;
         }
         sendPostItemRequest(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput, 
-            () => sendGetItemsRequest(state, 1, 10, setItems, setIsLoading));
+            () => sendGetItemsRequest(state, 1, setPage, 10, setItems, setIsLoading));
         setNameInput('');
         setCodeInput('');
         setUnitInput('');
@@ -74,8 +74,8 @@ const ItemPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetItemsRequest(state, page, 10, setItems, setIsLoading);
-    }, []);
+        sendGetItemsRequest(state, page, setPage, 10, setItems, setIsLoading);
+    }, [page]);
 
     return (
         <div>
@@ -121,7 +121,8 @@ const ItemPostPage = () => {
                                     <button className='manufacturer-button'
                                         onClick={() => {
                                             console.log('checked: ', checked);
-                                            sendDeleteItemRequest(state, items.pageInfo, checked, setChecked, () => sendGetItemsRequest(state, page, 10, setItems, setIsLoading));
+                                            const checkedItems = checked.map(item => items.data[item].itemId);
+                                            sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => sendGetItemsRequest(state, page, setPage, 10, setItems, setIsLoading));
                                         }}>삭제</button>
                                 </div>
                             </div>
@@ -137,7 +138,7 @@ const ItemPostPage = () => {
                             setPage={setPage}
                             pageInfo={items.pageInfo}
                             getPage={(page) => {
-                                sendGetItemsRequest(state, page, 10, setItems, setIsLoading)
+                                sendGetItemsRequest(state, page, setPage, 10, setItems, setIsLoading)
                             }}
                             setChecked={(value) => setChecked(value)}
                         ></PageContainer>}

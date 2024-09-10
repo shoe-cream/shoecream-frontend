@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const sendDeleteItemRequest = async (state, pageInfo, checked, setChecked, executeAfter) => {
+const sendDeleteItemRequest = async (state, pageInfo, checkedItems, setChecked, executeAfter) => {
     try {
-        console.log('checked: ', checked);
-        const selected = checked.map(item => item + (pageInfo.page - 1) * pageInfo.size);
-        console.log('selected: ', selected);
+        console.log('checkedItems: ', checkedItems);
+        /* const selected = checkedItems.map(item => item + (pageInfo.page - 1) * pageInfo.size);
+        console.log('selected: ', selected); */
         const response = await axios.delete(`http://localhost:8080/items`, 
             {
                 headers: {
@@ -12,7 +12,7 @@ const sendDeleteItemRequest = async (state, pageInfo, checked, setChecked, execu
                     'Authorization': `${state.token}`
                 },
                 data: {
-                    itemId: selected
+                    itemId: checkedItems
                 },
             }
         );
