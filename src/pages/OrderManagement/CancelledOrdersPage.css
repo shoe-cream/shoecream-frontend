@@ -1,14 +1,4 @@
-/* CancelledOrdersPage.css */
-.app-container {
-    display: flex;
-}
 
-.app-content-container {
-    padding: 20px;
-    flex: 1;
-    position: relative; /* 상대 위치를 설정하여 버튼을 절대 위치로 배치할 수 있습니다 */
-    margin : 0 auto;
-}
 
 .actions-container {
     position: absolute;
@@ -45,7 +35,7 @@
 }
 
 table {
-    width: 2000px;
+    width: 100%;
     border-collapse: collapse;
     height: 50px;
 }

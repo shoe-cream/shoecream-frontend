@@ -1,14 +1,3 @@
-.app-container {
-    display: flex;
-}
-
-.app-content-container {
-    flex: 1;
-    display: flex;
-    align-items: flex-start;
-    padding: 20px;
-}
-
 .order-registration {
     width: 100%;
 }
@@ -33,6 +22,9 @@
     flex-direction: column; /* 열 방향으로 요소 배치 */
     width: 100%;
     height: 50%;
+}
+.product-search select {
+    width: 100%;
 }
 
 .product-search table {
@@ -133,4 +125,9 @@
     color: white;
     text-align: center;
     width: 120px;
+}
+
+.buyerItemDropDown {
+    position: relative; /* 또는 absolute */
+    z-index: 1000;
 }
