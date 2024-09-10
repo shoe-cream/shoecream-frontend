@@ -25,7 +25,7 @@ const LoginPage = () => {
                                 type='text'
                                 id='username'
                                 name='username'
-                                placeholder='아이디'
+                                placeholder='사원번호'
                                 required
                                 onChange={(e) => setEmailInput(e.target.value)}
                             />

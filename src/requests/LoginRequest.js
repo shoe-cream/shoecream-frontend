@@ -5,7 +5,7 @@ const sendLoginRequest = async(emailInput, passwordInput, navigate, login) => {
     try{
         const response = await axios.post('http://localhost:8080/auth/login',
             {
-                username: emailInput,
+                employeeId: emailInput,
                 password: passwordInput,
             },
             {
