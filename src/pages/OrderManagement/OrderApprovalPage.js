@@ -7,6 +7,10 @@ import 'react-tabs/style/react-tabs.css';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import OrderDatepickerSelect from '../../components/OrderPost/OrderDatepickerSelect';
 import PageContainer from '../../components/page_container/PageContainer';
+import GetOrders from '../../requests/GetOrders';
+import getOrderAllRequest from '../../requests/GetOrders';
+import { useAuth } from '../../auth/AuthContext';
+
 
 const BaseTable = ({ data }) => {
     const columns = React.useMemo(
@@ -16,11 +20,11 @@ const BaseTable = ({ data }) => {
             { Header: "주문상태", accessor: "orderStatus" },
             { Header: "등록일", accessor: "registerDate" },
             { Header: "납기일", accessor: "dueDate" },
-            { Header: "고객사 명", accessor: "customerName" },
-            { Header: "고객 코드", accessor: "customerCode" },
-            { Header: "제품 명", accessor: "productName" },
+            { Header: "고객사 명", accessor: "buyerNm" },
+            { Header: "고객 코드", accessor: "buyerCd" },
+            { Header: "제품 명", accessor: "itemNm" },
             { Header: "수량", accessor: "quantity" },
-            { Header: "금액", accessor: "price" },
+            { Header: "제품 단가", accessor: "unitPrice" },
             { Header: "총금액", accessor: "totalPrice" },
         ],
         []
@@ -32,8 +36,13 @@ const BaseTable = ({ data }) => {
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
+    const { state } = useAuth();
+    const [optionSelect, setOptionSelect] = useState('orderId');
+    const [keyword, setKeyword] = useState('');
+
+
     const data = [
-        { selection: false, member: "홍길동", orderId: "12345", orderStatus: "처리중", registerDate: "2024-09-01", dueDate: "2024-09-15", customerName: "고객사A", customerCode: "C001", productName: "제품A", quantity: 10, price: 50000, totalPrice: 500000 },
+        { selection: false, member: "홍길동", orderId: "12345", orderStatus: "처리중", registerDate: "2024-09-01", dueDate: "2024-09-15", buyerNm: "고객사A", buyerCd: "C001", itemNm: "제품A", quantity: 10, unitPrice: 50000, totalPrice: 500000 },
         // 추가 데이터...
     ];
 
@@ -44,6 +53,12 @@ const OrderApprovalPage = () => {
     const handlePrint = () => {
         window.print();
     };
+
+    const handleGetOrdersAll = () => {
+        if(optionSelect === 'orderId'){
+            getOrderAllRequest(state, null, null, null, optionSelect, null, null, page, 10)
+        }
+    }
 
     return (
         <div>
@@ -71,7 +86,10 @@ const OrderApprovalPage = () => {
                             <div className='tab-content'>
                                 <TabPanel>
                                     <h2>전체주문조회</h2>
-                                    <OrderDatepickerSelect></OrderDatepickerSelect>
+                                    <OrderDatepickerSelect GetOrdersAll={handleGetOrdersAll}
+                                        optionSelect={optionSelect} setOptionSelect={setOptionSelect}
+                                        keyword={keyword} setKeyword={setKeyword}>
+                                    </OrderDatepickerSelect>
                                     <BaseTable data={data} />
                                 </TabPanel>
                                 <TabPanel>
@@ -97,11 +115,11 @@ const OrderApprovalPage = () => {
                             </div>
                         </Tabs>
                     </div>
-                    {isLoading ? <div/> : <PageContainer
+                    {isLoading ? <div /> : <PageContainer
                         currentPage={page}
                         setPage={setPage}
                         pageInfo={data.pageInfo}
-                        getPage={() => {}}
+                        getPage={() => { }}
                     ></PageContainer>}
                 </div>
             </div>
