@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const sendPostItemRequest = async(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput) => {
+const sendPostItemRequest = async(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput, executeAfter) => {
     try{
         const response = await axios.post('http://localhost:8080/items',
             {
@@ -21,6 +21,9 @@ const sendPostItemRequest = async(state, nameInput, codeInput, unitInput, unitpr
         );
         if(response.status === 200 || response.status === 201){
             console.log('제품 등록 성공', response);
+            if(executeAfter !== undefined){
+                executeAfter();
+            }
         }else{
             console.log('제품 등록 실패: ', response.status);
         }

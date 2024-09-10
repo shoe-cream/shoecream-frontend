@@ -51,7 +51,15 @@ const ItemPostPage = () => {
             alert('단위를 입력해주세요');
             return;
         }
-        sendPostItemRequest(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput);
+        sendPostItemRequest(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput, 
+            () => sendGetItemsRequest(state, 1, 10, setItems, setIsLoading));
+        setNameInput('');
+        setCodeInput('');
+        setUnitInput('');
+        setUnitpriceInput('');
+        setColorInput('');
+        setSizeInput('');
+        setCategoryInput('');
     }
 
     useEffect(() => {
@@ -72,10 +80,22 @@ const ItemPostPage = () => {
                                 onClick={() => addItem()}
                                 >등록</button>
                             </div>
-                            <PostContainer leftContent='제품명' rightContent='사이즈' setLeftInput={(value) => setNameInput(value)} setRightInput={(value) => setSizeInput(value)}></PostContainer>
-                            <PostContainer leftContent='제품 코드' rightContent='색상'setLeftInput={(value) => setCodeInput(value)} setRightInput={(value) => setColorInput(value)}></PostContainer>
-                            <PostContainer leftContent='카테고리' rightContent='단가'setLeftInput={(value) => setCategoryInput(value)} setRightInput={(value) => setUnitpriceInput(value)}></PostContainer>
-                            <PostContainer leftContent='단위'setLeftInput={(value) => setUnitInput(value)}></PostContainer>
+                            <PostContainer 
+                                leftContent='제품명' rightContent='사이즈' 
+                                leftInput = {nameInput} setLeftInput={(value) => setNameInput(value)}
+                                rightInput = {sizeInput} setRightInput={(value) => setSizeInput(value)}></PostContainer>
+                            <PostContainer
+                                leftContent='제품 코드' rightContent='색상'
+                                leftInput = {codeInput} setLeftInput={(value) => setCodeInput(value)}
+                                rightInput = {colorInput} setRightInput={(value) => setColorInput(value)}></PostContainer>
+                            <PostContainer
+                                leftContent='카테고리' rightContent='단가'
+                                leftInput = {categoryInput} setLeftInput={(value) => setCategoryInput(value)}
+                                rightInput = {unitpriceInput} setRightInput={(value) => setUnitpriceInput(value)}></PostContainer>
+                            <PostContainer 
+                                leftContent='단위' setLeftInput={(value) => setUnitInput(value)}
+                                leftInput={unitInput}
+                                ></PostContainer>
                         </div>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>

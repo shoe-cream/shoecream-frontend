@@ -43,7 +43,6 @@ const getPageRange = (currentPage, pageInfo) => {
 }
 
 const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setPageOriginal }) => {
-    /* const [currentPage, setPage] = useState(currentPage); */
     const [range, setRange] = useState(getPageRange(currentPage, pageInfo));
 
     useEffect(() => {
@@ -54,6 +53,13 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setPageOrigina
 
     return (
         <div className="page-container">
+            <button className='page-button' onClick={() => {
+                getPage(1);
+                setPage(1);
+                if(setPageOriginal !== undefined){
+                    setPageOriginal(1);
+                } 
+            }}>{'<<'}</button>
             <button className='page-button' onClick={() => {
                 if(currentPage > 1){
                     getPage(currentPage - 1);
@@ -89,6 +95,13 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setPageOrigina
                     }
                 }
                 }}>{'>'}</button>
+            <button className='page-button' onClick={() => {
+            getPage(pageInfo.totalPage);
+            setPage(pageInfo.totalPage);
+            if(setPageOriginal !== undefined){
+                setPageOriginal(pageInfo.totalPage);
+            } 
+            }}>{'>>'}</button>
         </div>
     );
 }
