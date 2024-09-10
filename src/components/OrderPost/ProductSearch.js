@@ -44,10 +44,15 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
         const itemCd = event.target.value;
         setSelectedItemCd(itemCd); 
 
-        // const index = event.target.key;
-        // setBuyerItemUnitPrice(buyers.data.buyerItems[index].unitPrice);
-        
-        getItemRequest(state, itemCd, setFindItem, setIsLoading);
+        const selectedIndex = event.target.selectedIndex;
+        if (selectedIndex > 0) { // 첫 번째 옵션은 빈 값이므로 0보다 큰 인덱스에서 데이터 가져오기
+            const selectedItem = buyers.data.buyerItems[selectedIndex - 1];
+            setBuyerItemUnitPrice(selectedItem.unitPrice);
+            
+            getItemRequest(state, itemCd, setFindItem, setIsLoading);
+        } else {
+            setBuyerItemUnitPrice('');
+        }
     };
 
 
@@ -72,8 +77,9 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
             color : findItem.data.color,
             size : findItem.data.size,
             unit : findItem.data.unit,
-            unitPrice : 2000,
+            unitPrice : buyerItemUnitPrice,
             category : findItem.data.category
+            
         });
 
         // 폼 필드 초기화
@@ -173,7 +179,7 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
                         <td className='title'>품목</td>
                         <td><input type='text' id='category' className='orderPostInput' value={findItem ? findItem.data.category : ''} onChange={handleChange} /></td>
                         <td className='title'>제품 단가</td>
-                        <td><input type='text' id='unitPrice' className='orderPostInput' value={2000} onChange={handleChange} /></td>
+                        <td><input type='text' id='unitPrice' className='orderPostInput' value={buyerItemUnitPrice ? buyerItemUnitPrice : ''} onChange={handleChange} /></td>
                     </tr>
                     <tr>
                         <td className='title'>고객사 연락처</td>
