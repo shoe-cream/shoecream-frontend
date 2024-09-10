@@ -7,7 +7,7 @@ import { useAuth } from '../../auth/AuthContext';
 import getBuyerWithItemsRequest from '../../requests/GetBuyerItems';
 import getItemRequest from '../../requests/GetItemRequest';
 
-const ProductSearch = ({ onAddOrder }) => {
+const ProductSearch = ({ onAddOrder, registrationDate }) => {
     // State 변수들
     const [searchParams, setSearchParams] = useState({
         buyerNm: '',
@@ -64,9 +64,16 @@ const ProductSearch = ({ onAddOrder }) => {
             ...searchParams,
             buyerNm: buyers.data.buyerNm,  // 고객사 이름을 추가
             tel: buyers.data.tel,  // 고객사 연락처를 추가
-            registrationDate: new Date().toISOString().split('T')[0],
+            registrationDate,
             deliveryDate: '',
-            contractPeriod
+            contractPeriod,
+            itemNm : findItem.data.itemNm,
+            itemCd : findItem.data.itemCd,
+            color : findItem.data.color,
+            size : findItem.data.size,
+            unit : findItem.data.unit,
+            unitPrice : 2000,
+            category : findItem.data.category
         });
 
         // 폼 필드 초기화
