@@ -1,6 +1,7 @@
 .header-container{
-    width: 100%;
+    width: 90%;
     height: 45px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     border-bottom: 2px solid rgb(216, 216, 216);

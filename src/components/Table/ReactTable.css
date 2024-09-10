@@ -6,6 +6,11 @@ table {
     border-collapse: collapse; /* 테이블 셀 사이에 중복된 경계를 제거 */
     background-color: white;
     box-shadow: 2px 4px 16px 4px #eeeeee;
+    font-size: 13px;
+}
+
+.header-r{
+    font-size: 10px;
 }
 
 th, td {
@@ -17,7 +22,6 @@ th, td {
     /* border-collapse: collapse; */
     border-left: none;
     border-right: none;
-    font-size: 13px;
 }
 
 thead {
