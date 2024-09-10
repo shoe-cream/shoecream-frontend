@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactTableWithCheckbox from '../Table/ReactTableWithCheckbox';
 
-const OrderTable = ({ data, onRegisterOrder }) => {
+const OrderTable = ({ data, setOrderData, setRequestDate }) => {
     const [tableData, setTableData] = useState([]);
 
     useEffect(() => {
@@ -22,15 +22,30 @@ const OrderTable = ({ data, onRegisterOrder }) => {
                 price
             };
             
+            setOrderData(updatedData);  // 변경된 데이터를 상위 컴포넌트로 전달
             return updatedData;
         });
-    }, []);
+    }, [setOrderData]);
+
+    const handleRequestDateChange = useCallback((e) => {
+        setRequestDate(e.target.value);
+    }, [setRequestDate]);
 
     const columns = React.useMemo(() => [
         { Header: "고객사", accessor: "buyerNm" },
         { Header: "고객코드", accessor: "buyerCd" },
         { Header: "등록일", accessor: "registrationDate" },
-        { Header: "납기일", accessor: "deliveryDate", Cell: ({ row }) => <input type='date'/> },
+        { 
+            Header: "납기일", 
+            accessor: "requestDate", 
+            Cell: ({ row }) => (
+                <input 
+                    type='date' 
+                    value={row.original.requestDate || ''} 
+                    onChange={handleRequestDateChange} 
+                />
+            )
+        },
         { Header: "제품명", accessor: "itemNm" },
         { Header: "제품코드", accessor: "itemCd" },
         { Header: "제품 단가", accessor: "unitPrice" },
@@ -51,7 +66,7 @@ const OrderTable = ({ data, onRegisterOrder }) => {
         { Header: "단위", accessor: "unit" },
         { Header: "금액", accessor: "price" },
         { Header: "계약 기간", accessor: "contractPeriod" }
-    ], [handleQuantityChange]);
+    ], [handleQuantityChange, handleRequestDateChange]);
 
     return <ReactTableWithCheckbox columns={columns} data={tableData} />;
 }
