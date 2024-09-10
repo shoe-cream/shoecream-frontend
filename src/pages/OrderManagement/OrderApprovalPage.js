@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs';
@@ -6,6 +6,7 @@ import './OrderApprovalPage.css';
 import 'react-tabs/style/react-tabs.css';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import OrderDatepickerSelect from '../../components/OrderPost/OrderDatepickerSelect';
+import PageContainer from '../../components/page_container/PageContainer';
 
 const BaseTable = ({ data }) => {
     const columns = React.useMemo(
@@ -29,6 +30,8 @@ const BaseTable = ({ data }) => {
 }
 
 const OrderApprovalPage = () => {
+    const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
     const data = [
         { selection: false, member: "홍길동", orderId: "12345", orderStatus: "처리중", registerDate: "2024-09-01", dueDate: "2024-09-15", customerName: "고객사A", customerCode: "C001", productName: "제품A", quantity: 10, price: 50000, totalPrice: 500000 },
         // 추가 데이터...
@@ -94,6 +97,12 @@ const OrderApprovalPage = () => {
                             </div>
                         </Tabs>
                     </div>
+                    {isLoading ? <div/> : <PageContainer
+                        currentPage={page}
+                        setPage={setPage}
+                        pageInfo={data.pageInfo}
+                        getPage={() => {}}
+                    ></PageContainer>}
                 </div>
             </div>
         </div>

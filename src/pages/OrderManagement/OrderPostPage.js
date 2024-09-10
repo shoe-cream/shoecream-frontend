@@ -6,10 +6,13 @@ import OrderTable from '../../components/OrderPost/OrderTable';
 import ProductSearch from "../../components/OrderPost/ProductSearch";
 import Header from "../../components/header/Header";
 import Sidebar from "../../components/sidebar/Sidebar";
+import PageContainer from '../../components/page_container/PageContainer';
 
 const OrderPostPage = () => {
     const [orderData, setOrderData] = useState([]);
     const [registrationDate, setRegistrationDate] = useState('');  // 등록일자 상태 추가
+    const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleAddOrder = (newOrder) => {
         setOrderData(prevData => [...prevData, newOrder]);
@@ -31,6 +34,12 @@ const OrderPostPage = () => {
                         <OrderActions />
                         <OrderTable data={orderData} />
                     </div>
+                    {isLoading ? <div/> : <PageContainer
+                        currentPage={page}
+                        setPage={setPage}
+                        pageInfo={orderData.pageInfo}
+                        getPage={() => {}}
+                    ></PageContainer>}
                 </div>
             </div>
         </div>
