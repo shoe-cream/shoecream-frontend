@@ -12,10 +12,11 @@ import { useAuth } from '../../auth/AuthContext';
 
 const OrderPostPage = () => {
     const [orderData, setOrderData] = useState([]);
-    const [registrationDate, setRegistrationDate] = useState('');  // 등록일자 상태 추가
+    const [registrationDate, setRegistrationDate] = useState('');
+    const [requestDate, setRequestDate] = useState('');
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
-    const { state } = useAuth(); // 인증 상태를 가져옴
+    const { state } = useAuth();
 
     const handleAddOrder = (newOrder) => {
         setOrderData(prevData => [...prevData, newOrder]);
@@ -27,8 +28,7 @@ const OrderPostPage = () => {
 
     const convertToLocalDateTime = (dateStr) => {
         const date = new Date(dateStr);
-        let isoString = date.toISOString();  // ISO 형식으로 변환 (밀리초 포함)
-        return isoString.replace('Z', '');  // 'Z'를 제거
+        return date.toISOString().replace('Z', '');  // 밀리초 포함
     };
 
     const handleRegisterOrder = () => {
@@ -37,15 +37,11 @@ const OrderPostPage = () => {
             return;
         }
 
-        
-
-
-
         const orderItemDtoList = orderData.map(order => {
             const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');
     
             return {
-                itemCd: order.itemCd,
+                itemCD: order.itemCd,
                 unitPrice: order.unitPrice,
                 quantity: order.quantity,
                 startDate: convertToLocalDateTime(startDateStr.trim()),
@@ -54,9 +50,9 @@ const OrderPostPage = () => {
             };
         });
 
-        const buyerCd = orderData[0];
-
-        sendPostOrder(state, buyerCd, registrationDate, orderItemDtoList);
+        const buyerCd = orderData.length > 0 ? orderData[0].buyerCd : ''; 
+        sendPostOrder(state, buyerCd, requestDate+"T00:00:00.000", orderItemDtoList);
+       
     };
 
     return (
@@ -69,7 +65,11 @@ const OrderPostPage = () => {
                         <OrderFilter onDateChange={handleDateChange} />
                         <ProductSearch onAddOrder={handleAddOrder} registrationDate={registrationDate} />
                         <OrderActions onRegisterOrder={handleRegisterOrder} />
-                        <OrderTable data={orderData} setOrderData={setOrderData} />
+                        <OrderTable 
+                            data={orderData} 
+                            setOrderData={setOrderData} 
+                            setRequestDate={setRequestDate}  // requestDate 설정 함수 전달
+                        />
                     </div>
                     {isLoading ? <div /> : <PageContainer
                         currentPage={page}
