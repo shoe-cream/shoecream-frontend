@@ -79,7 +79,6 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
             unit : findItem.data.unit,
             unitPrice : buyerItemUnitPrice,
             category : findItem.data.category
-            
         });
 
         // 폼 필드 초기화
@@ -148,7 +147,7 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
                         <td>
                             <div className='divSearch'>
                                 {
-                                    isLoading ? <div>Loading...</div> :
+                                    isLoading ? <div></div> :
                                         <select
                                             className='buyerItemDropDown'
                                             value={selectedItemCd}

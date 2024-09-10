@@ -27,9 +27,19 @@ const OrderTable = ({ data, setOrderData, setRequestDate }) => {
         });
     }, [setOrderData]);
 
-    const handleRequestDateChange = useCallback((e) => {
-        setRequestDate(e.target.value);
-    }, [setRequestDate]);
+    const handleRequestDateChange = useCallback((index, newDate) => {
+        setTableData(prevData => {
+            const updatedData = [...prevData];
+            updatedData[index] = {
+                ...updatedData[index],
+                requestDate: newDate
+            };
+            
+            setOrderData(updatedData);  // 변경된 데이터를 상위 컴포넌트로 전달
+            setRequestDate(newDate);  // 상위 컴포넌트의 상태도 업데이트
+            return updatedData;
+        });
+    }, [setOrderData, setRequestDate]);
 
     const columns = React.useMemo(() => [
         { Header: "고객사", accessor: "buyerNm" },
@@ -42,7 +52,7 @@ const OrderTable = ({ data, setOrderData, setRequestDate }) => {
                 <input 
                     type='date' 
                     value={row.original.requestDate || ''} 
-                    onChange={handleRequestDateChange} 
+                    onChange={(e) => handleRequestDateChange(row.index, e.target.value)} 
                 />
             )
         },
