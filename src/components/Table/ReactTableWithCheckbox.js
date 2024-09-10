@@ -29,9 +29,9 @@ const ReactTableWithCheckbox = ({ columns, data }) => {
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
             ))}
           </tr>
         ))}
@@ -40,9 +40,9 @@ const ReactTableWithCheckbox = ({ columns, data }) => {
         {rows.map(row => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr className='body-r' {...row.getRowProps()}>
               {row.cells.map(cell => (
-                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
               ))}
             </tr>
           );

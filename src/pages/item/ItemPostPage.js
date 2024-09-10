@@ -7,10 +7,12 @@ import { useEffect, useState } from 'react';
 import sendPostItemRequest from '../../requests/PostItemRequest';
 import { useAuth } from '../../auth/AuthContext';
 import sendGetItemsRequest from '../../requests/GetItemsRequest';
+import PageContainer from '../../components/page_container/PageContainer';
 
 const ItemPostPage = () => {
     const { state } = useAuth();
     const [items, setItems] = useState({data:[]});
+    const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
     const [nameInput, setNameInput] = useState('');
     const [codeInput, setCodeInput] = useState('');
@@ -90,6 +92,14 @@ const ItemPostPage = () => {
                             </div>
                             <ReactTableWithCheckbox columns={columnData} data={items.data}></ReactTableWithCheckbox>
                         </div>
+                        {isLoading ? <div/> : <PageContainer 
+                            currentPage={page} 
+                            setPage={setPage}
+                            pageInfo={items.pageInfo}
+                            getPage={(page) => {
+                                sendGetItemsRequest(state, page, 10, setItems, setIsLoading)
+                            }}
+                        ></PageContainer>}
                     </div>
                 </div>
             </div>
