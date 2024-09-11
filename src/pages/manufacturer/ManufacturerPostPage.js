@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import ReactTable from '../../components/Table/ReactTable';
@@ -9,6 +9,7 @@ import PostContainer from '../../components/postcontainer/PostContainer';
 
 
 const ManufacturerPostPage = () => {
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <div>
             <Header></Header>
@@ -38,7 +39,7 @@ const ManufacturerPostPage = () => {
                                     <button className='manufacturer-button'>삭제</button>
                                 </div>
                             </div>
-                            <ReactTableWithCheckbox columns={columnData} data={data}></ReactTableWithCheckbox>
+                            {isLoading ? <div/> : <ReactTableWithCheckbox columns={columnData} data={data}></ReactTableWithCheckbox>}
                         </div>
                     </div>
                 </div>
