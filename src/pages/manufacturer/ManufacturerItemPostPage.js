@@ -4,8 +4,10 @@ import './ManufacturerItemPostPage.css';
 import { columnData, data } from '../../data/ManufacturerData';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import PostContainer from '../../components/postcontainer/PostContainer';
+import { useState } from 'react';
 
 const ManufacturerItemPostPage = () => {
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <div>
             <Header></Header>
@@ -36,7 +38,7 @@ const ManufacturerItemPostPage = () => {
                                     <button className='manufacturer-button'>삭제</button>
                                 </div>
                             </div>
-                            <ReactTableWithCheckbox columns={columnData} data={data}></ReactTableWithCheckbox>
+                            {isLoading ? <div/> : <ReactTableWithCheckbox columns={columnData} data={data}></ReactTableWithCheckbox>}
                         </div>
                     </div>
                 </div>

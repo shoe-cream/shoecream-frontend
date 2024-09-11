@@ -9,9 +9,12 @@ import { useAuth } from '../../auth/AuthContext';
 import sendGetItemsRequest from '../../requests/GetItemsRequest';
 import PageContainer from '../../components/page_container/PageContainer';
 import sendDeleteItemRequest from '../../requests/DeleteItemRequest';
+import PostModal from '../../components/modal/PostModal';
+import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 
 const ItemPostPage = () => {
     const { state } = useAuth();
+    const [dbItems, setDbItems] = useState();
     const [items, setItems] = useState({data:[]});
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +27,10 @@ const ItemPostPage = () => {
     const [categoryInput, setCategoryInput] = useState('');
 
     const [checked, setChecked] = useState([]);
+    const [isPostMode, setIsPostMode] = useState(false);
+    const [edited, setEdited] = useState([]);
+
+    console.log('edited: ', edited);
 
     const handleRowSelect = (rowId) => {
         setChecked(prev => 
@@ -73,9 +80,46 @@ const ItemPostPage = () => {
         setCategoryInput('');
     }
 
+    const resetData = (value) => {
+        console.log('reset data: ', value);
+        setItems(value);
+        setDbItems(value);
+    }
+
     useEffect(() => {
-        sendGetItemsRequest(state, page, setPage, 10, setItems, setIsLoading);
+        sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
     }, [page]);
+
+    const columnData = [
+        {
+          accessor: 'itemNm',
+          Header: '상품명',
+        },
+        {
+          accessor: 'itemCd',
+          Header: '상품 코드',
+        },
+        {
+          accessor: 'category',
+          Header: '카테고리',
+        },
+        {
+          accessor: 'color',
+          Header: '색상',
+        },
+        {
+          accessor: 'size',
+          Header: '사이즈',
+        },
+        {
+          accessor: 'unit',
+          Header: '단위',
+        },
+        {
+          accessor: 'unitPrice',
+          Header: '단가',
+        },
+      ]
 
     return (
         <div>
@@ -84,64 +128,48 @@ const ItemPostPage = () => {
                 <Sidebar></Sidebar>
                 <div className='app-content-container'>
                     <div className='app-background'>
-                        <div className='manufacturer-input-container'>
-                            <div className='manufacturer-input-header'>
-                                <div className='manufacturer-input-text'>제품 등록</div>
-                                <button className='manufacturer-input-button'
-                                onClick={() => addItem()}
-                                >등록</button>
-                            </div>
-                            <PostContainer 
-                                leftContent='제품명' rightContent='사이즈' 
-                                leftInput = {nameInput} setLeftInput={(value) => setNameInput(value)}
-                                rightInput = {sizeInput} setRightInput={(value) => setSizeInput(value)}></PostContainer>
-                            <PostContainer
-                                leftContent='제품 코드' rightContent='색상'
-                                leftInput = {codeInput} setLeftInput={(value) => setCodeInput(value)}
-                                rightInput = {colorInput} setRightInput={(value) => setColorInput(value)}></PostContainer>
-                            <PostContainer
-                                leftContent='카테고리' rightContent='단가'
-                                leftInput = {categoryInput} setLeftInput={(value) => setCategoryInput(value)}
-                                rightInput = {unitpriceInput} setRightInput={(value) => setUnitpriceInput(value)}></PostContainer>
-                            <PostContainer 
-                                leftContent='단위' setLeftInput={(value) => setUnitInput(value)}
-                                leftInput={unitInput}
-                                ></PostContainer>
-                        </div>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
-                                <select>
+                                {/* <select>
                                     <option disabled='true'>Filter By</option>
                                     <option>최신순</option>
                                     <option>무슨순</option>
                                     <option>무슨순2</option>
-                                </select>
+                                </select> */}
+                                <div/>
                                 <div className='manufacturer-button-container'>
+                                    <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
                                     <button className='manufacturer-button'>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
                                             console.log('checked: ', checked);
                                             const checkedItems = checked.map(item => items.data[item].itemId);
-                                            sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => sendGetItemsRequest(state, page, setPage, 10, setItems, setIsLoading));
+                                            sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading));
                                         }}>삭제</button>
                                 </div>
                             </div>
-                            <ReactTableWithCheckbox 
+                            {isLoading ? <div/> : <EditableTableWithCheckbox 
                                 columns={columnData} 
-                                data={items.data} 
+                                ogData={dbItems}
+                                data={items} 
+                                setData={(data) => setItems(data)}
                                 checked = {checked} 
-                                setChecked={setChecked}>
-                            </ReactTableWithCheckbox>
+                                setChecked={setChecked}
+                                edited = {edited}
+                                setEdited={setEdited}
+                                >
+                            </EditableTableWithCheckbox>}
                         </div>
                         {isLoading ? <div/> : <PageContainer 
                             currentPage={page} 
                             setPage={setPage}
                             pageInfo={items.pageInfo}
                             getPage={(page) => {
-                                sendGetItemsRequest(state, page, setPage, 10, setItems, setIsLoading)
+                                sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading)
                             }}
                             setChecked={(value) => setChecked(value)}
                         ></PageContainer>}
+                        {isPostMode ? <PostModal setOpened = {setIsPostMode} columnData={columnData}></PostModal> : <div/>}
                     </div>
                 </div>
             </div>

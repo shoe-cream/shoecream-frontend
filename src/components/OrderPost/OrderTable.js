@@ -3,10 +3,19 @@ import ReactTableWithCheckbox from '../Table/ReactTableWithCheckbox';
 
 const OrderTable = ({ data, setOrderData, setRequestDate }) => {
     const [tableData, setTableData] = useState([]);
+    const [checked, setChecked] = useState([]);
 
     useEffect(() => {
-        setTableData(data);
+        setTableData(data || []);
     }, [data]);
+
+    const getCurrentDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
     const handleQuantityChange = useCallback((index, newQuantity) => {
         setTableData(prevData => {
@@ -22,7 +31,7 @@ const OrderTable = ({ data, setOrderData, setRequestDate }) => {
                 price
             };
             
-            setOrderData(updatedData);  // 변경된 데이터를 상위 컴포넌트로 전달
+            setOrderData(updatedData);
             return updatedData;
         });
     }, [setOrderData]);
@@ -35,8 +44,8 @@ const OrderTable = ({ data, setOrderData, setRequestDate }) => {
                 requestDate: newDate
             };
             
-            setOrderData(updatedData);  // 변경된 데이터를 상위 컴포넌트로 전달
-            setRequestDate(newDate);  // 상위 컴포넌트의 상태도 업데이트
+            setOrderData(updatedData);
+            setRequestDate(newDate);
             return updatedData;
         });
     }, [setOrderData, setRequestDate]);
@@ -44,7 +53,12 @@ const OrderTable = ({ data, setOrderData, setRequestDate }) => {
     const columns = React.useMemo(() => [
         { Header: "고객사", accessor: "buyerNm" },
         { Header: "고객코드", accessor: "buyerCd" },
-        { Header: "등록일", accessor: "registrationDate" },
+        { Header: "등록일", accessor: "registrationDate", 
+            Cell: ({ row }) => (
+                <span>
+                    {getCurrentDate()}
+                </span>
+            )},
         { 
             Header: "납기일", 
             accessor: "requestDate", 
@@ -78,7 +92,7 @@ const OrderTable = ({ data, setOrderData, setRequestDate }) => {
         { Header: "계약 기간", accessor: "contractPeriod" }
     ], [handleQuantityChange, handleRequestDateChange]);
 
-    return <ReactTableWithCheckbox columns={columns} data={tableData} />;
+    return <ReactTableWithCheckbox columns={columns} data={tableData} checked={checked} setChecked={setChecked}/>;
 }
 
 export default OrderTable;

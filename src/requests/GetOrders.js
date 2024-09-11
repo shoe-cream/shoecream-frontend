@@ -1,24 +1,26 @@
 import axios from 'axios';
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2';
 
 
-const getOrderAllRequest = async (state , buyerCd, itemCd, orderStatus, orderId, searchStartDate, searchEndDate, page, size, setOrders, setIsLoading) => {
+const getOrderAllRequest = async (state, buyerCd, itemCd, orderStatus, orderId, searchStartDate, searchEndDate, page, size, setOrders, setIsLoading) => {
     try {
+        const params = {};
+        if (buyerCd) params.buyerCode = buyerCd;
+        if (itemCd) params.itemCode = itemCd;
+        if (orderStatus) params.status = orderStatus;
+        if (orderId) params.orderId = orderId;
+        if (searchStartDate) params.searchStartDate = searchStartDate;
+        if (searchEndDate) params.searchEndDate = searchEndDate;
+        params.page = page;
+        params.size = size;
+
+
         const response = await axios.get(`http://localhost:8080/orders`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${state.token}`
-            }   
-            ,params: {
-                buyerCode : buyerCd,
-                itemCode : itemCd,
-                status : orderStatus,
-                orderId : orderId,
-                searchStartDate : searchStartDate,
-                searchEndDate : searchEndDate,
-                page : page,
-                size : size
-            }
+                'Authorization': state.token
+            }, 
+            params: params
         });
 
         if (response.status === 200) {
@@ -30,7 +32,7 @@ const getOrderAllRequest = async (state , buyerCd, itemCd, orderStatus, orderId,
         }
     } catch (error) {
         console.error('Error fetching buyer data:', error);
-        Swal.fire({ text: '해당되는 고객코드는 없어요' });
+        Swal.fire({ text: '해당되는 주문이 없어요' });
     }
 };
 
