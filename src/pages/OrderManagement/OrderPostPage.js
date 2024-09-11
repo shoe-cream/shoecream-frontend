@@ -28,7 +28,7 @@
 
         const convertToLocalDateTime = (dateStr) => {
             const date = new Date(dateStr);
-            return date.toISOString().replace('Z', '');  // 밀리초 포함
+            return date.toISOString().replace('Z', ''); 
         };
 
         const handleRegisterOrder = () => {

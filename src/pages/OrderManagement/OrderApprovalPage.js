@@ -128,7 +128,7 @@ const OrderApprovalPage = () => {
     return (
         <div>
             <Header />
-            <div className='app-csontainer'>
+            <div className='app-container'>
                 <Sidebar />
                 <div className='app-content-container'>
                     <div className='tab-container'>
