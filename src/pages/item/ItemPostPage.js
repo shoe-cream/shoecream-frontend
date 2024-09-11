@@ -12,6 +12,7 @@ import sendDeleteItemRequest from '../../requests/DeleteItemRequest';
 import PostModal from '../../components/modal/PostModal';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import sendPostMultiItemRequest from '../../requests/PostMultiItemRequest';
+import sendPatchMultiItemRequest from '../../requests/PatchMultiItemsRequest';
 
 const ItemPostPage = () => {
     const { state } = useAuth();
@@ -96,30 +97,37 @@ const ItemPostPage = () => {
         {
           accessor: 'itemNm',
           Header: '상품명',
+          editable: true,
         },
         {
           accessor: 'itemCd',
           Header: '상품 코드',
+          editable: false,
         },
         {
           accessor: 'category',
           Header: '카테고리',
+          editable: false,
         },
         {
           accessor: 'color',
           Header: '색상',
+          editable: false,
         },
         {
           accessor: 'size',
           Header: '사이즈',
+          editable: false,
         },
         {
           accessor: 'unit',
           Header: '단위',
+          editable: true,
         },
         {
           accessor: 'unitPrice',
           Header: '단가',
+          editable: true,
         },
       ]
 
@@ -141,12 +149,31 @@ const ItemPostPage = () => {
                                 <div/>
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
-                                    <button className='manufacturer-button'>수정</button>
+                                    <button className='manufacturer-button' onClick= {() => {
+                                        /* console.log('checked: ', checked);
+                                        console.log('edited: ', edited); */
+                                        const checkedAndEdited = checked.filter(element => edited.includes(element));
+                                        /* console.log('checkedAndEdited', checkedAndEdited); */
+
+                                        let requestBody = [];
+                                        for(let i = 0; i< checkedAndEdited.length; i++){
+                                            requestBody.push(items.data[checkedAndEdited[i]]);
+                                        }
+                                        /* console.log('requestBody: ', requestBody); */
+                                        sendPatchMultiItemRequest(state, requestBody, () => {
+                                            sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
+                                            setChecked([]);
+                                        });
+
+                                    }}>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
-                                            console.log('checked: ', checked);
+                                            /* console.log('checked: ', checked); */
                                             const checkedItems = checked.map(item => items.data[item].itemId);
-                                            sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading));
+                                            sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
+                                                    sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
+                                                    setChecked([]);
+                                                });
                                         }}>삭제</button>
                                 </div>
                             </div>

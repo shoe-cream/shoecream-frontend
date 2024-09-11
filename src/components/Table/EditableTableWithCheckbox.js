@@ -5,7 +5,7 @@ import './ReactTable.css';
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   const [tableData, setTableData] = useState(data.data);
 
-  console.log('ogData: ', ogData);
+  /* console.log('ogData: ', ogData); */
 
   useEffect(() => {
     setTableData(data.data);
@@ -101,11 +101,13 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     ...columns.map(column => ({
         ...column,
         Cell: ({ value, row, column }) => (
-          <EditableCell
-            value={value}
-            row={row}
-            column={column}
-          />
+          column.editable ? (
+            <EditableCell
+              value={value}
+              row={row}
+              column={column}
+            />
+          ) : (<span>{value}</span>)
         ),
       }))
   ], [columns, tableData, checked, setChecked]);
