@@ -20,13 +20,6 @@ const ItemPostPage = () => {
     const [items, setItems] = useState({data:[]});
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
-    const [nameInput, setNameInput] = useState('');
-    const [codeInput, setCodeInput] = useState('');
-    const [unitInput, setUnitInput] = useState('');
-    const [unitpriceInput, setUnitpriceInput] = useState('');
-    const [colorInput, setColorInput] = useState('');
-    const [sizeInput, setSizeInput] = useState('');
-    const [categoryInput, setCategoryInput] = useState('');
 
     const [checked, setChecked] = useState([]);
     const [isPostMode, setIsPostMode] = useState(false);
@@ -35,53 +28,6 @@ const ItemPostPage = () => {
     /* console.log('edited: ', edited); */
     console.log('items in page: ', items);
 
-    const handleRowSelect = (rowId) => {
-        setChecked(prev => 
-        prev.includes(rowId)
-            ? prev.filter(id => id !== rowId)
-            : [...prev, rowId]
-        );
-    };
-
-    const addItem = () => {
-        if(nameInput === ''){
-            alert('제품명을 입력해주세요');
-            return;
-        }
-        if(sizeInput === ''){
-            alert('사이즈를 입력해주세요');
-            return;
-        }
-        if(codeInput === ''){
-            alert('제품 코드를 입력해주세요');
-            return;
-        }
-        if(colorInput === ''){
-            alert('색상을 입력해주세요');
-            return;
-        }
-        if(categoryInput === ''){
-            alert('카테고리를 입력해주세요');
-            return;
-        }
-        if(unitpriceInput === ''){
-            alert('단가를 입력해주세요');
-            return;
-        }
-        if(unitInput === ''){
-            alert('단위를 입력해주세요');
-            return;
-        }
-        sendPostItemRequest(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput, 
-            () => sendGetItemsRequest(state, 1, setPage, 10, setItems, setIsLoading));
-        setNameInput('');
-        setCodeInput('');
-        setUnitInput('');
-        setUnitpriceInput('');
-        setColorInput('');
-        setSizeInput('');
-        setCategoryInput('');
-    }
 
     const resetData = (value) => {
         console.log('reset data: ', value);
@@ -197,7 +143,6 @@ const ItemPostPage = () => {
                                 sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading)
                             }}
                             setChecked={(value) => setChecked(value)}
-                            reloading = {() => setIsLoading(true)}
                         ></PageContainer>}
                         {isPostMode ? <PostModal 
                             state = {state} 
