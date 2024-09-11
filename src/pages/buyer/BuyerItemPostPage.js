@@ -3,8 +3,10 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import { columnData, data } from '../../data/ManufacturerData';
 import PostContainer from '../../components/postcontainer/PostContainer';
+import { useState } from 'react';
 
 const BuyerItemPostPage = () => {
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <div>
             <Header></Header>
@@ -35,7 +37,7 @@ const BuyerItemPostPage = () => {
                                 <button className='manufacturer-button'>삭제</button>
                             </div>
                         </div>
-                        <ReactTableWithCheckbox columns={columnData} data={data}></ReactTableWithCheckbox>
+                        {isLoading ? <div/> : <ReactTableWithCheckbox columns={columnData} data={data}></ReactTableWithCheckbox>}
                     </div>
                 </div>
             </div>
