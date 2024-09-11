@@ -13,6 +13,7 @@ const sendPatchMultiItemRequest = async(state, requestBody, executeAfter) => {
             }
         );
         if(response.status === 200 || response.status === 201){
+            alert('수정 완료');
             console.log('제품 일괄 수정 성공', response);
             if(executeAfter !== undefined){
                 executeAfter();

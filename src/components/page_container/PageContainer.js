@@ -68,10 +68,14 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, se
     return (
         <div className="page-container">
             <button className='page-button' onClick={() => {
-                changePage(1);
+                if(currentPage > 1){
+                    changePage(1);
+                }
             }}>{'<<'}</button>
             <button className='page-button' onClick={() => {
-                changePage(currentPage - 1);
+                if(currentPage > 1){
+                    changePage(currentPage - 1);
+                }
                 }}>{'<'}</button>
             <div>
                 {range.map((value)=> <button 
@@ -92,7 +96,9 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, se
                 }
                 }}>{'>'}</button>
             <button className='page-button' onClick={() => {
-                changePage(pageInfo.totalPage);
+                if(currentPage < pageInfo.totalPage){
+                    changePage(pageInfo.totalPage);
+                }
             }}>{'>>'}</button>
         </div>
     );
