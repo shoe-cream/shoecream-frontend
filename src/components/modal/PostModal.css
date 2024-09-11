@@ -1,0 +1,31 @@
+.post-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 300px;
+    height: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.post-modal-button-container{
+    display: flex;
+}
+.post-modal-button{
+    width: 100px;
+    height: 50px;
+    background-color: #769adc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.post-modal-button:hover{
+    background-color: #8aabe9;
+}
