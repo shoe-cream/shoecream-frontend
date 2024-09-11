@@ -133,12 +133,14 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     }
 
     // 필드별 비교를 수행하여, 값이 다른 경우에만 'body-r-edited'를 반환
-    for (const key in ogRow) {
-        if (ogRow.hasOwnProperty(key) && tableRow.hasOwnProperty(key)) {
-            if (ogRow[key] != tableRow[key]) {
-              return 'body-r-edited'; // 데이터가 다를 때 -edited 클래스 붙임
-            }
-        }
+    if(ogRow.length > 0){
+      for (const key in ogRow) {
+          if (ogRow.hasOwnProperty(key) && tableRow.hasOwnProperty(key)) {
+              if (ogRow[key] != tableRow[key]) {
+                return 'body-r-edited'; // 데이터가 다를 때 -edited 클래스 붙임
+              }
+          }
+      }
     }
 
     return 'body-r'; // 값이 모두 동일하면 기본 클래스
