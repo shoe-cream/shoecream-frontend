@@ -17,7 +17,7 @@ const OrderDatepickerSelect = ({GetOrdersAll, optionSelect, setOptionSelect, key
             <select className="search-list" onChange={handleOptionChange} value={optionSelect}>
                 <option value="orderId">주문번호</option>
                 <option value="buyerCd">고객 코드</option>
-                <option value="itemNm">제품 명</option>
+                <option value="date">날짜</option>
                 <option value="itemCd">제품 코드</option>
                 <option value="buyerCdAnditemCd">고객 코드 + 제품 코드</option>
             </select>

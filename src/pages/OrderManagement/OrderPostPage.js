@@ -41,9 +41,9 @@ const OrderPostPage = () => {
             const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');
     
             return {
-                itemCD: order.itemCd,
+                itemCd: order.itemCd,
                 unitPrice: order.unitPrice,
-                quantity: order.quantity,
+                qty: order.quantity,
                 startDate: convertToLocalDateTime(startDateStr.trim()),
                 endDate: convertToLocalDateTime(endDateStr.trim()),
                 unit: order.unit
