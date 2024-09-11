@@ -1,133 +1,96 @@
-.order-registration {
-    width: 100%;
+/* input 필드 스타일 통합 */
+.orderPostInput, .buyerItemDropDown, .input-field input {
+    padding: 5px; /* 일관된 패딩 설정 */
+    height: auto; /* 고정된 높이 대신 자동 높이 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 일관된 내장 그림자 */
+    width: 100%; /* 부모 요소의 너비를 차지 */
+    box-sizing: border-box; /* 패딩이 포함된 너비 계산 */
 }
 
-.order-filters {
+.divSearch {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.order-filters label {
-    font-weight: bold;
-}
-
-.product-search-container {
-    position: relative; /* 위치 지정 컨텍스트 설정 */
-}
-
-.product-search {
-    display: flex;
-    flex-direction: column; /* 열 방향으로 요소 배치 */
     width: 100%;
-    height: 50%;
-}
-.product-search select {
-    width: 100%;
+    height: auto; /* 부모 요소의 높이를 자동으로 설정 */
 }
 
+/* 테이블 스타일 */
 .product-search table {
-    width: 100%; /* 테이블이 컨테이너 너비를 차지하도록 설정 */
-    border-collapse: collapse; /* 셀 경계 중복 제거 */
+    table-layout: fixed;
+    width: 100%;
 }
 
-.product-search td {
-    padding: 8px; /* 셀 내 패딩 설정 */
-    border: 1px solid #ddd; /* 셀 경계 스타일 설정 */
-}
-
-.button-container {
-    margin-top: 10px; /* 테이블과 버튼 사이 간격 설정 */
-    text-align: right; /* 버튼을 오른쪽으로 정렬 */
+.product-search td, .product-search th {
+    width: 14.28%; /* 균등하게 열을 나눔 */
+    padding: 8px;
+    box-sizing: border-box;
 }
 
 .load-btn {
-    background-color: #4688E2; /* 버튼 배경색 설정 */
-    color: white; /* 버튼 글자 색상 설정 */
-    padding: 8px 16px; /* 버튼 패딩 설정 */
-    border: none; /* 버튼의 경계 제거 */
-    cursor: pointer; /* 커서를 포인터로 변경 */
+    background-color: #4688E2;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+}
+/* 769ADC */
+/* 9f91d7 */
+.special-cell {
+    font-size: 14px;
+    background-color: #4688E2; /* 원하는 배경색 */
+    color: white; /* 글자 색상 */
+    padding: 8px; /* 셀 내부 패딩 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    border-radius: 4px; /* 둥근 모서리 */
+    box-sizing: border-box; /* 패딩이 포함된 너비 계산 */
 }
 
-.order-table {
-    margin-top: 20px; /* 주문 테이블과 위의 컴포넌트 사이의 간격 설정 */
-}
-
-.order-table table {
-    width: 100%; /* 테이블이 부모 컨테이너의 100% 너비를 차지하도록 설정 */
-    border-collapse: collapse; /* 셀 경계 중복 제거 */
-}
-
-.order-table th, .order-table td {
-    padding: 8px; /* 셀 내 패딩 설정 */
-    text-align: left; /* 텍스트 왼쪽 정렬 */
-    border: 1px solid #ddd; /* 셀 경계 스타일 설정 */
-}
-
-.order-actions {
+.button-container {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 5%;
+    justify-content: flex-end; /* 버튼들이 공간을 균등하게 차지하도록 설정 */
+    gap: 15px; /* 버튼 간의 간격을 설정 */
+    margin-top: 20px; /* 버튼 위쪽 여백 */
+    margin-bottom: 15px;
 }
 
 .order-actions button {
-    padding: 10px 20px; /* 버튼 패딩 설정 */
-    border: none; /* 버튼의 경계 제거 */
-    cursor: pointer; /* 커서를 포인터로 변경 */
-    background-color: #4688E2; /* 버튼 배경색 설정 */
-    color: white; /* 버튼 글자 색상 설정 */
-}
-
-.search-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.product-search search-icon {
-    width: 16px; /* 아이콘 크기 조절 */
-    height: 16px;
-    border: none;
-}
-
-
-.orderPostInput{
-    border: none;
-    height: 100%;
-    width: 100%;
-}
-
-.divSearch{
-    display: flex;
-    width : 100%;
-    height: 100%;
-}
-
-.react-datepicker-wrapper{
-    width: 100%;
-}
-
-.react-datepicker__input-container input{
-    width: 90%;
-    text-align: center;
-    font-size: 18px;
-}
-
-
-.product-search td.title{
-    background-color: #769ADC;
+    background-color: #4688E2;
     color: white;
-    text-align: center;
-    width: 120px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1; /* 버튼이 같은 너비를 차지하게 함 */
+    margin-right: 10px; /* 버튼 간의 오른쪽 간격 */
 }
 
-.buyerItemDropDown {
-    position: relative; /* 또는 absolute */
-    z-index: 1000;
-}
+
+
+/* 테이블에 전체적인 그리드 스타일 적용 */
+.table-body {
+    border-collapse: collapse; /* 중복된 경계선 제거 */
+    width: 100%; /* 테이블 전체 너비 사용 */
+    height: 300px;
+  }
+  
+  /* 테이블 행 스타일 */
+  .table-row {
+    border: 1px solid #909090; /* 테두리 스타일 적용 */
+  }
+  
+  /* 테이블 셀 스타일 */
+  .table-cell {
+    border: 1px solid #979797; /* 셀마다 테두리 추가 */
+    padding: 8px; /* 셀 내부 패딩 */
+    text-align: left; /* 텍스트 정렬 */
+    min-width: 100px; /* 셀의 최소 너비 */
+  }
+  
+  /* 선택된 셀에 대한 하이라이트 효과 */
+  .table-cell:hover {
+    background-color: #f1f1f1; /* 마우스 오버 시 배경색 변경 */
+  }
+
+  

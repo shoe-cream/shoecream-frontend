@@ -18,7 +18,7 @@ const Header = ()=> {
         <div className="header-container">
             <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate("/")}></img>
             <div className="header-userinfo-container">
-                {state.isAuthenticated ? <div className="header-welcome-text">반갑습니다. {myData.data.name} 님</div> : 
+                {state.isAuthenticated ? <div className="header-welcome-text">{myData.data.name} 님</div> : 
                 <button className="header-login-button" onClick={() => navigate('/login')}>로그인</button>}
                 {state.isAuthenticated ? <img src="icons/profile-icon.png" className="header-profile-icon"
                 onClick={() => navigate('/mypage')}></img> : <div></div>}

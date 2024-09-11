@@ -60,18 +60,18 @@ const ReactTableWithCheckbox = ({ columns, data, checked, setChecked }) => {
           </tr>
         ))}
       </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr className='body-r' {...row.getRowProps()}>
-              {row.cells.map(cell => (
-                <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              ))}
-            </tr>
-          );
-        })}
-      </tbody>
+      <tbody className="table-body" {...getTableBodyProps()}>
+  {rows.map(row => {
+    prepareRow(row);
+    return (
+      <tr className="table-row" {...row.getRowProps()}>
+        {row.cells.map(cell => (
+          <td className="table-cell" {...cell.getCellProps()}>{cell.render('Cell')}</td>
+        ))}
+      </tr>
+    );
+  })}
+</tbody>
     </table>
   );
 };

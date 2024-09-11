@@ -1,17 +1,22 @@
 .sidebar{
-    width: 200px;
-    margin-left: 100px;
+    width: 195px;
+    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: #f4f5f7;
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 4px;
+    border-radius: 5px;    
 }
 
-.sidebar-search {
-    resize: none;
-    background-color: #f2f4f7;
-    border-radius: 25px;
-    text-align: center;
-    align-content: center;
+.sidebar-container{
+    
+    height: 100vh;
+    background-color: bisque;
 }
+
 .sidebar-search::placeholder{
     /* padding-left: 20px; */
 }
