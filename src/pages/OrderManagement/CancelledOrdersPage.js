@@ -1,44 +1,116 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import './CancelledOrdersPage.css';
-import DateRangePicker from '../../components/datepicker/DateRangePicker';
+import DatePicker from 'react-datepicker';
 import getOrderAllRequest from '../../requests/GetOrders';
+import { useAuth } from '../../auth/AuthContext';
+import PageContainer from '../../components/page_container/PageContainer';
 
 const CancelledOrdersPage = () => {
-    // 테이블의 열 정의
-    const columns = React.useMemo(
-        () => [
-            { Header: "담당자", accessor: "member" },
-            { Header: "주문번호", accessor: "orderId" },
-            { Header: "주문상태", accessor: "orderStatus" },
-            { Header: "등록일", accessor: "registerDate" },
-            { Header: "납기일", accessor: "dueDate" },
-            { Header: "고객사 명", accessor: "customerName" },
-            { Header: "고객 코드", accessor: "customerCode" },
-            { Header: "제품 명", accessor: "productName" },
-            { Header: "수량", accessor: "quantity" },
-            { Header: "금액", accessor: "price" },
-            { Header: "총금액", accessor: "totalPrice" },
-        ],
-        []
-    );
+    const columns = [
+        { Header: "담당자", accessor: "employeeId" },
+        { Header: "주문번호", accessor: "orderId" },
+        { Header: "주문상태", accessor: "status" },
+        { Header: "등록일", accessor: "createdAt" },
+        { Header: "납기일", accessor: "requestDate" },
+        { Header: "고객사 명", accessor: "buyerNm" },
+        { Header: "고객 코드", accessor: "buyerCd" },
+        { Header: "제품 명", accessor: "itemNm" },
+        { Header: "수량", accessor: "qty" },
+        { Header: "금액", accessor: "unitPrice" },
+        { Header: "총금액", accessor: "totalPrice" },
+    ];
 
-    // 임시 데이터
-    const data = React.useMemo(
-        () => [
-            { selection: false, member: "홍길동", orderId: "12345", orderStatus: "취소됨", registerDate: "2024-09-01", dueDate: "2024-09-15", customerName: "고객사A", customerCode: "C001", productName: "제품A", quantity: 10, price: 50000, totalPrice: 500000 },
-            // 추가 데이터...
-        ],
-        []
-    );
+    const [checked, setChecked] = useState([]);
+    const [page, setPage] = useState(1);
+    const [orders, setOrders] = useState({ data: [], pageInfo: {} });
+    const [keyword, setKeyword] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const { state } = useAuth();
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [startDate, endDate] = dateRange;
+    const [data, setData] = useState([]);
 
-    // const [orders, setOrders] = useState([]);
-    // const [keyword, setKeyword] = useState('');
-    // const [isLoading, setIsLoading] = useState(true);
-    // const { state } = useAuth();
+    const transformData = useCallback((ordersData) => {
+        return ordersData.flatMap(order =>
+            order.orderItems.map(item => ({
+                employeeId: order.employeeId,
+                orderId: order.orderId,
+                status: order.status,
+                createdAt: order.createdAt,
+                requestDate: order.requestDate,
+                buyerNm: order.buyerNm,
+                buyerCd: order.buyerCd,
+                itemNm: item.itemCd,
+                qty: item.qty,
+                unitPrice: item.unitPrice,
+                totalPrice: item.qty * item.unitPrice,
+                startDate: item.startDate,
+                endDate: item.endDate
+            }))
+        );
+    }, []);
 
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            await getOrderAllRequest(
+                state,
+                null,
+                null,
+                'CANCELLED',
+                null,
+                null,
+                null,
+                page,
+                10,
+                (response) => {
+                    setOrders(response);
+                    const transformedData = transformData(response.data);
+                    setData(transformedData);
+                },
+                setIsLoading
+            );
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setIsLoading(false);
+        }
+    }, [state, page, transformData]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+  
+    const handleSearch = async () => {
+        setIsLoading(true);
+        try {
+            await getOrderAllRequest(
+                state,
+                null,
+                null,
+                null,
+                keyword,
+                startDate,
+                endDate,
+                1, // 검색 시 첫 페이지부터 시작
+                10,
+                (response) => {
+                    setOrders(response);
+                    const transformedData = transformData(response.data);
+                    setData(transformedData);
+                    setPage(1); // 페이지를 1로 리셋
+                },
+                setIsLoading
+            );
+        } catch (error) {
+            console.error("Error searching data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleExportToExcel = () => {
         console.log("Export to Excel");
@@ -48,10 +120,17 @@ const CancelledOrdersPage = () => {
         window.print();
     };
 
-    const handleSearch = () => {
-        
-        
-    };
+    const DateRangePicker = () => (
+        <DatePicker
+            selectsRange
+            startDate={startDate}
+            endDate={endDate}
+            onChange={(update) => setDateRange(update)}
+            isClearable
+            dateFormat="yyyy/MM/dd"
+            placeholderText="기간 선택"
+        />
+    );
 
     return (
         <div>
@@ -60,10 +139,10 @@ const CancelledOrdersPage = () => {
                 <Sidebar />
                 <div className='app-content-container'>
                     <div className='date'>
-                        <DateRangePicker></DateRangePicker>
+                        <DateRangePicker />
                         <label>주문 번호</label>
-                        <input type='text' id='productName'/>
-                        <button id='searchProduct' className='search-button'>
+                        <input type='text' id='productName' value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                        <button id='searchProduct' className='search-button' onClick={handleSearch}>
                             <img src='/icons/zoom.png' alt='Search' className='search-icon' />
                         </button>
                     </div>
@@ -73,9 +152,26 @@ const CancelledOrdersPage = () => {
                         <button className='miscBtn' onClick={handlePrint}>인쇄</button>
                     </div>
                     <h2>취소된 주문</h2>
-                    <ReactTableWithCheckbox columns={columns} data={data} />
+                    {isLoading ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <ReactTableWithCheckbox 
+                            columns={columns} 
+                            data={data} 
+                            checked={checked} 
+                            setChecked={setChecked} 
+                        />
+                    )}
                 </div>
             </div>
+            {!isLoading && orders.pageInfo && (
+                <PageContainer
+                    currentPage={page}
+                    setPage={setPage}
+                    pageInfo={orders.pageInfo}
+                    getPage={fetchData}
+                />
+            )}
         </div>
     );
 }
