@@ -11,6 +11,7 @@ import PageContainer from '../../components/page_container/PageContainer';
 import sendDeleteItemRequest from '../../requests/DeleteItemRequest';
 import PostModal from '../../components/modal/PostModal';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
+import sendPostMultiItemRequest from '../../requests/PostMultiItemRequest';
 
 const ItemPostPage = () => {
     const { state } = useAuth();
@@ -169,7 +170,14 @@ const ItemPostPage = () => {
                             }}
                             setChecked={(value) => setChecked(value)}
                         ></PageContainer>}
-                        {isPostMode ? <PostModal setOpened = {setIsPostMode} columnData={columnData}></PostModal> : <div/>}
+                        {isPostMode ? <PostModal 
+                            state = {state} 
+                            setOpened = {setIsPostMode} 
+                            columnData={columnData}
+                            page={page}
+                            setPage={setPage}
+                            setParentData={(value) => setItems(value)}
+                        ></PostModal> : <div/>}
                     </div>
                 </div>
             </div>
