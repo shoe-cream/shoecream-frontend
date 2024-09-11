@@ -7,11 +7,14 @@ table {
     background-color: white;
     box-shadow: 2px 4px 16px 4px #eeeeee;
     font-size: 13px;
+    border-top: 1px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
+    border-bottom: 1px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
 }
 
 .header-r{
     font-size: 10px !important;
 }
+
 
 .header-h {
     font-size: 13px !important;
@@ -36,4 +39,6 @@ th, td {
 
 thead {
     background-color: #f2f2f2; /* 헤더에 배경색 추가 */
+
+    
 }

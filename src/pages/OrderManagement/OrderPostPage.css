@@ -22,13 +22,14 @@
 }
 
 .product-search td, .product-search th {
-    width: 14.28%; /* 균등하게 열을 나눔 */
-    padding: 8px;
+    /* td, th전역 */
+    width: 110px; /* 균등하게 열을 나눔 */
+    padding: 8px 20px 8px 10px ;
     box-sizing: border-box;
 }
 
 .load-btn {
-    background-color: #4688E2;
+    background-color: #6aa1e8;
     color: white;
     padding: 8px 16px;
     border: none;
@@ -36,11 +37,15 @@
 }
 /* 769ADC */
 /* 9f91d7 */
+/* 4688E2 */
 .special-cell {
     font-size: 14px;
+    /* 제목창 */
+    max-width: 60px !important; 
+    font-weight: bold;
     background-color: #4688E2; /* 원하는 배경색 */
-    color: white; /* 글자 색상 */
-    padding: 8px; /* 셀 내부 패딩 */
+    color: #FFFFFF; /* 글자 색상 */
+    padding: 8px !important; /* 셀 내부 패딩 */
     text-align: center; /* 텍스트 가운데 정렬 */
     border-radius: 4px; /* 둥근 모서리 */
     box-sizing: border-box; /* 패딩이 포함된 너비 계산 */
@@ -55,8 +60,8 @@
 }
 
 .order-actions button {
-    background-color: #4688E2;
-    color: white;
+    background-color: #6aa1e8;
+    color: rgb(0, 0, 0);
     padding: 10px 20px;
     border: none;
     cursor: pointer;
@@ -66,6 +71,9 @@
     margin-right: 10px; /* 버튼 간의 오른쪽 간격 */
 }
 
+.header-h {
+    
+}
 
 
 /* 테이블에 전체적인 그리드 스타일 적용 */
