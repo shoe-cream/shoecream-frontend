@@ -10,22 +10,29 @@ import PageContainer from '../../components/page_container/PageContainer';
 import GetOrders from '../../requests/GetOrders';
 import getOrderAllRequest from '../../requests/GetOrders';
 import { useAuth } from '../../auth/AuthContext';
+import getOrderRequest from '../../requests/GetOrder';
 
 
 const BaseTable = ({ data }) => {
     const columns = React.useMemo(
         () => [
-            { Header: "담당자", accessor: "member" },
+            { Header: "담당자", accessor: "employeeId" },
             { Header: "주문번호", accessor: "orderId" },
-            { Header: "주문상태", accessor: "orderStatus" },
-            { Header: "등록일", accessor: "registerDate" },
-            { Header: "납기일", accessor: "dueDate" },
+            { Header: "주문상태", accessor: "status" },
+            { Header: "등록일", accessor: "createdAt" },
+            { Header: "납기일", accessor: "requestDate" },
             { Header: "고객사 명", accessor: "buyerNm" },
-            { Header: "고객 코드", accessor: "buyerCd" },
-            { Header: "제품 명", accessor: "itemNm" },
-            { Header: "수량", accessor: "quantity" },
-            { Header: "제품 단가", accessor: "unitPrice" },
-            { Header: "총금액", accessor: "totalPrice" },
+            { Header: "고객 코드", accessor: "buyerCD" },
+            { Header: "제품 코드", accessor: row => row.orderItems[0]?.itemCD || "" },
+            { Header: "수량", accessor: row => row.orderItems[0]?.quantity || 0 },
+            { Header: "제품 단가", accessor: row => row.orderItems[0]?.unitPrice || 0 },
+            { Header: "총금액", accessor: row => {
+                const item = row.orderItems[0];
+                if (item) {
+                    return (item.unitPrice || 0) * (item.quantity || 0);
+                }
+                return ;
+            } },
         ],
         []
     );
@@ -39,10 +46,11 @@ const OrderApprovalPage = () => {
     const { state } = useAuth();
     const [optionSelect, setOptionSelect] = useState('orderId');
     const [keyword, setKeyword] = useState('');
+    const [orders, setOrders] = useState([]);
 
 
     const data = [
-        { selection: false, member: "홍길동", orderId: "12345", orderStatus: "처리중", registerDate: "2024-09-01", dueDate: "2024-09-15", buyerNm: "고객사A", buyerCd: "C001", itemNm: "제품A", quantity: 10, unitPrice: 50000, totalPrice: 500000 },
+        { selection: false, member: "홍길동", orderId: "12345", status: "처리중", createdAt: "2024-09-01", requestDate: "2024-09-15", buyerNm: "고객사A", buyerCD: "C001", itemCD: "제품A", quantity: 10, unitPrice: 50000, totalPrice: 500000 },
         // 추가 데이터...
     ];
 
@@ -55,15 +63,19 @@ const OrderApprovalPage = () => {
     };
 
     const handleGetOrdersAll = () => {
-        if(optionSelect === 'orderId'){
-            getOrderAllRequest(state, null, null, null, optionSelect, null, null, page, 10)
+        console.log(keyword);
+        if (optionSelect === 'orderId') {
+            setIsLoading(true);
+            getOrderAllRequest(state, null, null, null, keyword, null, null, page, 10, setOrders, setIsLoading);
+        } else if( optionSelect === 'buyerCd'){
+            
         }
     }
 
     return (
         <div>
             <Header />
-            <div className='app-container'>
+            <div className='app-csontainer'>
                 <Sidebar />
                 <div className='app-content-container'>
                     <div className='tab-container'>
@@ -90,27 +102,51 @@ const OrderApprovalPage = () => {
                                         optionSelect={optionSelect} setOptionSelect={setOptionSelect}
                                         keyword={keyword} setKeyword={setKeyword}>
                                     </OrderDatepickerSelect>
-                                    <BaseTable data={data} />
+                                    {isLoading ? (
+                                        <div />
+                                    ) : (
+                                        <BaseTable data={orders?.data || []} />
+                                    )}
                                 </TabPanel>
                                 <TabPanel>
                                     <h2>견적요청</h2>
-                                    <BaseTable data={data} />
+                                    {isLoading ? (
+                                        <div />
+                                    ) : (
+                                        <BaseTable data={orders?.data || []} />
+                                    )}
                                 </TabPanel>
                                 <TabPanel>
                                     <h2>발주요청</h2>
-                                    <BaseTable data={data} />
+                                    {isLoading ? (
+                                        <div />
+                                    ) : (
+                                        <BaseTable data={orders?.data || []} />
+                                    )}
                                 </TabPanel>
                                 <TabPanel>
                                     <h2>Completed Orders</h2>
-                                    <BaseTable data={data} />
+                                    {isLoading ? (
+                                        <div />
+                                    ) : (
+                                        <BaseTable data={orders?.data || []} />
+                                    )}
                                 </TabPanel>
                                 <TabPanel>
                                     <h2>취소된 주문</h2>
-                                    <BaseTable data={data} />
+                                    {isLoading ? (
+                                        <div />
+                                    ) : (
+                                        <BaseTable data={orders?.data || []} />
+                                    )}
                                 </TabPanel>
                                 <TabPanel>
                                     <h2>Returned Orders</h2>
-                                    <BaseTable data={data} />
+                                    {isLoading ? (
+                                        <div />
+                                    ) : (
+                                        <BaseTable data={orders?.data || []} />
+                                    )}
                                 </TabPanel>
                             </div>
                         </Tabs>
@@ -118,7 +154,7 @@ const OrderApprovalPage = () => {
                     {isLoading ? <div /> : <PageContainer
                         currentPage={page}
                         setPage={setPage}
-                        pageInfo={data.pageInfo}
+                        pageInfo={orders.pageInfo}
                         getPage={() => { }}
                     ></PageContainer>}
                 </div>
