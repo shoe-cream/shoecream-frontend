@@ -120,81 +120,81 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
     );
 
     return (
-        <div className='product-search'>
-            <table>
-                <tbody>
-                    <tr>
-                        <td className='title'>고객코드</td>
-                        <td>
-                            <div className='divSearch'>
-                                <input
-                                    type='text'
-                                    id='buyerCd'
-                                    className='orderPostInput'
-                                    value={searchParams.buyerCd}
-                                    onChange={handleChange}
-                                />
-                                <button
-                                    id='searchBuyer'
-                                    className='search-button'
-                                    onClick={handleBuyerSearch}
-                                >
-                                    <img src='/icons/zoom.png' alt='Search' className='search-icon' />
-                                </button>
-                            </div>
-                        </td>
-                        <td className='title'>제품코드</td>
-                        <td>
-                            <div className='divSearch'>
-                                {
-                                    isLoading ? <div></div> :
-                                        <select
-                                            className='buyerItemDropDown'
-                                            value={selectedItemCd}
-                                            onChange={handleSelectChange}
-                                        >
-                                            <option value="">Select an item</option>
-                                            {buyers.data.buyerItems.map((value, index) => (
-                                                <option key={index} value={value.itemCd}>{value.itemCd}</option>
-                                            ))}
-                                        </select>
-                                }
-                            </div>
-                        </td>
-                        <td className='title'>사이즈</td>
-                        <td><input type='text' id='size' className='orderPostInput' value={findItem ? findItem.data.size : ''} onChange={handleChange} /></td>
-                    </tr>
-                    <tr>
-                        <td className='title'>계약 기간</td>
-                        <td className='order-date'><DateRangePicker /></td>
-                        <td className='title'>제품명</td>
-                        <td><input type='text' id='itemNm' className='orderPostInput' value={findItem ? findItem.data.itemNm : ''} onChange={handleChange} /></td>
-                        <td className='title'>재고량</td>
-                        <td><input type='text' id='qty' className='orderPostInput' value={searchParams.qty} onChange={handleChange} /></td>
-                    </tr>
-                    <tr>
-                        <td className='title'>고객사</td>
-                        <td><input type='text' id='buyerNm' className='orderPostInput' value={buyers.data.buyerNm} onChange={handleChange} /></td>
-                        <td className='title'>품목</td>
-                        <td><input type='text' id='category' className='orderPostInput' value={findItem ? findItem.data.category : ''} onChange={handleChange} /></td>
-                        <td className='title'>제품 단가</td>
-                        <td><input type='text' id='unitPrice' className='orderPostInput' value={buyerItemUnitPrice ? buyerItemUnitPrice : ''} onChange={handleChange} /></td>
-                    </tr>
-                    <tr>
-                        <td className='title'>고객사 연락처</td>
-                        <td><input type='text' id='tel' className='orderPostInput' value={buyers.data.tel} onChange={handleChange} /></td>
-                        <td className='title'>색상</td>
-                        <td><input type='text' id='color' className='orderPostInput' value={findItem ? findItem.data.color : ''} onChange={handleChange} /></td>
-                        <td className='title'>수량 단위</td>
-                        <td><input type='text' id='unit' className='orderPostInput' value={findItem ? findItem.data.unit : ''} onChange={handleChange} /></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div className='button-container'>
-                <button className='load-btn' onClick={handleFetch}>불러오기</button>
-            </div>
+    <div className='product-search'>
+        <table>
+            <tbody>
+                <tr>
+                    <td className='title special-cell'>고객코드</td>
+                    <td>
+                        <div className='divSearch'>
+                            <input
+                                type='text'
+                                id='buyerCd'
+                                className='orderPostInput'
+                                value={searchParams.buyerCd}
+                                onChange={handleChange}
+                            />
+                            <button
+                                id='searchBuyer'
+                                className='search-button'
+                                onClick={handleBuyerSearch}
+                            >
+                                <img src='/icons/zoom.png' alt='Search' className='search-icon' />
+                            </button>
+                        </div>
+                    </td>
+                    <td className='title special-cell'>제품코드</td>
+                    <td>
+                        <div className='divSearch'>
+                            {
+                                isLoading ? <input className='orderPostInput' value={''}></input> :
+                                    <select
+                                        className='buyerItemDropDown'
+                                        value={selectedItemCd}
+                                        onChange={handleSelectChange}
+                                    >
+                                        <option value="">Select an item</option>
+                                        {buyers.data.buyerItems.map((value, index) => (
+                                            <option key={index} value={value.itemCd}>{value.itemCd}</option>
+                                        ))}
+                                    </select>
+                            }
+                        </div>
+                    </td>
+                    <td className='title special-cell'>사이즈</td>
+                    <td><input type='text' id='size' className='orderPostInput' value={findItem ? findItem.data.size : ''} onChange={handleChange} /></td>
+                </tr>
+                <tr>
+                    <td className='title special-cell'>계약 기간</td>
+                    <td className='order-date'><DateRangePicker /></td>
+                    <td className='title special-cell'>제품명</td>
+                    <td><input type='text' id='itemNm' className='orderPostInput' value={findItem ? findItem.data.itemNm : ''} onChange={handleChange} /></td>
+                    <td className='title special-cell'>재고량</td>
+                    <td><input type='text' id='qty' className='orderPostInput' value={searchParams.qty} onChange={handleChange} /></td>
+                </tr>
+                <tr>
+                    <td className='title special-cell'>고객사</td>
+                    <td><input type='text' id='buyerNm' className='orderPostInput' value={buyers.data.buyerNm} onChange={handleChange} /></td>
+                    <td className='title special-cell'>품목</td>
+                    <td><input type='text' id='category' className='orderPostInput' value={findItem ? findItem.data.category : ''} onChange={handleChange} /></td>
+                    <td className='title special-cell'>제품 단가</td>
+                    <td><input type='text' id='unitPrice' className='orderPostInput' value={buyerItemUnitPrice ? buyerItemUnitPrice : ''} onChange={handleChange} /></td>
+                </tr>
+                <tr>
+                    <td className='title special-cell'>고객사 연락처</td>
+                    <td><input type='text' id='tel' className='orderPostInput' value={buyers.data.tel} onChange={handleChange} /></td>
+                    <td className='title special-cell'>색상</td>
+                    <td><input type='text' id='color' className='orderPostInput' value={findItem ? findItem.data.color : ''} onChange={handleChange} /></td>
+                    <td className='title special-cell'>수량 단위</td>
+                    <td><input type='text' id='unit' className='orderPostInput' value={findItem ? findItem.data.unit : ''} onChange={handleChange} /></td>
+                </tr>
+            </tbody>
+        </table>
+        <div className='button-container'>
+            <button className='load-btn' onClick={handleFetch}>불러오기</button>
         </div>
-    );
+    </div>
+);
 }
 
 export default ProductSearch;

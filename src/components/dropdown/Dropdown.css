@@ -1,6 +1,7 @@
 .dropdown{
     display: flex;
     flex-direction: column;
+    
 }
 .dropdown-title{  
     height: 40px;
@@ -11,25 +12,40 @@
     justify-content: space-between;
     align-items: center;
     cursor:pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
 }
 .dropdown-title-text{
     margin-left: 15px;
     color: #585858;
     font-size: 15px;
 }
-.dropdown-arrow{
-    height: 70%;
+
+/* 드롭다운 화살표 */
+.dropdown-arrow {
+    width: 20px;
+    height: 20px;
 }
+
 .dropdown-content{
     background-color: #e4ebf7;
-    /* border-radius: 5px; */
-    border: none;
+    border-radius: 5px;
     margin-left: 20px;
     height: 30px;
-    /* border-top: 1px solid #ecf0f5;
-    border-bottom: 1px solid #ecf0f5; */
+    border-top: 0.5px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
+    border-bottom: 0.5px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
+    border-left: none; /* 좌측 구분선 제거 */
+    border-right: none; /* 우측 구분선 제거 */
     cursor:pointer;
 }
+
+/* 드롭다운 타이틀 마우스오버 색상  */
+.dropdown-title:hover {
+    background-color: #b8a7fb;
+    color: white;
+  }
+
+/* 드롭다운 컨탠트 마우스오버 색상  */
 .dropdown-content:hover{
-    background-color: #d1dae7;
+    background-color: #b8a7fb;
 }
