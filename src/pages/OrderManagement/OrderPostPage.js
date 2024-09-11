@@ -32,10 +32,6 @@
         };
 
         const handleRegisterOrder = () => {
-            if (!registrationDate) {
-                alert('등록일자를 선택해주세요.');
-                return;
-            }
 
         const orderItemDtoList = orderData.map(order => {
             const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');

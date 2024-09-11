@@ -4,6 +4,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import './CancelledOrdersPage.css';
 import DateRangePicker from '../../components/datepicker/DateRangePicker';
+import getOrderAllRequest from '../../requests/GetOrders';
 
 const CancelledOrdersPage = () => {
     // 테이블의 열 정의
@@ -33,6 +34,12 @@ const CancelledOrdersPage = () => {
         []
     );
 
+    // const [orders, setOrders] = useState([]);
+    // const [keyword, setKeyword] = useState('');
+    // const [isLoading, setIsLoading] = useState(true);
+    // const { state } = useAuth();
+
+
     const handleExportToExcel = () => {
         console.log("Export to Excel");
     };
@@ -42,7 +49,8 @@ const CancelledOrdersPage = () => {
     };
 
     const handleSearch = () => {
-        console.log("Search");
+        
+        
     };
 
     return (

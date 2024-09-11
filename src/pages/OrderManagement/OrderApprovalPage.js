@@ -13,26 +13,8 @@ import { useAuth } from '../../auth/AuthContext';
 import getOrderRequest from '../../requests/GetOrder';
 
 
-const BaseTable = ({ data }) => {
-    const columns = React.useMemo(
-        () => [
-            { Header: "담당자", accessor: "employeeId" },
-            { Header: "주문번호", accessor: "orderId" },
-            { Header: "주문상태", accessor: "status" },
-            { Header: "등록일", accessor: "createdAt" },
-            { Header: "납기일", accessor: "requestDate" },
-            { Header: "고객사 명", accessor: "buyerNm" },
-            { Header: "고객 코드", accessor: "buyerCd" },
-            { Header: "제품 코드", accessor: "itemCd" },
-            { Header: "수량", accessor: "qty" },
-            { Header: "제품 단가", accessor: "unitPrice" },
-            { Header: "총금액", accessor: "totalPrice" },
-        ],
-        []
-    );
 
-    return <ReactTableWithCheckbox columns={columns} data={data} />;
-}
+
 
 
 const transformData = (orders) => {
@@ -54,6 +36,7 @@ const OrderApprovalPage = () => {
     const [optionSelect, setOptionSelect] = useState('orderId');
     const [keyword, setKeyword] = useState('');
     const [orders, setOrders] = useState([]);
+    const [checked, setChecked] = useState([]);
 
 
     const data = [
@@ -72,6 +55,28 @@ const OrderApprovalPage = () => {
     useEffect(() => {
         getOrderAllRequest(state,null,null,null,null,null,null,page,10,setOrders, setIsLoading)
     },[])
+
+    const BaseTable = ({ data }) => {
+        const columns = React.useMemo(
+            () => [
+                { Header: "담당자", accessor: "employeeId" },
+                { Header: "주문번호", accessor: "orderId" },
+                { Header: "주문상태", accessor: "status" },
+                { Header: "등록일", accessor: "createdAt" },
+                { Header: "납기일", accessor: "requestDate" },
+                { Header: "고객사 명", accessor: "buyerNm" },
+                { Header: "고객 코드", accessor: "buyerCd" },
+                { Header: "제품 코드", accessor: "itemCd" },
+                { Header: "수량", accessor: "qty" },
+                { Header: "제품 단가", accessor: "unitPrice" },
+                { Header: "총금액", accessor: "totalPrice" },
+            ],
+            []
+        );
+    
+        return <ReactTableWithCheckbox columns={columns} data={data} checked={checked} setChecked={setChecked}/>;
+    }
+
 
     const handleGetOrdersAll = () => {
         console.log(keyword);

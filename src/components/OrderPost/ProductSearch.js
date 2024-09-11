@@ -80,10 +80,7 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
             unitPrice : buyerItemUnitPrice,
             category : findItem.data.category
         });
-        if (!registrationDate) {
-            alert('등록일자를 선택해주세요.');
-            return;
-        }
+   
         // 폼 필드 초기화
         setSearchParams({
             buyerNm: '',
