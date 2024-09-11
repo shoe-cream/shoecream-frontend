@@ -5,9 +5,9 @@
 }
 .dropdown-title{  
     height: 40px;
-    background-color: rgb(255, 255, 255);
-    /* border: none; */
-    /* border-radius: 10px; */
+    background-color:#FFFFFF;
+    border-top: 0.5px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
+    border-bottom: 0.5px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -17,7 +17,7 @@
 }
 .dropdown-title-text{
     margin-left: 15px;
-    color: #585858;
+    color: #313131;
     font-size: 15px;
 }
 
@@ -42,7 +42,7 @@
 /* 드롭다운 타이틀 마우스오버 색상  */
 .dropdown-title:hover {
     background-color: #b8a7fb;
-    color: white;
+  
   }
 
 /* 드롭다운 컨탠트 마우스오버 색상  */

@@ -50,28 +50,28 @@ const ReactTableWithCheckbox = ({ columns, data, checked, setChecked }) => {
   } = useTable({ columns: allColumns, data });
 
   return (
-    <table {...getTableProps()}>
+    <table {...getTableProps()} className="react-table">
       <thead>
         {headerGroups.map(headerGroup => (
-          <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
+          <tr className='table-header-row' {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
+              <th className='table-header-cell' {...column.getHeaderProps()}>{column.render('Header')}</th>
             ))}
           </tr>
         ))}
       </thead>
       <tbody className="table-body" {...getTableBodyProps()}>
-  {rows.map(row => {
-    prepareRow(row);
-    return (
-      <tr className="table-row" {...row.getRowProps()}>
-        {row.cells.map(cell => (
-          <td className="table-cell" {...cell.getCellProps()}>{cell.render('Cell')}</td>
-        ))}
-      </tr>
-    );
-  })}
-</tbody>
+        {rows.map(row => {
+          prepareRow(row);
+          return (
+            <tr className="table-body-row" {...row.getRowProps()}>
+              {row.cells.map(cell => (
+                <td className="table-body-cell" {...cell.getCellProps()}>{cell.render('Cell')}</td>
+              ))}
+            </tr>
+          );
+        })}
+      </tbody>
     </table>
   );
 };
