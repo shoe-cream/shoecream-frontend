@@ -105,12 +105,11 @@ const ItemPostPage = () => {
                                         for(let i = 0; i< checkedAndEdited.length; i++){
                                             requestBody.push(items.data[checkedAndEdited[i]]);
                                         }
-                                        /* console.log('requestBody: ', requestBody); */
+                                        console.log('requestBody: ', requestBody);
                                         sendPatchMultiItemRequest(state, requestBody, () => {
                                             sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
                                             setChecked([]);
                                         });
-
                                     }}>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
@@ -140,7 +139,7 @@ const ItemPostPage = () => {
                             setPage={setPage}
                             pageInfo={items.pageInfo}
                             getPage={(page) => {
-                                sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading)
+                                sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
                             }}
                             setChecked={(value) => setChecked(value)}
                             setIsLoading={setIsLoading}
