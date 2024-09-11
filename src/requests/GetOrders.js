@@ -32,7 +32,7 @@ const getOrderAllRequest = async (state, buyerCd, itemCd, orderStatus, orderId, 
         }
     } catch (error) {
         console.error('Error fetching buyer data:', error);
-        Swal.fire({ text: '해당되는 고객코드는 없어요' });
+        Swal.fire({ text: '해당되는 주문이 없어요' });
     }
 };
 

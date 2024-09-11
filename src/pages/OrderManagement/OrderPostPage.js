@@ -37,18 +37,19 @@
                 return;
             }
 
-            const orderItemDtoList = orderData.map(order => {
-                const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');
-        
-                return {
-                    itemCD: order.itemCd,
-                    unitPrice: order.unitPrice,
-                    quantity: order.quantity,
-                    startDate: convertToLocalDateTime(startDateStr.trim()),
-                    endDate: convertToLocalDateTime(endDateStr.trim()),
-                    unit: order.unit
-                };
-            });
+        const orderItemDtoList = orderData.map(order => {
+            const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');
+    
+            return {
+                itemCd: order.itemCd,
+                unitPrice: order.unitPrice,
+                qty: order.quantity,
+                startDate: convertToLocalDateTime(startDateStr.trim()),
+                endDate: convertToLocalDateTime(endDateStr.trim()),
+                unit: order.unit
+            };
+        });
+
 
             const buyerCd = orderData.length > 0 ? orderData[0].buyerCd : ''; 
             sendPostOrder(state, buyerCd, requestDate+"T00:00:00.000", orderItemDtoList);

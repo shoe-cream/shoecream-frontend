@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs';
@@ -22,23 +22,30 @@ const BaseTable = ({ data }) => {
             { Header: "등록일", accessor: "createdAt" },
             { Header: "납기일", accessor: "requestDate" },
             { Header: "고객사 명", accessor: "buyerNm" },
-            { Header: "고객 코드", accessor: "buyerCD" },
-            { Header: "제품 코드", accessor: row => row.orderItems[0]?.itemCD || "" },
-            { Header: "수량", accessor: row => row.orderItems[0]?.quantity || 0 },
-            { Header: "제품 단가", accessor: row => row.orderItems[0]?.unitPrice || 0 },
-            { Header: "총금액", accessor: row => {
-                const item = row.orderItems[0];
-                if (item) {
-                    return (item.unitPrice || 0) * (item.quantity || 0);
-                }
-                return ;
-            } },
+            { Header: "고객 코드", accessor: "buyerCd" },
+            { Header: "제품 코드", accessor: "itemCd" },
+            { Header: "수량", accessor: "qty" },
+            { Header: "제품 단가", accessor: "unitPrice" },
+            { Header: "총금액", accessor: "totalPrice" },
         ],
         []
     );
 
     return <ReactTableWithCheckbox columns={columns} data={data} />;
 }
+
+
+const transformData = (orders) => {
+    return orders.flatMap(order =>
+        order.orderItems.map(item => ({
+            ...order,
+            itemCd: item.itemCd,
+            qty: item.qty,
+            unitPrice: item.unitPrice,
+            totalPrice: (item.unitPrice || 0) * (item.qty || 0)  // totalPrice 계산
+        }))
+    );
+};
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -62,15 +69,56 @@ const OrderApprovalPage = () => {
         window.print();
     };
 
+    useEffect(() => {
+        getOrderAllRequest(state,null,null,null,null,null,null,page,10,setOrders, setIsLoading)
+    },[])
+
     const handleGetOrdersAll = () => {
         console.log(keyword);
         if (optionSelect === 'orderId') {
             setIsLoading(true);
             getOrderAllRequest(state, null, null, null, keyword, null, null, page, 10, setOrders, setIsLoading);
-        } else if( optionSelect === 'buyerCd'){
-            
+        } else if (optionSelect === 'buyerCd') {
+            setIsLoading(true);
+            getOrderAllRequest(state, keyword, null, null, null, null, null, page, 10, setOrders, setIsLoading);
+        } else if (optionSelect === 'date') {
+            setIsLoading(true);
+            getOrderAllRequest(state, null, null, null, null, keyword, null, page, 10, setOrders, setIsLoading);
+            if (setOrders) {
+                getOrderAllRequest(state, null, null, null, null, null, keyword, page, 10, setOrders, setIsLoading);
+            } else {
+                alert("날자 안에 주문이 없습니다.");
+            }
+        } else if (optionSelect === 'itemCd') {
+            setIsLoading(true);
+            getOrderAllRequest(state, null, keyword, null, null, null, null, page, 10, setOrders, setIsLoading);
         }
     }
+
+    const handleTabSelect = (index) => {
+        if(index === 0){
+            setIsLoading(true);
+            getOrderAllRequest(state, null , null, null,null,null,null,page,10, setOrders,setIsLoading);
+        }
+        else if(index === 1){
+            setIsLoading(true);
+            getOrderAllRequest(state, null , null, 'REQUEST_TEMP' ,null,null,null,page,10, setOrders,setIsLoading);
+        }
+        else if(index === 2){
+            setIsLoading(true);
+            getOrderAllRequest(state, null , null,'PURCHASE_REQUEST',null,null,null,page,10, setOrders,setIsLoading);
+
+        }else if(index === 3){
+            setIsLoading(true);
+            getOrderAllRequest(state, null , null,'APPROVED', null,null,null,page,10, setOrders,setIsLoading);
+        }else if(index === 4){
+            setIsLoading(true);
+            getOrderAllRequest(state, null , null,'CANCELLED', null,null,null,page,10, setOrders,setIsLoading);
+        }else if(index ===5){
+            setIsLoading(true);
+            getOrderAllRequest(state, null , null,'REJECTED', null,null,null,page,10, setOrders,setIsLoading);
+        }
+    };
 
     return (
         <div>
@@ -79,7 +127,7 @@ const OrderApprovalPage = () => {
                 <Sidebar />
                 <div className='app-content-container'>
                     <div className='tab-container'>
-                        <Tabs>
+                        <Tabs onSelect={handleTabSelect}>
                             <div className='tab-list-container'>
                                 <TabList>
                                     <Tab>전체주문조회</Tab>
@@ -105,7 +153,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={orders?.data || []} />
+                                        <BaseTable data={transformData(orders?.data || [])} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -113,7 +161,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={orders?.data || []} />
+                                        <BaseTable data={transformData(orders?.data || [])} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -121,7 +169,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={orders?.data || []} />
+                                        <BaseTable data={transformData(orders?.data || [])} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -129,7 +177,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={orders?.data || []} />
+                                        <BaseTable data={transformData(orders?.data || [])} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -137,7 +185,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={orders?.data || []} />
+                                        <BaseTable data={transformData(orders?.data || [])} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -145,7 +193,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={orders?.data || []} />
+                                        <BaseTable data={transformData(orders?.data || [])} />
                                     )}
                                 </TabPanel>
                             </div>
@@ -155,7 +203,7 @@ const OrderApprovalPage = () => {
                         currentPage={page}
                         setPage={setPage}
                         pageInfo={orders.pageInfo}
-                        getPage={() => { }}
+                        getPage={() => {handleGetOrdersAll()}}
                     ></PageContainer>}
                 </div>
             </div>
