@@ -1,33 +1,41 @@
 .header-container{
-    width: 90%;
+    width: 100%;
     height: 45px;
     margin: 0 auto;
-    display: flex;
+    margin-bottom: 5px; /* 컴포넌트 밑 여백 */ 
+    display: flex; /* 자식들의 가로 방향으로 정렬됨 */
+    /* flex-direction: column; 애는 세로로 바뀜 */
     justify-content: space-between;
-    border-bottom: 2px solid rgb(216, 216, 216);
+    border-bottom: 2px solid rgb(142, 175, 238);    
+    align-items: center; /* 자식들의 flex수직방향 정렬 기준 정해줌 */
 }
 .header-logo{
-    height: 100%;
-    margin-left: 40px;
-    /* margin-right: 60%; */
+    height: 78%; /* 크기 조정 */
+    /* margin-left: 1px; */
     cursor: pointer;
+    /* width: 170px;  양옆 크기조절 */ 
 }
 .header-userinfo-container{
     display: flex;
     width: 200px;
     align-items: center;
+
 }
 .header-welcome-text{
-    width: 100px;
+    width: auto;
 }
-.header-profile-icon{
+.header-profile-icon {
     cursor: pointer;
-    height: 100%;
+    height: 40px; /* 고정된 높이를 설정해 아이콘이 일정한 크기를 유지하도록 */
+    width: auto;  /* 아이콘의 너비는 비율에 맞게 자동 조정 */
 }
-.header-logout-icon{
+
+.header-logout-icon {
     cursor: pointer;
-    height: 100%;
+    height: 40px; /* 고정된 높이로 설정 */
+    width: auto;  /* 너비를 비율에 맞게 자동 조정 */
 }
+
 .header-login-button{
     font-size: 15px;
     font-weight: bold;
@@ -38,7 +46,7 @@
     width: 100px;
     height: 40px;
     margin-left: auto;
-    margin-right: 5px;
+    margin-right: 22px;
     cursor: pointer;
 }
 .header-login-button:hover{

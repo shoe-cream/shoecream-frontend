@@ -38,11 +38,11 @@ const getPageRange = (currentPage, pageInfo) => {
         array.push(i);
     }
     // 최종 배열 생성
-    console.log('array: ', array);
+    /* console.log('array: ', array); */
     return array;
 }
 
-const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setPageOriginal }) => {
+const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, setPageOriginal }) => {
     const [range, setRange] = useState(getPageRange(currentPage, pageInfo));
 
     useEffect(() => {
@@ -51,23 +51,24 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setPageOrigina
         }
     }, [currentPage, pageInfo] );
 
+    const changePage = (newPage) => {
+        getPage(newPage);
+        setPage(newPage);
+        if(setChecked !== undefined){
+            setChecked([]);
+        }
+        if(setPageOriginal !== undefined){
+            setPageOriginal(newPage);
+        }
+    }
+
     return (
         <div className="page-container">
             <button className='page-button' onClick={() => {
-                getPage(1);
-                setPage(1);
-                if(setPageOriginal !== undefined){
-                    setPageOriginal(1);
-                } 
+                changePage(1);
             }}>{'<<'}</button>
             <button className='page-button' onClick={() => {
-                if(currentPage > 1){
-                    getPage(currentPage - 1);
-                    setPage(currentPage - 1);
-                    if(setPageOriginal !== undefined){
-                        setPageOriginal(currentPage - 1);
-                    } 
-                }
+                changePage(currentPage - 1);
                 }}>{'<'}</button>
             <div>
                 {range.map((value)=> <button 
@@ -76,31 +77,19 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setPageOrigina
                     if(currentPage === value){
                         return;
                     }
-                    console.log('value: ', value);
-                    getPage(value);
-                    setPage(value);
-                    if(setPageOriginal !== undefined){
-                        setPageOriginal(value);
-                    }
+                    /* console.log('value: ', value); */
+                    changePage(value);
                 }}
                 style={{color: currentPage === value ? '#a883b5' : 'black', fontWeight: currentPage === value ? 'bold' : 100}}
                 >{value}</button>)}
             </div>
             <button className='page-button' onClick={() => {
                 if(currentPage < pageInfo.totalPage){
-                    getPage(currentPage + 1);
-                    setPage(currentPage + 1);
-                    if(setPageOriginal !== undefined){
-                        setPageOriginal(currentPage + 1);
-                    }
+                    changePage(currentPage + 1);
                 }
                 }}>{'>'}</button>
             <button className='page-button' onClick={() => {
-            getPage(pageInfo.totalPage);
-            setPage(pageInfo.totalPage);
-            if(setPageOriginal !== undefined){
-                setPageOriginal(pageInfo.totalPage);
-            } 
+                changePage(pageInfo.totalPage);
             }}>{'>>'}</button>
         </div>
     );

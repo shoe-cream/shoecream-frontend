@@ -3,7 +3,7 @@ import axios from "axios";
 const sendGetMyInfoRequest = async(state, setData, setIsLoading) => {
     try{
         console.log('state: ', state);
-        const response = await axios.get('http://localhost:8080/members/myinfo',
+        const response = await axios.get('http://localhost:8080/members/my-info',
             {
                 headers: {
                     'Content-Type': 'application/json',
