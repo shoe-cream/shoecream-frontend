@@ -170,6 +170,7 @@ const ItemPostPage = () => {
                                 sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading)
                             }}
                             setChecked={(value) => setChecked(value)}
+                            reloading = {() => setIsLoading(true)}
                         ></PageContainer>}
                         {isPostMode ? <PostModal 
                             state = {state} 

@@ -42,7 +42,7 @@ const getPageRange = (currentPage, pageInfo) => {
     return array;
 }
 
-const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, setPageOriginal }) => {
+const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, setPageOriginal, reloading }) => {
     const [range, setRange] = useState(getPageRange(currentPage, pageInfo));
 
     useEffect(() => {
@@ -52,6 +52,9 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, se
     }, [currentPage, pageInfo] );
 
     const changePage = (newPage) => {
+        if(reloading !== undefined){
+            reloading();
+        }
         getPage(newPage);
         setPage(newPage);
         if(setChecked !== undefined){
