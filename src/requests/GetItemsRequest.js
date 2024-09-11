@@ -24,7 +24,9 @@ const sendGetItemsRequest = async (state ,page, setPage, size, setData, setIsLoa
             }
             console.log('제품 정보 GET요청 성공: ', response.data);
             setData(response.data);
-            setIsLoading(false);
+            if(setIsLoading !== undefined){
+                setIsLoading(false);
+            }
         } else {
             console.log('제품 정보 GET요청 실패');
         }

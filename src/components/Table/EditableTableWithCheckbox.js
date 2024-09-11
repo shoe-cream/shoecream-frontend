@@ -5,14 +5,31 @@ import './ReactTable.css';
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   const [tableData, setTableData] = useState(data.data);
 
+  console.log('ogData: ', ogData);
+
   useEffect(() => {
     setTableData(data.data);
-  },[ogData]);
+  }, [ogData]);
 
-  /* console.log('ogData: ', ogData);
-  console.log('tableData: ', tableData); */
+  useEffect(() => {
+    // Update edited state whenever tableData or ogData changes
+    const updatedEdited = tableData.map((row, index) => {
+      const ogRow = ogData.data[index];
+      if (ogRow) {
+        for (const key in ogRow) {
+          if (ogRow.hasOwnProperty(key) && row.hasOwnProperty(key)) {
+            if (ogRow[key] != row[key]) {
+              return index; // Return index of edited row
+            }
+          }
+        }
+      }
+      return null;
+    }).filter(index => index !== null);
 
-  // 체크박스를 렌더링하는 셀 컴포넌트
+    setEdited(updatedEdited);
+  }, [tableData, ogData]);
+
   const CheckboxCell = ({ row }) => (
     <input
       type="checkbox"
@@ -30,11 +47,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id } }) => {
     const [value, setValue] = React.useState(initialValue);
-  
+
     const onChange = (e) => {
       setValue(e.target.value);
     };
-  
+
     const onBlur = () => {
       const newData = [...tableData];
       if (!newData[index]) {
@@ -47,11 +64,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
       setTableData(newData);
       setData({ ...data, data: newData });
     };
-  
+
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue]);
-  
+
     return (
       <input
         className='cell-input'
@@ -63,7 +80,6 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     );
   });
 
-  // 컬럼에 체크박스 컬럼 추가 및 모든 셀을 input으로 변경
   const allColumns = React.useMemo(() => [
     {
       id: 'selection',
@@ -102,7 +118,6 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     prepareRow,
   } = useTable({ columns: allColumns, data: tableData });
 
-  // 행의 클래스 이름을 결정하는 함수
   const getRowClassName = (row) => {
     const rowIndex = row.index;
 
@@ -119,20 +134,13 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     for (const key in ogRow) {
         if (ogRow.hasOwnProperty(key) && tableRow.hasOwnProperty(key)) {
             if (ogRow[key] != tableRow[key]) {
-              console.log('edited in component: ', edited);
-              if(Array.isArray(edited) && !edited.includes(row)){
-                const newArray = [...edited, row];
-                setEdited(newArray);
-              }
               return 'body-r-edited'; // 데이터가 다를 때 -edited 클래스 붙임
             }
         }
     }
-    /* const newArray = edited.filter(item => item != row);
-    setEdited(newArray); */
-    return 'body-r'; // 값이 모두 동일하면 기본 클래스
-};
 
+    return 'body-r'; // 값이 모두 동일하면 기본 클래스
+  };
 
   return (
     <table {...getTableProps()}>
