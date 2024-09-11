@@ -31,7 +31,8 @@ const ItemPostPage = () => {
     const [isPostMode, setIsPostMode] = useState(false);
     const [edited, setEdited] = useState([]);
 
-    console.log('edited: ', edited);
+    /* console.log('edited: ', edited); */
+    console.log('items in page: ', items);
 
     const handleRowSelect = (rowId) => {
         setChecked(prev => 
@@ -176,7 +177,7 @@ const ItemPostPage = () => {
                             columnData={columnData}
                             page={page}
                             setPage={setPage}
-                            setParentData={(value) => setItems(value)}
+                            setParentData={(value) => resetData(value)}
                         ></PostModal> : <div/>}
                     </div>
                 </div>
