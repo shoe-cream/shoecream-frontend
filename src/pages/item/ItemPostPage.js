@@ -123,7 +123,7 @@ const ItemPostPage = () => {
                                         }}>삭제</button>
                                 </div>
                             </div>
-                            {isLoading ? <div/> : <EditableTableWithCheckbox 
+                            <EditableTableWithCheckbox 
                                 columns={columnData} 
                                 ogData={dbItems}
                                 data={items} 
@@ -133,7 +133,7 @@ const ItemPostPage = () => {
                                 edited = {edited}
                                 setEdited={setEdited}
                                 >
-                            </EditableTableWithCheckbox>}
+                            </EditableTableWithCheckbox>
                         </div>
                         {isLoading ? <div/> : <PageContainer 
                             currentPage={page} 
@@ -143,6 +143,7 @@ const ItemPostPage = () => {
                                 sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading)
                             }}
                             setChecked={(value) => setChecked(value)}
+                            setIsLoading={setIsLoading}
                         ></PageContainer>}
                         {isPostMode ? <PostModal 
                             state = {state} 
