@@ -64,11 +64,11 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
             : '';
 
         console.log('Fetching with contractPeriod:', contractPeriod);
-
+        
         onAddOrder({
             ...searchParams,
-            buyerNm: buyers.data.buyerNm,  // 고객사 이름을 추가
-            tel: buyers.data.tel,  // 고객사 연락처를 추가
+            buyerNm: buyers.data.buyerNm, 
+            tel: buyers.data.tel,  
             registrationDate,
             deliveryDate: '',
             contractPeriod,
@@ -80,7 +80,10 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
             unitPrice : buyerItemUnitPrice,
             category : findItem.data.category
         });
-
+        if (!registrationDate) {
+            alert('등록일자를 선택해주세요.');
+            return;
+        }
         // 폼 필드 초기화
         setSearchParams({
             buyerNm: '',

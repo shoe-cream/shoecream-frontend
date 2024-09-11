@@ -7,7 +7,7 @@ const sendPostOrder = async(state, buyerCd, requestDate, orderItemDtoList) => {
         console.log('orderItems',orderItemDtoList);
         const response = await axios.post('http://localhost:8080/orders',
             {
-                "buyerCD": buyerCd,
+                "buyerCd": buyerCd,
                 "requestDate": requestDate,
                 "orderItems": orderItemDtoList
             },
@@ -20,6 +20,7 @@ const sendPostOrder = async(state, buyerCd, requestDate, orderItemDtoList) => {
         );
         if (response.status === 200 || response.status === 201) {
             console.log('주문 등록 성공', response);
+            alert("등록에 성공했습니다.")
         } else {
             console.log('주문 등록 실패: ', response.status);
         }
