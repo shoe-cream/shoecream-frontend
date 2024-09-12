@@ -22,6 +22,7 @@ const OrderApprovalPage = () => {
     const [optionSelect, setOptionSelect] = useState('orderId');
     const [keyword, setKeyword] = useState('');
     const [orders, setOrders] = useState([]);
+    const [transeData, setTranseData] = useState([]);
     const [checkedItems, setCheckedItems] = useState([]);
     const [edited, setEdited] = useState([]);
     const [ogData, setOgData] = useState({data : []});
@@ -56,7 +57,7 @@ const OrderApprovalPage = () => {
                 { Header: "제품 단가", accessor: "unitPrice" },
                 { Header: "총금액", accessor: "totalPrice" },
             ]
-        return <EditableTableWithCheckbox columns={columns} ogData={data} data={data} checked={checkedItems} setChecked={setCheckedItems} edited={edited} setEdited={setEdited} />;
+        return <EditableTableWithCheckbox columns={columns} ogData={ogData} data={data} checked={checkedItems} setChecked={setCheckedItems} edited={edited} setEdited={setEdited} />;
     };
 
     useEffect(() => {
