@@ -18,6 +18,7 @@ const BuyerItemPostPage = () => {
     const [edited, setEdited] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [sortBy, setSortBy] = useState('buyerItemId');
+    const [isPostMode, setIsPostMode] = useState(false);
 
     const columnData = [
         {
@@ -92,8 +93,47 @@ const BuyerItemPostPage = () => {
                                     <option value='modifiedAt'>최신 수정순</option>
                                 </select>
                                 <div className='manufacturer-button-container'>
-                                    <button className='manufacturer-button'>수정</button>
-                                    <button className='manufacturer-button'>삭제</button>
+                                    <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
+                                    <button className='manufacturer-button' onClick={() => {
+                                        console.log('checked: ', checked);
+                                        console.log('edited: ', edited);
+                                        /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
+                                        const checkedAndEdited = Object.keys(edited)
+                                            .filter(key => checked.includes(Number(key)))
+                                            .reduce((acc, key) => {
+                                                acc[key] = edited[key];
+                                                return acc;
+                                            }, {});
+                                        console.log('checkedAndEdited', checkedAndEdited);
+
+                                        let requestBody = [];
+                                        Object.keys(checkedAndEdited).forEach(key => {
+                                            const index = Number(key); // key는 문자열이므로 숫자로 변환
+                                            const buyerId = data.data[index].buyerId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
+                                            const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
+
+                                            // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
+                                            requestBody.push({
+                                                buyerId,
+                                                ...updatedData
+                                            });
+                                        });
+                                        console.log('requestBody: ', requestBody);
+                                        /* sendPatchMultiBuyerRequest(state, requestBody, () => {
+                                            sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+                                            setChecked([]);
+                                        }); */
+                                    }}>수정</button>
+                                    <button className='manufacturer-button'
+                                        onClick={() => {
+                                            console.log('checked: ', checked);
+                                            const checkedData = checked.map(item => data.data[item].buyerId);
+                                            console.log('checkedData: ', checkedData);
+                                            /* sendDeleteBuyersRequest(state, data.pageInfo, checkedData, setChecked, () => {
+                                                sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+                                                setChecked([]);
+                                            }); */
+                                        }}>삭제</button>
                                 </div>
                             </div>
                             <EditableTableWithCheckbox
