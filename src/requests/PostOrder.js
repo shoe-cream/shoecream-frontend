@@ -5,12 +5,15 @@ const sendPostOrder = async(state, buyerCd, requestDate, orderItemDtoList) => {
         console.log('buyerId:', buyerCd);
         console.log('requestDate',requestDate);
         console.log('orderItems',orderItemDtoList);
+
+        const orderPostDtos =[{
+            buyerCd: buyerCd,
+            requestDate: requestDate,
+            orderItems: orderItemDtoList
+        }];
+
         const response = await axios.post('http://localhost:8080/orders',
-            {
-                "buyerCd": buyerCd,
-                "requestDate": requestDate,
-                "orderItems": orderItemDtoList
-            },
+            orderPostDtos,
             {
                 headers: {
                     'Content-Type': 'application/json',

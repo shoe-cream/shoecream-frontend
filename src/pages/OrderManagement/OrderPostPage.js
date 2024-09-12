@@ -49,7 +49,7 @@ const OrderPostPage = () => {
 
         const buyerCd = checkedOrders.length > 0 ? checkedOrders[0].buyerCd : '';
         
-        sendPostOrder(state, buyerCd, requestDate+"T00:00:00.000", orderItemDtoList);
+        sendPostOrder(state, buyerCd, convertToLocalDateTime(requestDate), orderItemDtoList);
     };
 
     return (
