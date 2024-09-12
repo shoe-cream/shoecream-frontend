@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './Modal.css';
 import './PostModal.css';
-import EditableTableWithCheckbox from '../OrderPost/OrderSheet';
+import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import getBuyerJoinItemsRequest from '../../requests/GetBuyerJoinItems';
-import getItemRequest from '../../requests/GetItemRequest'; // getItemRequest를 import합니다.
+import getItemRequest from '../../requests/GetItemRequest';
 import Swal from 'sweetalert2';
+import EditableTableWithCheckboxYoung from '../Table/EditableTableWithCheckboxYoung';
 
 const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     const [buyerItems, setBuyerItems] = useState({ data: [] });
@@ -12,19 +13,20 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     const [checked, setChecked] = useState([]);
     const [edited, setEdited] = useState([]);
     const [itemsDetails, setItemsDetails] = useState({});
-    const [itemsWithDetails, setItemsWithDetails] = useState([]);
+    const [itemsWithDetails, setItemsWithDetails] = useState({ data: [] });
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         const fetchBuyerItems = async () => {
             try {
-                await getBuyerJoinItemsRequest(state, buyerCd, setBuyerItems, 1, 10, setIsLoading); // 페이지와 사이즈 지정
+                await getBuyerJoinItemsRequest(state, buyerCd, setBuyerItems, page, 10, setIsLoading);
             } catch (error) {
                 console.error("Failed to fetch buyer items:", error);
                 Swal.fire({ text: '고객 아이템을 가져오는데 실패했습니다.' });
             }
         };
         fetchBuyerItems();
-    }, [state, buyerCd]);
+    }, [state, buyerCd, page]);
 
     useEffect(() => {
         const fetchItemDetails = async () => {
@@ -44,7 +46,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
             }
         };
 
-        if (!isLoading) {
+        if (!isLoading && buyerItems.data.length > 0) {
             fetchItemDetails();
         }
     }, [buyerItems, state, isLoading]);
@@ -58,9 +60,9 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
                 size: itemsDetails[item.itemCd]?.data.size || '',
                 unitPrice: item.unitPrice,
                 unit: item.unit,
-                quantity: 0 // 초기값 설정
+                quantity: 0
             }));
-            setItemsWithDetails(combinedItems);
+            setItemsWithDetails({ data: combinedItems });
         }
     }, [buyerItems, itemsDetails]);
 
@@ -75,7 +77,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     ];
 
     const handleSubmit = () => {
-        const selectedItems = checked.map(index => itemsWithDetails[index]);
+        const selectedItems = checked.map(index => itemsWithDetails.data[index]);
         onItemsSelected(selectedItems);
         setOpened(false);
     };
@@ -87,10 +89,10 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     return (
         <div className="modal-background">
             <div className='modal-container'>
-                <EditableTableWithCheckbox
+                <EditableTableWithCheckboxYoung
                     columns={columnData}
-                    ogData={{ data: itemsWithDetails }}
-                    data={{ data: itemsWithDetails }}
+                    ogData={itemsWithDetails}
+                    data={itemsWithDetails}
                     setData={setItemsWithDetails}
                     checked={checked}
                     setChecked={setChecked}

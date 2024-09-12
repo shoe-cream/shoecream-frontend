@@ -1,39 +1,47 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import './ReactTable.css';
 
 const EditableTableWithCheckboxYoung = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
-  console.log('ogData in table: ', ogData);
-  console.log('data in table: ', data);
-
   useEffect(() => {
-    if (ogData && data && Array.isArray(ogData.data) && Array.isArray(data.data)) {
-      const updatedEdited = data.data.map((row, index) => {
+    if (ogData && data && ogData.data && data.data) {
+      const updatedEdited = data.data.reduce((acc, row, index) => {
         const ogRow = ogData.data[index];
         if (ogRow) {
-          // 데이터 필드별로 원본 데이터와 비교
-          return Object.keys(ogRow).some(key => ogRow[key] !== row[key]) ? index : null;
+          const changedCells = Object.keys(row).reduce((cellAcc, key) => {
+            if (row[key] !== ogRow[key]) {
+              cellAcc[key] = row[key];
+            }
+            return cellAcc;
+          }, {});
+
+          if (Object.keys(changedCells).length > 0) {
+            acc[index] = changedCells;
+          }
+        } else {
+          // 새로 추가된 행
+          acc[index] = { ...row };
         }
-        return null;
-      }).filter(index => index !== null);
-  
-      // 만약 변경된 사항이 있을 때만 setEdited 호출
+        return acc;
+      }, {});
+
+      // 변경 사항이 있을 때만 setEdited 호출
       if (JSON.stringify(edited) !== JSON.stringify(updatedEdited)) {
         setEdited(updatedEdited);
       }
     }
-  }, [data, ogData, edited, setEdited]);
+  }, [data, ogData, setEdited]);
 
   const CheckboxCell = ({ row }) => (
     <input
       type="checkbox"
-      checked={checked.includes(row.index)}
+      checked={checked.includes(parseInt(row.id, 10))}
       onChange={() => {
-        const rowIndex = row.index;
+        const rowId = parseInt(row.id, 10);
         setChecked(prev => 
-          prev.includes(rowIndex)
-            ? prev.filter(id => id !== rowIndex)
-            : [...prev, rowIndex]
+          prev.includes(rowId)
+            ? prev.filter(id => id !== rowId)
+            : [...prev, rowId]
         );
       }}
     />
@@ -47,19 +55,18 @@ const EditableTableWithCheckboxYoung = ({ columns, ogData, data, setData, checke
     };
 
     const onBlur = () => {
-      const newData = Array.isArray(data.data) ? [...data.data] : [];
-      if (!newData[index]) {
-        newData[index] = {};
-      }
-
-      // 수량 값이 숫자인지 확인 후 업데이트
-      newData[index] = {
-        ...newData[index],
-        [id]: id === "quantity" ? parseInt(value, 10) || 0 : value,
+        setData(prevData => {
+          const newData = [...prevData.data];
+          if (!newData[index]) {
+            newData[index] = {};
+          }
+          newData[index] = {
+            ...newData[index],
+            [id]: value
+          };
+          return { ...prevData, data: newData };
+        });
       };
-
-      setData({ ...data, data: newData });
-    };
 
     React.useEffect(() => {
       setValue(initialValue);
@@ -76,20 +83,18 @@ const EditableTableWithCheckboxYoung = ({ columns, ogData, data, setData, checke
     );
   });
 
-  const allColumns = useMemo(() => [
+  const allColumns = React.useMemo(() => [
     {
       id: 'selection',
-      Header: () => (
+      Header: ({ getToggleAllRowsSelectedProps }) => (
         <input
           type="checkbox"
-          checked={Array.isArray(data.data) && data.data.length > 0 && checked.length === data.data.length}
+          checked={data.data.length > 0 && checked.length === data.data.length}
           onChange={() => {
-            if (Array.isArray(data.data)) {
-              if (checked.length === data.data.length) {
-                setChecked([]);
-              } else {
-                setChecked(data.data.map((_, index) => index));
-              }
+            if (checked.length === data.data.length) {
+              setChecked([]);
+            } else {
+              setChecked(data.data.map((_, index) => index));
             }
           }}
         />
@@ -98,7 +103,7 @@ const EditableTableWithCheckboxYoung = ({ columns, ogData, data, setData, checke
     },
     ...columns.map(column => ({
         ...column,
-        Cell: ({ value, row }) => (
+        Cell: ({ value, row, column }) => (
           column.editable ? (
             <EditableCell
               value={value}
@@ -116,30 +121,15 @@ const EditableTableWithCheckboxYoung = ({ columns, ogData, data, setData, checke
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns: allColumns, data: Array.isArray(data.data) ? data.data : [] });
+  } = useTable({ columns: allColumns, data: data.data });
 
   const getRowClassName = (row) => {
     const rowIndex = row.index;
-    const ogRow = Array.isArray(ogData.data) ? ogData.data[rowIndex] : null;
-    const tableRow = Array.isArray(data.data) ? data.data[rowIndex] : null;
-
-    if (!ogRow || !tableRow) {
-      return 'body-r';
-    }
-
-    for (const key in ogRow) {
-      if (ogRow.hasOwnProperty(key) && tableRow.hasOwnProperty(key)) {
-        if (ogRow[key] !== tableRow[key]) {
-          return 'body-r-edited'; // 데이터가 다를 때 -edited 클래스 붙임
-        }
-      }
-    }
-
-    return 'body-r'; // 값이 모두 동일하면 기본 클래스
+    return edited.hasOwnProperty(rowIndex) ? 'body-r-edited' : 'body-r';
   };
 
   return (
-    <table {...getTableProps()} className="editable-table">
+    <table {...getTableProps()}>
       <thead>
         {headerGroups.map(headerGroup => (
           <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>

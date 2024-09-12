@@ -123,12 +123,34 @@ const ProductSearch = ({ onAddOrder }) => {
     );
 
     const handleOpenModal = () => {
-        setIsModalOpen(true);
+        if(searchParams.buyerCd){
+            setIsModalOpen(true);
+        }else {
+            alert("고객 코드를 넣어주세요")
+        }
     };
 
     const handleItemsSelected = (items) => {
-        setSelectedItems(items);
-        handleFetch(items);
+        const newOrder = {
+            buyerCd: searchParams.buyerCd,
+            buyerNm: buyers.data.buyerNm,
+            tel: buyers.data.tel,
+            registrationDate: new Date().toISOString().slice(0, 10),
+            requestDate: '', // You may want to add a field for this in the modal
+            contractPeriod: `${startDate ? startDate.toISOString().split('T')[0] : ''} ~ ${endDate ? endDate.toISOString().split('T')[0] : ''}`,
+            items: items.map(item => ({
+                itemCd: item.itemCd,
+                itemNm: item.itemNm,
+                color: item.color,
+                size: item.size,
+                unitPrice: item.unitPrice,
+                qty: item.quantity,
+                unit: item.unit,
+            }))
+        };
+
+        onAddOrder(newOrder);
+        setIsModalOpen(false);
     };
     
 
