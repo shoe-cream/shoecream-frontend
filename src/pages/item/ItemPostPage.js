@@ -44,7 +44,6 @@ const ItemPostPage = () => {
         {
           accessor: 'itemNm',
           Header: '상품명',
-          type: 'text',
         },
         {
           accessor: 'itemCd',
@@ -70,7 +69,7 @@ const ItemPostPage = () => {
         {
           accessor: 'unitPrice',
           Header: '단가',
-          type: 'text',
+          type: 'number',
         },
       ]
 

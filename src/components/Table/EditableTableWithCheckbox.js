@@ -3,13 +3,17 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
+  // 원본 데이터와 테이블 데이터를 비교해서 수정됨 상태 업데이트
   useEffect(() => {
     if (ogData && data && ogData.data && data.data) {
       const updatedEdited = data.data.reduce((acc, row, index) => {
         const ogRow = ogData.data[index];
         if (ogRow) {
           const changedCells = Object.keys(row).reduce((cellAcc, key) => {
-            if (row[key] !== ogRow[key]) {
+            const rowValue = (typeof row[key] === 'number' ? row[key] : String(row[key]));
+            const ogValue = (typeof ogRow[key] === 'number' ? ogRow[key] : String(ogRow[key]));
+
+            if (rowValue !== ogValue) {
               cellAcc[key] = row[key];
             }
             return cellAcc;
@@ -56,7 +60,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
 
     const onChange = useCallback((e) => {
       const newValue = e.target.value;
-  
+
       if (column.type === 'date') {
         setData(prevData => {
           const newData = [...prevData.data];
@@ -66,7 +70,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           };
           return { ...prevData, data: newData };
         });
-      }
+      } 
     }, [column.type, id, index, setData]);
 
     const onBlur = useCallback(() => {
@@ -75,7 +79,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           const newData = [...prevData.data];
           newData[index] = {
             ...newData[index],
-            [id]: inputRef.current.value
+            [id]: column.type === 'number' ? Number(inputRef.current.value) : inputRef.current.value
           };
           return { ...prevData, data: newData };
         });
