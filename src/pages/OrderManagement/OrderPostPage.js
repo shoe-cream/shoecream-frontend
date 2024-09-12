@@ -49,6 +49,7 @@ const OrderPostPage = () => {
             };
         });
 
+
         const buyerCd = orderData.length > 0 ? orderData[0].buyerCd : ''; 
         sendPostOrder(state, buyerCd, requestDate + "T00:00:00.000", orderItemDtoList);
     };
@@ -102,6 +103,7 @@ const OrderPostPage = () => {
                             getPage={() => {}}
                         />
                     )}
+
                 </div>
             </div>
         </div>
@@ -109,3 +111,4 @@ const OrderPostPage = () => {
 };
 
 export default OrderPostPage;
+

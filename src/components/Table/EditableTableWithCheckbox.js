@@ -3,32 +3,34 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
-  const [tableData, setTableData] = useState(data.data);
-
-  console.log('ogData: ', ogData);
-
   useEffect(() => {
-    setTableData(data.data);
-  }, [ogData]);
-
-  useEffect(() => {
-    // Update edited state whenever tableData or ogData changes
-    const updatedEdited = tableData.map((row, index) => {
-      const ogRow = ogData.data[index];
-      if (ogRow) {
-        for (const key in ogRow) {
-          if (ogRow.hasOwnProperty(key) && row.hasOwnProperty(key)) {
-            if (ogRow[key] != row[key]) {
-              return index; // Return index of edited row
+    if (ogData && data && ogData.data && data.data) {
+      const updatedEdited = data.data.reduce((acc, row, index) => {
+        const ogRow = ogData.data[index];
+        if (ogRow) {
+          const changedCells = Object.keys(row).reduce((cellAcc, key) => {
+            if (row[key] !== ogRow[key]) {
+              cellAcc[key] = row[key];
             }
-          }
-        }
-      }
-      return null;
-    }).filter(index => index !== null);
+            return cellAcc;
+          }, {});
 
-    setEdited(updatedEdited);
-  }, [tableData, ogData]);
+          if (Object.keys(changedCells).length > 0) {
+            acc[index] = changedCells;
+          }
+        } else {
+          // 새로 추가된 행
+          acc[index] = { ...row };
+        }
+        return acc;
+      }, {});
+
+      // 변경 사항이 있을 때만 setEdited 호출
+      if (JSON.stringify(edited) !== JSON.stringify(updatedEdited)) {
+        setEdited(updatedEdited);
+      }
+    }
+  }, [data, ogData, setEdited]);
 
   const CheckboxCell = ({ row }) => (
     <input
@@ -53,7 +55,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     };
 
     const onBlur = () => {
-      const newData = [...tableData];
+      const newData = [...data.data];
       if (!newData[index]) {
         newData[index] = {};
       }
@@ -61,7 +63,6 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         ...newData[index],
         [id]: value
       };
-      setTableData(newData);
       setData({ ...data, data: newData });
     };
 
@@ -86,12 +87,12 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
       Header: ({ getToggleAllRowsSelectedProps }) => (
         <input
           type="checkbox"
-          checked={tableData.length > 0 && checked.length === tableData.length}
+          checked={data.data.length > 0 && checked.length === data.data.length}
           onChange={() => {
-            if (checked.length === tableData.length) {
+            if (checked.length === data.data.length) {
               setChecked([]);
             } else {
-              setChecked(tableData.map((_, index) => index));
+              setChecked(data.data.map((_, index) => index));
             }
           }}
         />
@@ -101,14 +102,16 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     ...columns.map(column => ({
         ...column,
         Cell: ({ value, row, column }) => (
-          <EditableCell
-            value={value}
-            row={row}
-            column={column}
-          />
+          column.editable ? (
+            <EditableCell
+              value={value}
+              row={row}
+              column={column}
+            />
+          ) : (<span>{value}</span>)
         ),
       }))
-  ], [columns, tableData, checked, setChecked]);
+  ], [columns, data.data, checked, setChecked]);
 
   const {
     getTableProps,
@@ -116,30 +119,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns: allColumns, data: tableData });
+  } = useTable({ columns: allColumns, data: data.data });
 
   const getRowClassName = (row) => {
     const rowIndex = row.index;
-
-    // 원본 데이터와 테이블 데이터를 필드별로 비교
-    const ogRow = ogData.data[rowIndex];
-    const tableRow = tableData[rowIndex];
-
-    // 원본 데이터나 테이블 데이터가 존재하지 않으면 기본 클래스 반환
-    if (!ogRow || !tableRow) {
-        return 'body-r';
-    }
-
-    // 필드별 비교를 수행하여, 값이 다른 경우에만 'body-r-edited'를 반환
-    for (const key in ogRow) {
-        if (ogRow.hasOwnProperty(key) && tableRow.hasOwnProperty(key)) {
-            if (ogRow[key] != tableRow[key]) {
-              return 'body-r-edited'; // 데이터가 다를 때 -edited 클래스 붙임
-            }
-        }
-    }
-
-    return 'body-r'; // 값이 모두 동일하면 기본 클래스
+    return edited.hasOwnProperty(rowIndex) ? 'body-r-edited' : 'body-r';
   };
 
   return (

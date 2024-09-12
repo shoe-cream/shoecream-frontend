@@ -11,23 +11,9 @@ import GetOrders from '../../requests/GetOrders';
 import getOrderAllRequest from '../../requests/GetOrders';
 import { useAuth } from '../../auth/AuthContext';
 import getOrderRequest from '../../requests/GetOrder';
+import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox'
 
 
-
-
-
-
-const transformData = (orders) => {
-    return orders.flatMap(order =>
-        order.orderItems.map(item => ({
-            ...order,
-            itemCd: item.itemCd,
-            qty: item.qty,
-            unitPrice: item.unitPrice,
-            totalPrice: (item.unitPrice || 0) * (item.qty || 0)  // totalPrice 계산
-        }))
-    );
-};
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -36,7 +22,10 @@ const OrderApprovalPage = () => {
     const [optionSelect, setOptionSelect] = useState('orderId');
     const [keyword, setKeyword] = useState('');
     const [orders, setOrders] = useState([]);
-    const [checked, setChecked] = useState([]);
+    const [checkedItems, setCheckedItems] = useState([]);
+    const [edited, setEdited] = useState([]);
+    const [ogData, setOgData] = useState({data : []});
+    const [status, setStatus] =useState('');
 
 
     const data = [
@@ -52,30 +41,47 @@ const OrderApprovalPage = () => {
         window.print();
     };
 
-    useEffect(() => {
-        getOrderAllRequest(state,null,null,null,null,null,null,page,10,setOrders, setIsLoading)
-    },[])
 
     const BaseTable = ({ data }) => {
-        const columns = React.useMemo(
-            () => [
-                { Header: "담당자", accessor: "employeeId" },
-                { Header: "주문번호", accessor: "orderId" },
+        const columns = [
+                { Header: "담당자", accessor: "employeeId"},
+                { Header: "주문코드", accessor: "orderCd" },
                 { Header: "주문상태", accessor: "status" },
                 { Header: "등록일", accessor: "createdAt" },
-                { Header: "납기일", accessor: "requestDate" },
+                { Header: "납기일", accessor: "requestDate",editable:true },
                 { Header: "고객사 명", accessor: "buyerNm" },
                 { Header: "고객 코드", accessor: "buyerCd" },
-                { Header: "제품 코드", accessor: "itemCd" },
-                { Header: "수량", accessor: "qty" },
+                { Header: "제품 코드", accessor: "itemCd",editable:true },
+                { Header: "수량", accessor: "qty", editable:true },
                 { Header: "제품 단가", accessor: "unitPrice" },
                 { Header: "총금액", accessor: "totalPrice" },
-            ],
-            []
+            ]
+        return <EditableTableWithCheckbox columns={columns} ogData={data} data={data} checked={checkedItems} setChecked={setCheckedItems} edited={edited} setEdited={setEdited} />;
+    };
+
+    useEffect(() => {
+        setIsLoading(true);
+        getOrderAllRequest(state,null,null,null,null,null,null,page,10, setOrders, setIsLoading)
+    },[page]);
+
+
+    const transformData = (orders) => {
+        return orders.flatMap(order =>
+            order.orderItems.map(item => ({
+                orderCd: order.orderCd,
+                employeeId: order.employeeId,
+                status: order.status,
+                createdAt: order.createdAt,
+                buyerNm: order.buyerNm,
+                buyerCd: order.buyerCd,
+                requestDate: order.requestDate,
+                itemCd: item.itemCd,
+                qty: item.qty,
+                unitPrice: item.unitPrice,
+                totalPrice: (item.unitPrice || 0) * (item.qty || 0)  // totalPrice 계산
+            }))
         );
-    
-        return <ReactTableWithCheckbox columns={columns} data={data} checked={checked} setChecked={setChecked}/>;
-    }
+    };
 
 
     const handleGetOrdersAll = () => {
@@ -86,14 +92,6 @@ const OrderApprovalPage = () => {
         } else if (optionSelect === 'buyerCd') {
             setIsLoading(true);
             getOrderAllRequest(state, keyword, null, null, null, null, null, page, 10, setOrders, setIsLoading);
-        } else if (optionSelect === 'date') {
-            setIsLoading(true);
-            getOrderAllRequest(state, null, null, null, null, keyword, null, page, 10, setOrders, setIsLoading);
-            if (setOrders) {
-                getOrderAllRequest(state, null, null, null, null, null, keyword, page, 10, setOrders, setIsLoading);
-            } else {
-                alert("날자 안에 주문이 없습니다.");
-            }
         } else if (optionSelect === 'itemCd') {
             setIsLoading(true);
             getOrderAllRequest(state, null, keyword, null, null, null, null, page, 10, setOrders, setIsLoading);
@@ -101,34 +99,34 @@ const OrderApprovalPage = () => {
     }
 
     const handleTabSelect = (index) => {
-        if(index === 0){
-            setIsLoading(true);
-            getOrderAllRequest(state, null , null, null,null,null,null,page,10, setOrders,setIsLoading);
+        let currentStatus;
+        switch (index) {
+            case 0 : currentStatus = null;
+            break;
+            case 1 : currentStatus = 'REQUEST_TEMP'; break;
+            case 2 : currentStatus = 'PURCHASE_REQUEST'; break;
+            case 3 : currentStatus = 'APPROVED'; break;
+            case 4 : currentStatus = 'CANCELLED'; break;
+            case 5 : currentStatus = 'REJECTED'; break;
         }
-        else if(index === 1){
-            setIsLoading(true);
-            getOrderAllRequest(state, null , null, 'REQUEST_TEMP' ,null,null,null,page,10, setOrders,setIsLoading);
-        }
-        else if(index === 2){
-            setIsLoading(true);
-            getOrderAllRequest(state, null , null,'PURCHASE_REQUEST',null,null,null,page,10, setOrders,setIsLoading);
-
-        }else if(index === 3){
-            setIsLoading(true);
-            getOrderAllRequest(state, null , null,'APPROVED', null,null,null,page,10, setOrders,setIsLoading);
-        }else if(index === 4){
-            setIsLoading(true);
-            getOrderAllRequest(state, null , null,'CANCELLED', null,null,null,page,10, setOrders,setIsLoading);
-        }else if(index ===5){
-            setIsLoading(true);
-            getOrderAllRequest(state, null , null,'REJECTED', null,null,null,page,10, setOrders,setIsLoading);
-        }
+        setStatus(currentStatus);
+        setIsLoading(true);
+        getOrderAllRequest(state, null, null, currentStatus, null, null, null, page, 10, setOrders, setIsLoading);
     };
+
+    const handleApprovePurchase = () => {
+
+    }
+
+
+    const handlePatchOrder = () => {
+
+    }
 
     return (
         <div>
             <Header />
-            <div className='app-csontainer'>
+            <div className='app-container'>
                 <Sidebar />
                 <div className='app-content-container'>
                     <div className='tab-container'>
@@ -155,18 +153,24 @@ const OrderApprovalPage = () => {
                                         optionSelect={optionSelect} setOptionSelect={setOptionSelect}
                                         keyword={keyword} setKeyword={setKeyword}>
                                     </OrderDatepickerSelect>
+                                    <button id='Approve_Purchase' onClick={handlePatchOrder}>수정</button>
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={transformData(orders?.data || [])} />
+                                        <BaseTable data={{data : orders?.data ? transformData(orders.data) : []}} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
                                     <h2>견적요청</h2>
+                                    <OrderDatepickerSelect GetOrdersAll={handleGetOrdersAll}
+                                        optionSelect={optionSelect} setOptionSelect={setOptionSelect}
+                                        keyword={keyword} setKeyword={setKeyword}>
+                                    </OrderDatepickerSelect>
+                                    <button id='Approve_Purchase' onClick={handleApprovePurchase}>발주 승인</button>
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={transformData(orders?.data || [])} />
+                                        <BaseTable data={{data : orders?.data ? transformData(orders.data) : []}} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -174,7 +178,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={transformData(orders?.data || [])} />
+                                        <BaseTable data={{data : orders?.data ? transformData(orders.data) : []}} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -182,7 +186,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={transformData(orders?.data || [])} />
+                                        <BaseTable data={{data : orders?.data ? transformData(orders.data) : []}} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -190,7 +194,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={transformData(orders?.data || [])} />
+                                        <BaseTable data={{data : orders?.data ? transformData(orders.data) : []}} />
                                     )}
                                 </TabPanel>
                                 <TabPanel>
@@ -198,7 +202,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={transformData(orders?.data || [])} />
+                                        <BaseTable data={{data : orders?.data ? transformData(orders.data) : []}} />
                                     )}
                                 </TabPanel>
                             </div>
@@ -208,7 +212,7 @@ const OrderApprovalPage = () => {
                         currentPage={page}
                         setPage={setPage}
                         pageInfo={orders.pageInfo}
-                        getPage={() => {handleGetOrdersAll()}}
+                        getPage={() => { handleGetOrdersAll() }}
                     ></PageContainer>}
                 </div>
             </div>
