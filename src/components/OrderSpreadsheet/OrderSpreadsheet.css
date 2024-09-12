@@ -1,0 +1,31 @@
+/* react-data-grid 테이블 배경 색상 변경 */
+.rdg {
+    background-color: #f3f3f3 !important; /* 배경을 흰색으로 변경 */
+}
+
+.rdg-cell {
+    background-color: #ffffff !important; /* 각 셀의 배경도 흰색으로 변경 */
+    color: #000000 !important; /* 텍스트는 검은색으로 */
+}
+
+/* 행의 배경색도 흰색으로 변경 */
+.rdg-row {
+    background-color: #ffffff !important;
+}
+
+/* 체크박스의 배경색, 테두리색, 선택된 상태의 색상 변경 */
+.rdg-checkbox-input {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #4688E2; /* 테두리 색상 */
+    background-color: white; /* 기본 배경색 */
+    appearance: none; /* 기본 브라우저 스타일 제거 */
+    cursor: pointer;
+}
+
+.rdg-checkbox-input:checked {
+    background-color: #4688E2; /* 체크된 상태일 때의 배경색 */
+    border: 2px solid #4688E2; /* 체크된 상태일 때의 테두리색 */
+}
+
