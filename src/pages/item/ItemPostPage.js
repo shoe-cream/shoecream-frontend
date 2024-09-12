@@ -98,15 +98,29 @@ const ItemPostPage = () => {
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
                                     <button className='manufacturer-button' onClick= {() => {
-                                        /* console.log('checked: ', checked);
-                                        console.log('edited: ', edited); */
-                                        const checkedAndEdited = checked.filter(element => edited.includes(element));
-                                        /* console.log('checkedAndEdited', checkedAndEdited); */
-
+                                        console.log('checked: ', checked);
+                                        console.log('edited: ', edited);
+                                        /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
+                                        const checkedAndEdited = Object.keys(edited)
+                                          .filter(key => checked.includes(Number(key)))
+                                          .reduce((acc, key) => {
+                                            acc[key] = edited[key];
+                                            return acc;
+                                          }, {});
+                                        console.log('checkedAndEdited', checkedAndEdited);
+                    
                                         let requestBody = [];
-                                        for(let i = 0; i< checkedAndEdited.length; i++){
-                                            requestBody.push(items.data[checkedAndEdited[i]]);
-                                        }
+                                        Object.keys(checkedAndEdited).forEach(key => {
+                                          const index = Number(key); // key는 문자열이므로 숫자로 변환
+                                          const itemId = items.data[index].itemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
+                                          const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
+                    
+                                          // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
+                                          requestBody.push({
+                                            itemId,
+                                            ...updatedData
+                                          });
+                                        });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchMultiItemRequest(state, requestBody, () => {
                                             sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
