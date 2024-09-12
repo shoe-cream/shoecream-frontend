@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactTableWithCheckbox from '../Table/ReactTableWithCheckbox';
 
-const OrderTable = ({ data, setOrderData, setRequestDate }) => {
+const OrderTable = ({ data, setOrderData, setRequestDate, checkedItems, setCheckedItems }) => {
     const [tableData, setTableData] = useState([]);
-    const [checked, setChecked] = useState([]);
 
     useEffect(() => {
         setTableData(data || []);
@@ -92,7 +91,7 @@ const OrderTable = ({ data, setOrderData, setRequestDate }) => {
         { Header: "계약 기간", accessor: "contractPeriod" }
     ], [handleQuantityChange, handleRequestDateChange]);
 
-    return <ReactTableWithCheckbox columns={columns} data={tableData} checked={checked} setChecked={setChecked}/>;
+    return <ReactTableWithCheckbox columns={columns} data={tableData} checked={checkedItems} setChecked={setCheckedItems}/>;
 }
 
 export default OrderTable;
