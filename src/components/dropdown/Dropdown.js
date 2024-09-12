@@ -17,8 +17,9 @@ const Dropdown = ({ title, buttons, expandedDropdown, setExpandedDropdown }) => 
                 <img src={expandedDropdown === title ? 'icons/uparrow.png' : 'icons/downarrow.png'} className='dropdown-arrow'></img>
             </div>
             {title === expandedDropdown ? buttons.map((value) => (
-                <button className='dropdown-content' onClick={() => navigate(value.urlTo)}>{value.name}</button>
-            )) : <div></div>}
+    <button key={value.id} className='dropdown-content' onClick={() => navigate(value.urlTo)}>{value.name}</button>
+)) : <div></div>}
+
         </div>
     );
 }
