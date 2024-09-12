@@ -2,18 +2,19 @@ import axios from 'axios';
 
 const sendDeleteBuyersRequest = async (state, pageInfo, checkedData, setChecked, executeAfter) => {
     try {
-        console.log('checkedItems: ', checkedData);
+        console.log('checkedData in request: ', checkedData);
         /* const selected = checkedItems.map(item => item + (pageInfo.page - 1) * pageInfo.size);
         console.log('selected: ', selected); */
         const response = await axios.delete(`http://localhost:8080/buyers`, 
-            {
+            {   
+                
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `${state.token}`
                 },
                 data: {
                     buyerId: checkedData
-                },
+                }
             }
         );
 
