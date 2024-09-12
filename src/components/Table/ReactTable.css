@@ -5,7 +5,8 @@ table {
     margin-bottom: 50px;
     border-collapse: collapse; /* 테이블 셀 사이에 중복된 경계를 제거 */
     background-color: white;
-    box-shadow: 2px 4px 16px 4px #eeeeee;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+    /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); */
     font-size: 13px;
     border-top: 1px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
     border-bottom: 1px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
@@ -33,9 +34,23 @@ table {
     /* background-color: #b5c7d3; */
 }
 
+.body-r:hover {
+    background-color: #f9f9f9b8; /* 마우스 오버 시 행 배경색을 약간 어둡게 */
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 추가 */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.body-r {
+    animation: fadeIn 0.5s ease-in-out; /* 나타나는 애니메이션 추가 */
+}
+
+
 th, td {
-    border: 1px solid #eeeeee; /* 테이블 셀에 경계 추가 */
-    background-color: white;
+    border: 1px solid #dddddd; /* 테두리를 더 부드럽게 */
     padding: 8px;
     text-align: left;
     color: #1d1d1d;
@@ -44,11 +59,10 @@ th, td {
     border-right: none;
 }
 
-thead {
-    background-color: #f2f2f2; /* 헤더에 배경색 추가 */
-
-    
+th {
+    background-color: #ffffff !important; /* 헤더 배경색 강제 적용 */
 }
+  
 
 .cell-input{
     width: 100%;
@@ -66,6 +80,3 @@ thead {
     font-weight: bold;
     cursor: pointer;
 }
-/* .add-row-button:hover{
-    background-color: rgb(216, 216, 216);
-} */

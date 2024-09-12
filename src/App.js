@@ -16,6 +16,8 @@ import OrderPostPage from './pages/OrderManagement/OrderPostPage';
 import RegistrationPage from './pages/registration/RegistrationPage';
 import BuyerPostPage from './pages/buyer/BuyerPostPage';
 import { AuthProvider } from './auth/AuthContext';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 function App() {
   return (
