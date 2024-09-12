@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import '../Table/ReactTable.css';
 
-
 const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   const [tableData, setTableData] = useState(data.data);
 
@@ -11,22 +10,40 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
   }, [ogData]);
 
   useEffect(() => {
-    const updatedEdited = tableData.map((row, index) => {
-      const ogRow = ogData.data[index];
-      if (ogRow) {
-        for (const key in ogRow) {
-          if (ogRow.hasOwnProperty(key) && row.hasOwnProperty(key)) {
-            if (ogRow[key] !== row[key]) {
-              return index; // Return index of edited row
+    if (ogData && data && ogData.data && data.data) {
+      const updatedEdited = data.data.reduce((acc, row, index) => {
+        const ogRow = ogData.data[index];
+        if (ogRow) {
+          const changedCells = Object.keys(row).reduce((cellAcc, key) => {
+            if (row[key] !== ogRow[key]) {
+              cellAcc[key] = row[key];
             }
-          }
-        }
-      }
-      return null;
-    }).filter(index => index !== null);
+            return cellAcc;
+          }, {});
 
-    setEdited(updatedEdited);
-  }, [tableData, ogData]);
+          if (Object.keys(changedCells).length > 0) {
+            acc[index] = changedCells;
+          }
+        } else {
+          // 새로 추가된 행
+          acc[index] = { ...row };
+        }
+        return acc;
+      }, {});
+
+      // 변경 사항이 있을 때만 setEdited 호출
+      if (JSON.stringify(edited) !== JSON.stringify(updatedEdited)) {
+        setEdited(updatedEdited);
+      }
+    }
+  }, [data, ogData, setEdited]);
+
+
+  // 현재 날짜와 시간으로 초기화하는 함수
+  const getCurrentDate = () => {
+    const now = new Date();
+    return now.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+  };
 
   const CheckboxCell = ({ row }) => (
     <input
@@ -61,13 +78,17 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
     };
 
     React.useEffect(() => {
-      setValue(initialValue);
-    }, [initialValue]);
+      if (id === 'registrationDate' && !value) {
+        setValue(getCurrentDate()); // 초기값 설정
+      } else {
+        setValue(initialValue);
+      }
+    }, [initialValue, id]);
 
     return (
       <input
         className='cell-input'
-        type="text"
+        type={id === 'requestDate' ? 'date' : 'text'}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
@@ -211,7 +232,12 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
     {
       Header: '금액',
       accessor: 'price',
-      Cell: ({ value }) => <span>{value}</span>
+      Cell: ({ row }) => {
+        const unitPrice = row.original.unitPrice || 0;
+        const quantity = row.original.quantity || 0;
+        const price = unitPrice * quantity;
+        return <span>{price}</span>;
+      }
     },
     {
       Header: '계약 기간',

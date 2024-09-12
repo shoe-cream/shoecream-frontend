@@ -79,7 +79,7 @@ const OrderPostPage = () => {
                 <div className='app-content-container'>
                     <div className='order-registration'>
                         {/* 검색 및 필터 컴포넌트 */}
-                        <ProductSearch onAddOrder={handleAddOrder} registrationDate={registrationDate} />
+                        <ProductSearch onAddOrder={handleAddOrder}/>
                         <OrderActions onRegisterOrder={handleRegisterOrder} />
 
                         {/* 새로 만든 EditableTableWithCheckbox 추가 */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Modal.css';
 import './PostModal.css';
-import EditableTableWithCheckboxYoung from '../Table/EditableTableWithCheckboxYoung';
+import EditableTableWithCheckbox from '../OrderPost/OrderSheet';
 import getBuyerJoinItemsRequest from '../../requests/GetBuyerJoinItems';
 import getItemRequest from '../../requests/GetItemRequest'; // getItemRequest를 import합니다.
 import Swal from 'sweetalert2';
@@ -87,7 +87,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     return (
         <div className="modal-background">
             <div className='modal-container'>
-                <EditableTableWithCheckboxYoung
+                <EditableTableWithCheckbox
                     columns={columnData}
                     ogData={{ data: itemsWithDetails }}
                     data={{ data: itemsWithDetails }}
