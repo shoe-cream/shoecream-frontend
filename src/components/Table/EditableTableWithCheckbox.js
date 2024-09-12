@@ -3,26 +3,34 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
-  console.log('ogData in table: ', ogData);
-  console.log('data in table: ', data);
-
   useEffect(() => {
     if (ogData && data && ogData.data && data.data) {
-      const updatedEdited = data.data.map((row, index) => {
+      const updatedEdited = data.data.reduce((acc, row, index) => {
         const ogRow = ogData.data[index];
         if (ogRow) {
-          // 데이터 필드별로 원본 데이터와 비교
-          return Object.keys(ogRow).some(key => ogRow[key] !== row[key]) ? index : null;
+          const changedCells = Object.keys(row).reduce((cellAcc, key) => {
+            if (row[key] !== ogRow[key]) {
+              cellAcc[key] = row[key];
+            }
+            return cellAcc;
+          }, {});
+
+          if (Object.keys(changedCells).length > 0) {
+            acc[index] = changedCells;
+          }
+        } else {
+          // 새로 추가된 행
+          acc[index] = { ...row };
         }
-        return null;
-      }).filter(index => index !== null);
-  
-      // 만약 변경된 사항이 있을 때만 setEdited 호출
+        return acc;
+      }, {});
+
+      // 변경 사항이 있을 때만 setEdited 호출
       if (JSON.stringify(edited) !== JSON.stringify(updatedEdited)) {
         setEdited(updatedEdited);
       }
     }
-  }, [data, ogData]);
+  }, [data, ogData, setEdited]);
 
   const CheckboxCell = ({ row }) => (
     <input
@@ -115,26 +123,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
 
   const getRowClassName = (row) => {
     const rowIndex = row.index;
-
-    // 원본 데이터와 테이블 데이터를 필드별로 비교
-    const ogRow = ogData.data[rowIndex];
-    const tableRow = data.data[rowIndex];
-
-    // 원본 데이터나 테이블 데이터가 존재하지 않으면 기본 클래스 반환
-    if (!ogRow || !tableRow) {
-        return 'body-r';
-    }
-
-    // 필드별 비교를 수행하여, 값이 다른 경우에만 'body-r-edited'를 반환
-    for (const key in ogRow) {
-        if (ogRow.hasOwnProperty(key) && tableRow.hasOwnProperty(key)) {
-            if (ogRow[key] != tableRow[key]) {
-              return 'body-r-edited'; // 데이터가 다를 때 -edited 클래스 붙임
-            }
-        }
-    }
-
-    return 'body-r'; // 값이 모두 동일하면 기본 클래스
+    return edited.hasOwnProperty(rowIndex) ? 'body-r-edited' : 'body-r';
   };
 
   return (
