@@ -3,7 +3,8 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
-  /* console.log('ogData: ', ogData); */
+  console.log('ogData in table: ', ogData);
+  console.log('data in table: ', data);
 
   useEffect(() => {
     const updatedEdited = data.data.map((row, index) => {

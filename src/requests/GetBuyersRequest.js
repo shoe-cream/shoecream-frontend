@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const sendGetItemsRequest = async (state ,page, setPage, size, sort, setData, setIsLoading) => {
+const sendGetBuyersRequest = async (state ,page, setPage, size, sort, setData, setIsLoading) => {
     console.log("state: ", state);
     try {
-        const response = await axios.get(`http://localhost:8080/items`, 
+        const response = await axios.get(`http://localhost:8080/buyers`, 
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,17 +23,17 @@ const sendGetItemsRequest = async (state ,page, setPage, size, sort, setData, se
                 console.log('요소가 없어서 -1 페이지 호출');
                 return;
             }
-            console.log('제품 정보 GET요청 성공: ', response.data);
+            console.log('고객사 정보 GET요청 성공: ', response.data);
             setData(response.data);
             if(setIsLoading !== undefined){
                 setIsLoading(false);
             }
         } else {
-            console.log('제품 정보 GET요청 실패');
+            console.log('고객사 정보 GET요청 실패');
         }
     } catch (error) {
-        console.error('제품 정보 GET요청 실패(에러 발생)', error);
+        console.error('고객사 정보 GET요청 실패(에러 발생)', error);
     }
 };
 
-export default sendGetItemsRequest;
+export default sendGetBuyersRequest;
