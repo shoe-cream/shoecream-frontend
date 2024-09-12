@@ -10,13 +10,40 @@ const Header = ()=> {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [myData, setMyData] = useState({data:{}});
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         sendGetMyInfoRequest(state, setMyData, setIsLoading);
     }, []);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        // ==========여기서 검색 기능을 추가=============
+        console.log('Search:', searchTerm);
+    };
+
     return (
         <div className="header-container">
             <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate("/")}></img>
+            
+            {/* ============검색창 추가 ============*/}
+            <form onSubmit={handleSearchSubmit} className="header-search-form">
+                <input
+                    type="text"
+                    placeholder="검색어를 입력하세요"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="header-search-input"
+                />
+                <button type="submit" className="header-search-button">
+                    검색
+                </button>
+            </form>
+
             <div className="header-userinfo-container">
                 {state.isAuthenticated ? <div className="header-welcome-text">{myData.data.name} 님</div> : 
                 <button className="header-login-button" onClick={() => navigate('/login')}>로그인</button>}
@@ -30,4 +57,5 @@ const Header = ()=> {
         </div>
     );
 }
+
 export default Header;
