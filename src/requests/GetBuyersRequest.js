@@ -8,7 +8,7 @@ const sendGetBuyersRequest = async (state ,page, setPage, size, sortBy, setData,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `${state.token}`
+                    'Authorization': state.token
                 }   
                 ,params: {
                     page: page,
