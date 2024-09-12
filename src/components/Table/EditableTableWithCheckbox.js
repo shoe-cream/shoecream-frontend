@@ -38,7 +38,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
       checked={checked.includes(parseInt(row.id, 10))}
       onChange={() => {
         const rowId = parseInt(row.id, 10);
-        setChecked(prev => 
+        setChecked(prev =>
           prev.includes(rowId)
             ? prev.filter(id => id !== rowId)
             : [...prev, rowId]
@@ -47,7 +47,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     />
   );
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id } }) => {
+  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, ...column } }) => {
     const [value, setValue] = React.useState(initialValue);
 
     const onChange = (e) => {
@@ -70,10 +70,14 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
       setValue(initialValue);
     }, [initialValue]);
 
+    if(column.type === undefined || column.type === 'cell'){
+      return <span>{value}</span>
+    }
+
     return (
       <input
         className='cell-input'
-        type="text"
+        type={column.type}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
@@ -100,17 +104,15 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
       Cell: ({ row }) => <CheckboxCell row={row} />
     },
     ...columns.map(column => ({
-        ...column,
-        Cell: ({ value, row, column }) => (
-          column.editable ? (
-            <EditableCell
-              value={value}
-              row={row}
-              column={column}
-            />
-          ) : (<span>{value}</span>)
-        ),
-      }))
+      ...column,
+      Cell: ({ value, row, column }) => (
+        <EditableCell
+          value={value}
+          row={row}
+          column={column}
+        />
+      ),
+    }))
   ], [columns, data.data, checked, setChecked]);
 
   const {

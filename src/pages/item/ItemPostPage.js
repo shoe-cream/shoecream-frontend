@@ -44,37 +44,33 @@ const ItemPostPage = () => {
         {
           accessor: 'itemNm',
           Header: '상품명',
-          editable: true,
+          type: 'text',
         },
         {
           accessor: 'itemCd',
           Header: '상품 코드',
-          editable: false,
         },
         {
           accessor: 'category',
           Header: '카테고리',
-          editable: false,
         },
         {
           accessor: 'color',
           Header: '색상',
-          editable: false,
         },
         {
           accessor: 'size',
           Header: '사이즈',
-          editable: false,
         },
         {
           accessor: 'unit',
           Header: '단위',
-          editable: true,
+          type: 'text',
         },
         {
           accessor: 'unitPrice',
           Header: '단가',
-          editable: true,
+          type: 'text',
         },
       ]
 

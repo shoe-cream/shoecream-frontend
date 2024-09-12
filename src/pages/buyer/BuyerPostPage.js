@@ -11,6 +11,7 @@ import sendGetBuyersRequest from "../../requests/GetBuyersRequest";
 import PostModal from "../../components/modal/PostModal";
 import sendPatchMultiBuyerRequest from "../../requests/PatchMultiBuyerRequest";
 import sendDeleteBuyersRequest from "../../requests/DeleteBuyersRequest";
+import { type } from "@testing-library/user-event/dist/type";
 
 const BuyerPostPage = () => {
   const { state } = useAuth();
@@ -28,32 +29,31 @@ const BuyerPostPage = () => {
     {
       accessor: 'buyerCd',
       Header: '고객사 코드',
-      editable: false,
     },
     {
       accessor: 'email',
       Header: '이메일',
-      editable: true,
+      type: 'text',
     },
     {
       accessor: 'buyerNm',
       Header: '고객사 명',
-      editable: true,
+      type: 'text',
     },
     {
       accessor: 'tel',
       Header: '전화번호',
-      editable: true,
+      type: 'text',
     },
     {
       accessor: 'address',
       Header: '주소',
-      editable: true,
+      type: 'text',
     },
     {
       accessor: 'businessType',
       Header: '사업 분류',
-      editable: true,
+      type: 'text',
     },
   ]
   const resetData = (value) => {
@@ -79,6 +79,8 @@ const BuyerPostPage = () => {
                   <option value='buyerCd'>고객사 코드</option>
                   <option value='buyerNm'>고객사 명</option>
                   <option value='buyerId'>등록순</option>
+                  <option value='address'>주소</option>
+                  <option value='businessType'>사업 분류</option>
                 </select>
                 <div />
                 <div className='manufacturer-button-container'>
