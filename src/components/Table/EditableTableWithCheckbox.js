@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useTable } from 'react-table';
 import './ReactTable.css';
 
@@ -19,20 +19,18 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
             acc[index] = changedCells;
           }
         } else {
-          // 새로 추가된 행
           acc[index] = { ...row };
         }
         return acc;
       }, {});
 
-      // 변경 사항이 있을 때만 setEdited 호출
       if (JSON.stringify(edited) !== JSON.stringify(updatedEdited)) {
         setEdited(updatedEdited);
       }
     }
   }, [data, ogData, setEdited]);
 
-  const CheckboxCell = ({ row }) => (
+  const CheckboxCell = React.memo(({ row }) => (
     <input
       type="checkbox"
       checked={checked.includes(parseInt(row.id, 10))}
@@ -45,50 +43,65 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         );
       }}
     />
-  );
+  ));
 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, ...column } }) => {
-    const [value, setValue] = React.useState(initialValue);
+    const inputRef = useRef(null);
 
-    const onChange = (e) => {
-      setValue(e.target.value);
-    };
-
-    const onBlur = () => {
-      const newData = [...data.data];
-      if (!newData[index]) {
-        newData[index] = {};
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.value = column.type === 'date' ? initialValue.slice(0, 10) : initialValue;
       }
-      newData[index] = {
-        ...newData[index],
-        [id]: value
-      };
-      setData({ ...data, data: newData });
-    };
+    }, [initialValue, column.type]);
 
-    React.useEffect(() => {
-      setValue(initialValue);
-    }, [initialValue]);
+    const onChange = useCallback((e) => {
+      const newValue = e.target.value;
+  
+      if (column.type === 'date') {
+        setData(prevData => {
+          const newData = [...prevData.data];
+          newData[index] = {
+            ...newData[index],
+            [id]: newValue
+          };
+          return { ...prevData, data: newData };
+        });
+      }
+    }, [column.type, id, index, setData]);
+
+    const onBlur = useCallback(() => {
+      if (column.type !== 'date') {
+        setData(prevData => {
+          const newData = [...prevData.data];
+          newData[index] = {
+            ...newData[index],
+            [id]: inputRef.current.value
+          };
+          return { ...prevData, data: newData };
+        });
+      }
+    }, [column.type, id, index, setData]);
 
     if(column.type === undefined || column.type === 'cell'){
-      return <span>{value}</span>
+      return <span>{initialValue}</span>;
     }
 
     return (
       <input
+        ref={inputRef}
         className='cell-input'
         type={column.type}
-        value={value}
+        defaultValue={column.type === 'date' ? initialValue.slice(0, 10) : initialValue}
         onChange={onChange}
         onBlur={onBlur}
       />
     );
   });
 
-  const allColumns = React.useMemo(() => [
+  const allColumns = useMemo(() => [
     {
       id: 'selection',
-      Header: ({ getToggleAllRowsSelectedProps }) => (
+      Header: () => (
         <input
           type="checkbox"
           checked={data.data.length > 0 && checked.length === data.data.length}
@@ -123,10 +136,10 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     prepareRow,
   } = useTable({ columns: allColumns, data: data.data });
 
-  const getRowClassName = (row) => {
+  const getRowClassName = useCallback((row) => {
     const rowIndex = row.index;
     return edited.hasOwnProperty(rowIndex) ? 'body-r-edited' : 'body-r';
-  };
+  }, [edited]);
 
   return (
     <table {...getTableProps()}>
@@ -155,4 +168,4 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
   );
 };
 
-export default EditableTableWithCheckbox;
+export default React.memo(EditableTableWithCheckbox);
