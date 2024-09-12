@@ -2,7 +2,7 @@ import axios from "axios";
 
 const sendPatchMultiBuyerRequest = async(state, requestBody, executeAfter) => {
     try{
-        console.log('requestBody: ', requestBody);
+        console.log('requestBody in request: ', requestBody);
         const response = await axios.patch('http://localhost:8080/buyers',
             requestBody,
             {
