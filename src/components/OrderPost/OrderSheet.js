@@ -4,7 +4,7 @@ import '../Table/ReactTable.css';
 
 const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   const [tableData, setTableData] = useState(data.data);
-
+  console.log(checked);
   useEffect(() => {
     setTableData(data.data);
   }, [ogData]);
@@ -59,6 +59,7 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
       }}
     />
   );
+  
 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id } }) => {
     const [value, setValue] = React.useState(initialValue);
@@ -209,7 +210,7 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
     },
     {
       Header: '수량',
-      accessor: 'quantity',
+      accessor: 'qty',
       Cell: ({ value, row, column }) => (
         <EditableCell
           value={value}
@@ -234,8 +235,8 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
       accessor: 'price',
       Cell: ({ row }) => {
         const unitPrice = row.original.unitPrice || 0;
-        const quantity = row.original.quantity || 0;
-        const price = unitPrice * quantity;
+        const qty = row.original.qty || 0;
+        const price = unitPrice * qty;
         return <span>{price}</span>;
       }
     },

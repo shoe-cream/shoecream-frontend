@@ -32,26 +32,54 @@ const OrderPostPage = () => {
         return date.toISOString().replace('Z', '');  // 밀리초 포함
     };
 
+    // const handleRegisterOrder = () => {
+    //     // 선택된 주문 항목만 전송
+    //     const ordersToRegister = orderData.filter((_, index) => selectedOrders.includes(index));
+
+    //     const orderItemDtoList = ordersToRegister.map(order => {
+    //         const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');
+    //         return {
+    //             itemCd: order.itemCd,
+    //             unitPrice: order.unitPrice,
+    //             qty: order.qty,
+    //             startDate: convertToLocalDateTime(startDateStr.trim()),
+    //             endDate: convertToLocalDateTime(endDateStr.trim()),
+    //             unit: order.unit
+    //         };
+    //     });
+
+    //     console.log("dsfsdfsdf",ordersToRegister);
+    //     const buyerCd = orderData.length > 0 ? orderData[0].buyerCd : ''; 
+    //     sendPostOrder(state, buyerCd, `${ordersToRegister[0].requestDate}T00:00:00.000`, orderItemDtoList);
+    // };
+
     const handleRegisterOrder = () => {
-        // 선택된 주문 항목만 전송
-        const ordersToRegister = orderData.filter(order => selectedOrders.includes(order.id));
-
-        const orderItemDtoList = ordersToRegister.map(order => {
+        // 선택된 주문 항목만 필터링
+        const ordersToRegister = orderData.filter((_, index) => selectedOrders.includes(index));
+    
+        // 주문 항목별로 POST 요청을 보내는 함수
+        const sendOrderRequests = (order) => {
             const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');
-
-            return {
+            const orderItemDto = {
                 itemCd: order.itemCd,
                 unitPrice: order.unitPrice,
-                qty: order.quantity,
+                qty: order.qty,
                 startDate: convertToLocalDateTime(startDateStr.trim()),
                 endDate: convertToLocalDateTime(endDateStr.trim()),
                 unit: order.unit
             };
-        });
-
-
-        const buyerCd = orderData.length > 0 ? orderData[0].buyerCd : ''; 
-        sendPostOrder(state, buyerCd, requestDate + "T00:00:00.000", orderItemDtoList);
+    
+            return sendPostOrder(state, order.buyerCd, `${order.requestDate}T00:00:00.000`, [orderItemDto]);
+        };
+    
+        // 모든 주문에 대해 POST 요청을 보냅니다.
+        Promise.all(ordersToRegister.map(sendOrderRequests))
+            .then(results => {
+                console.log("All orders registered successfully:", results);
+            })
+            .catch(error => {
+                console.error("Error registering orders:", error);
+            });
     };
 
     // 주문 등록 테이블의 컬럼 정의
