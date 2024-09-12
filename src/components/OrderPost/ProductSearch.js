@@ -8,7 +8,7 @@ import getBuyerWithItemsRequest from '../../requests/GetBuyerItems';
 import getItemRequest from '../../requests/GetItemRequest';
 import OrderPostModal from '../modal/OrderPostModal';
 
-const ProductSearch = ({ onAddOrder, registrationDate }) => {
+const ProductSearch = ({ onAddOrder }) => {
     // State 변수들
     const [searchParams, setSearchParams] = useState({
         buyerNm: '',
@@ -72,7 +72,7 @@ const ProductSearch = ({ onAddOrder, registrationDate }) => {
             ...searchParams,
             buyerNm: buyers.data.buyerNm || '',
             tel: buyers.data.tel || '',
-            registrationDate,
+            registrationDate : new Date().toISOString().slice(0, 10),
             deliveryDate: '',
             contractPeriod,
             itemNm: findItem ? findItem.data.itemNm : '',
