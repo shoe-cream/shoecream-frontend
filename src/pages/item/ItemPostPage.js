@@ -24,6 +24,7 @@ const ItemPostPage = () => {
     const [checked, setChecked] = useState([]);
     const [isPostMode, setIsPostMode] = useState(false);
     const [edited, setEdited] = useState([]);
+    const [sortBy, setSortBy] = useState('itemId');
 
     /* console.log('edited: ', edited); */
     console.log('items in page: ', items);
@@ -36,8 +37,8 @@ const ItemPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
-    }, [page]);
+        sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+    }, [page, sortBy]);
 
     const columnData = [
         {
@@ -86,12 +87,13 @@ const ItemPostPage = () => {
                     <div className='app-background'>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
-                                {/* <select>
-                                    <option disabled='true'>Filter By</option>
-                                    <option>최신순</option>
-                                    <option>무슨순</option>
-                                    <option>무슨순2</option>
-                                </select> */}
+                                <select onChange={(e) => setSortBy(e.target.value)}>
+                                    <option disabled='true'>정렬 기준 선택</option>
+                                    <option value={'itemCd'}>제품코드</option>
+                                    <option value={'itemNm'}>제품명</option>
+                                    <option value={'createdAt'}>등록순</option>
+                                    <option value={'unitPrice'}>단가순</option>
+                                </select>
                                 <div/>
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
@@ -107,7 +109,7 @@ const ItemPostPage = () => {
                                         }
                                         console.log('requestBody: ', requestBody);
                                         sendPatchMultiItemRequest(state, requestBody, () => {
-                                            sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
+                                            sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                                             setChecked([]);
                                         });
                                     }}>수정</button>
@@ -116,7 +118,7 @@ const ItemPostPage = () => {
                                             /* console.log('checked: ', checked); */
                                             const checkedItems = checked.map(item => items.data[item].itemId);
                                             sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
-                                                    sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
+                                                    sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                                                     setChecked([]);
                                                 });
                                         }}>삭제</button>
@@ -139,7 +141,7 @@ const ItemPostPage = () => {
                             setPage={setPage}
                             pageInfo={items.pageInfo}
                             getPage={(page) => {
-                                sendGetItemsRequest(state, page, setPage, 10, resetData, setIsLoading);
+                                sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                             }}
                             setChecked={(value) => setChecked(value)}
                             setIsLoading={setIsLoading}
@@ -150,6 +152,7 @@ const ItemPostPage = () => {
                             columnData={columnData}
                             page={page}
                             setPage={setPage}
+                            sortBy={sortBy}
                             setParentData={(value) => resetData(value)}
                         ></PostModal> : <div/>}
                     </div>

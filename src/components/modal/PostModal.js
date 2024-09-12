@@ -6,7 +6,7 @@ import EditableTableWithCheckbox from '../Table/EditableTableWithCheckbox';
 import sendPostMultiItemRequest from '../../requests/PostMultiItemRequest.js';
 import sendGetItemsRequest from '../../requests/GetItemsRequest.js';
 
-const PostModal = ({ state, setOpened, columnData, postRequest, page, setPage, setParentData }) => {
+const PostModal = ({ state, setOpened, columnData, postRequest, page, setPage, sortBy, setParentData }) => {
     const [data, setData] = useState([]);
     const [checked, setChecked] = useState([]);
 
@@ -61,9 +61,10 @@ const PostModal = ({ state, setOpened, columnData, postRequest, page, setPage, s
                                     }
                                 }
                                 console.log('checkedData: ', checkedData);
+                                console.log('sortBy: ', sortBy);
                                 sendPostMultiItemRequest(state, checkedData, () => {
                                 setOpened(false);
-                                sendGetItemsRequest(state, page, setPage, 10, (value) => setParentData(value));
+                                sendGetItemsRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
                                 });
                                 }}>등록</button>
                     <button className="post-modal-button" onClick={() => setOpened(false)}>취소</button>

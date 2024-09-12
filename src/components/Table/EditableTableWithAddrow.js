@@ -3,7 +3,28 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 
 const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }) => {
-  const [tableData, setTableData] = React.useState(data);
+  // 빈 행을 생성하는 함수
+  const createEmptyRow = React.useCallback(() => {
+    return columns.reduce((acc, column) => {
+      acc[column.accessor] = ''; // 열마다 빈 값을 초기화
+      return acc;
+    }, {});
+  }, [columns]);
+
+  // 초기 데이터 설정
+  const initialData = React.useMemo(() => {
+    if (data.length === 0) {
+      return [createEmptyRow()];
+    }
+    return data;
+  }, [data, createEmptyRow]);
+
+  const [tableData, setTableData] = React.useState(initialData);
+
+  // 행 추가하는 함수
+  const addEmptyRow = React.useCallback(() => {
+    setTableData(prevData => [...prevData, createEmptyRow()]);
+  }, [createEmptyRow]);
 
   // 체크박스를 렌더링하는 셀 컴포넌트
   const CheckboxCell = ({ row }) => (
@@ -88,15 +109,6 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
         ),
       }))
   ], [columns, tableData, checked, setChecked]);
-
-  // 행 추가하는 함수
-  const addEmptyRow = () => {
-    const emptyRow = columns.reduce((acc, column) => {
-      acc[column.accessor] = ''; // 열마다 빈 값을 초기화
-      return acc;
-    }, {});
-    setTableData([...tableData, emptyRow]); // 새로운 빈 행 추가
-  };
 
   const {
     getTableProps,
