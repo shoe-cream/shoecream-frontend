@@ -43,7 +43,7 @@ const BuyerItemPostPage = () => {
             accessor: 'unitPrice',
             Header: '단가',
             editable: true,
-            type: 'text',
+            type: 'number',
         },
         {
             accessor: 'unit',

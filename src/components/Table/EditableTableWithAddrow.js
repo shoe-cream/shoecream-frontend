@@ -42,13 +42,14 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
     />
   );
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id } }) => {
+  // 다양한 입력 타입을 지원하는 셀 컴포넌트
+  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type } }) => {
     const [value, setValue] = React.useState(initialValue);
-  
+
     const onChange = (e) => {
       setValue(e.target.value);
     };
-  
+
     const onBlur = () => {
       const newData = [...tableData];
       if (!newData[index]) {
@@ -60,18 +61,18 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
       };
       setTableData(newData);
       setData(newData);
-      /* console.log('tableData: ', tableData);
-      console.log('newData: ', newData); */
     };
-  
+
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue]);
-  
+
+    const inputType = type || 'text'; // 기본 타입은 'text'
+
     return (
       <input
         className='cell-input'
-        type="text"
+        type={inputType}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
@@ -83,7 +84,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
   const allColumns = React.useMemo(() => [
     {
       id: 'selection',
-      Header: ({ getToggleAllRowsSelectedProps }) => (
+      Header: () => (
         <input
           type="checkbox"
           checked={tableData.length > 0 && checked.length === tableData.length}
@@ -144,17 +145,14 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
         {/* 마지막 줄에 + 버튼 추가 */}
         <tr className="body-r">
           <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }}>
-            <button onClick={() =>
-                {
-                    addEmptyRow();
-                    console.log(tableData);
-                }
-                
-        } className="add-row-button">+ 추가</button>
+            <button onClick={() => {
+                addEmptyRow();
+            }} className="add-row-button">+ 추가</button>
           </td>
         </tr>
       </tbody>
     </table>
   );
 };
+
 export default EditableTableWithAddrow;
