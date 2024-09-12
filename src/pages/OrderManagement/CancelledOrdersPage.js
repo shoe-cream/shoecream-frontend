@@ -153,7 +153,7 @@ const CancelledOrdersPage = () => {
                     </div>
                     <h2>취소된 주문</h2>
                     {isLoading ? (
-                        <div>Loading...</div>
+                        <div></div>
                     ) : (
                         <ReactTableWithCheckbox 
                             columns={columns} 
