@@ -22,7 +22,7 @@ const BuyerPostPage = () => {
   const [checked, setChecked] = useState([]);
   const [isPostMode, setIsPostMode] = useState(false);
   const [edited, setEdited] = useState([]);
-  const [sortBy, setSortBy] = useState('');
+  const [sortBy, setSortBy] = useState('buyerId');
 
   const columnData = [
     {
@@ -78,7 +78,7 @@ const BuyerPostPage = () => {
                   <option disabled='true'>정렬 기준 선택</option>
                   <option value='buyerCd'>고객사 코드</option>
                   <option value='buyerNm'>고객사 명</option>
-                  <option value='createdAt'>등록순</option>
+                  <option value='buyerId'>등록순</option>
                 </select>
                 <div />
                 <div className='manufacturer-button-container'>
@@ -109,16 +109,17 @@ const BuyerPostPage = () => {
                     });
                     console.log('requestBody: ', requestBody);
                     sendPatchMultiBuyerRequest(state, requestBody, () => {
-                      sendGetBuyersRequest(state, page, setPage, sortBy, 10, resetData, setIsLoading);
+                      sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                       setChecked([]);
                     });
                   }}>수정</button>
                   <button className='manufacturer-button'
                     onClick={() => {
                       console.log('checked: ', checked);
-                      const checkedData = checked.map(item => data.data[item].itemId);
+                      const checkedData = checked.map(item => data.data[item].buyerId);
+                      console.log('checkedData: ', checkedData);
                       sendDeleteBuyersRequest(state, data.pageInfo, checkedData, setChecked, () => {
-                        sendGetBuyersRequest(state, page, setPage, 10, resetData, setIsLoading);
+                        sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                         setChecked([]);
                       });
                     }}>삭제</button>

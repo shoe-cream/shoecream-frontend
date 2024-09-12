@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const sendGetBuyersRequest = async (state ,page, setPage, size, sort, setData, setIsLoading) => {
-    console.log("state: ", state);
+const sendGetBuyersRequest = async (state ,page, setPage, size, sortBy, setData, setIsLoading) => {
+    /* console.log("state: ", state); */
+    console.log('sortBy in request: ', sortBy);
     try {
         const response = await axios.get(`http://localhost:8080/buyers`, 
             {
@@ -12,7 +13,7 @@ const sendGetBuyersRequest = async (state ,page, setPage, size, sort, setData, s
                 ,params: {
                     page: page,
                     size: size,
-                    sort: sort,
+                    sort: sortBy,
                 }
             }
         );
