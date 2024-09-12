@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import '../Table/ReactTable.css';
 
-const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked, edited, setEdited }) => {
+const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   const [tableData, setTableData] = useState(data.data);
-  console.log(checked);
+
   useEffect(() => {
     setTableData(data.data);
-  }, [ogData]);
+  }, [data]);
 
   useEffect(() => {
     if (ogData && data && ogData.data && data.data) {
@@ -15,7 +15,7 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
         const ogRow = ogData.data[index];
         if (ogRow) {
           const changedCells = Object.keys(row).reduce((cellAcc, key) => {
-            if (row[key] !== ogRow[key]) {
+            if (JSON.stringify(row[key]) !== JSON.stringify(ogRow[key])) {
               cellAcc[key] = row[key];
             }
             return cellAcc;
@@ -31,15 +31,12 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
         return acc;
       }, {});
 
-      // 변경 사항이 있을 때만 setEdited 호출
       if (JSON.stringify(edited) !== JSON.stringify(updatedEdited)) {
         setEdited(updatedEdited);
       }
     }
   }, [data, ogData, setEdited]);
 
-
-  // 현재 날짜와 시간으로 초기화하는 함수
   const getCurrentDate = () => {
     const now = new Date();
     return now.toISOString().split('T')[0]; // YYYY-MM-DD 형식
@@ -59,7 +56,6 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
       }}
     />
   );
-  
 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id } }) => {
     const [value, setValue] = React.useState(initialValue);
@@ -80,7 +76,7 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
 
     React.useEffect(() => {
       if (id === 'registrationDate' && !value) {
-        setValue(getCurrentDate()); // 초기값 설정
+        setValue(getCurrentDate());
       } else {
         setValue(initialValue);
       }
@@ -96,6 +92,16 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
       />
     );
   });
+
+  const ItemsCell = ({ items }) => (
+    <div>
+      {items.map((item, index) => (
+        <div key={index}>
+          {item.itemCd} - {item.itemNm} ({item.qty} {item.unit})
+        </div>
+      ))}
+    </div>
+  );
 
   const columns = React.useMemo(() => [
     {
@@ -118,24 +124,12 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
     {
       Header: '고객사',
       accessor: 'buyerNm',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
+      Cell: EditableCell
     },
     {
       Header: '고객코드',
       accessor: 'buyerCd',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
+      Cell: EditableCell
     },
     {
       Header: '등록일',
@@ -145,111 +139,17 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
     {
       Header: '납기일',
       accessor: 'requestDate',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
+      Cell: EditableCell
     },
     {
-      Header: '제품명',
-      accessor: 'itemNm',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
-    },
-    {
-      Header: '제품코드',
-      accessor: 'itemCd',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
-    },
-    {
-      Header: '제품 단가',
-      accessor: 'unitPrice',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
-    },
-    {
-      Header: '색상',
-      accessor: 'color',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
-    },
-    {
-      Header: '사이즈',
-      accessor: 'size',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
-    },
-    {
-      Header: '수량',
-      accessor: 'qty',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
-    },
-    {
-      Header: '단위',
-      accessor: 'unit',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
-    },
-    {
-      Header: '금액',
-      accessor: 'price',
-      Cell: ({ row }) => {
-        const unitPrice = row.original.unitPrice || 0;
-        const qty = row.original.qty || 0;
-        const price = unitPrice * qty;
-        return <span>{price}</span>;
-      }
+      Header: '주문 아이템',
+      accessor: 'orderItems',
+      Cell: ({ value }) => <ItemsCell items={value} />
     },
     {
       Header: '계약 기간',
       accessor: 'contractPeriod',
-      Cell: ({ value, row, column }) => (
-        <EditableCell
-          value={value}
-          row={row}
-          column={column}
-        />
-      )
+      Cell: EditableCell
     }
   ], [tableData, checked, setChecked]);
 
@@ -263,7 +163,6 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
 
   const getRowClassName = (row) => {
     const rowIndex = row.index;
-
     const ogRow = ogData.data[rowIndex];
     const tableRow = tableData[rowIndex];
 
@@ -273,7 +172,7 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
 
     for (const key in ogRow) {
         if (ogRow.hasOwnProperty(key) && tableRow.hasOwnProperty(key)) {
-            if (ogRow[key] !== tableRow[key]) {
+            if (JSON.stringify(ogRow[key]) !== JSON.stringify(tableRow[key])) {
               return 'body-r-edited';
             }
         }
@@ -309,4 +208,4 @@ const EditableTableWithCheckbox = ({ ogData, data, setData, checked, setChecked,
   );
 };
 
-export default EditableTableWithCheckbox;
+export default OrderSheet;
