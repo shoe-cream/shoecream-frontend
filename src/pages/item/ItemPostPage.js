@@ -13,6 +13,7 @@ import PostModal from '../../components/modal/PostModal';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import sendPostMultiItemRequest from '../../requests/PostMultiItemRequest';
 import sendPatchMultiItemRequest from '../../requests/PatchMultiItemsRequest';
+import { type } from '@testing-library/user-event/dist/type';
 
 const ItemPostPage = () => {
     const { state } = useAuth();
@@ -44,6 +45,7 @@ const ItemPostPage = () => {
         {
           accessor: 'itemNm',
           Header: '상품명',
+          type: 'text',
         },
         {
           accessor: 'itemCd',
@@ -60,6 +62,40 @@ const ItemPostPage = () => {
         {
           accessor: 'size',
           Header: '사이즈',
+        },
+        {
+          accessor: 'unit',
+          Header: '단위',
+          type: 'text',
+        },
+        {
+          accessor: 'unitPrice',
+          Header: '단가',
+          type: 'number',
+        },
+      ]
+      const postColumnData = [
+        {
+          accessor: 'itemNm',
+          Header: '상품명',
+          type: 'text',
+        },
+        {
+          accessor: 'itemCd',
+          Header: '상품 코드',
+        },
+        {
+          accessor: 'category',
+          Header: '카테고리',
+        },
+        {
+          accessor: 'color',
+          Header: '색상',
+        },
+        {
+          accessor: 'size',
+          Header: '사이즈',
+          type: 'number',
         },
         {
           accessor: 'unit',
@@ -158,7 +194,7 @@ const ItemPostPage = () => {
                         {isPostMode ? <PostModal 
                             state = {state} 
                             setOpened = {setIsPostMode} 
-                            columnData={columnData}
+                            columnData={postColumnData}
                             page={page}
                             setPage={setPage}
                             sortBy={sortBy}
