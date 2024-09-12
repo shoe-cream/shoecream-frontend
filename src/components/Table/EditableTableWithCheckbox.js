@@ -7,15 +7,21 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
   console.log('data in table: ', data);
 
   useEffect(() => {
-    const updatedEdited = data.data.map((row, index) => {
-      const ogRow = ogData.data[index];
-      if (ogRow) {
-        return Object.keys(ogRow).some(key => ogRow[key] !== row[key]) ? index : null;
+    if (ogData && data && ogData.data && data.data) {
+      const updatedEdited = data.data.map((row, index) => {
+        const ogRow = ogData.data[index];
+        if (ogRow) {
+          // 데이터 필드별로 원본 데이터와 비교
+          return Object.keys(ogRow).some(key => ogRow[key] !== row[key]) ? index : null;
+        }
+        return null;
+      }).filter(index => index !== null);
+  
+      // 만약 변경된 사항이 있을 때만 setEdited 호출
+      if (JSON.stringify(edited) !== JSON.stringify(updatedEdited)) {
+        setEdited(updatedEdited);
       }
-      return null;
-    }).filter(index => index !== null);
-
-    setEdited(updatedEdited);
+    }
   }, [data, ogData]);
 
   const CheckboxCell = ({ row }) => (

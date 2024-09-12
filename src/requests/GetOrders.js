@@ -2,13 +2,13 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 
-const getOrderAllRequest = async (state, buyerCd, itemCd, orderStatus, orderId, searchStartDate, searchEndDate, page, size, setOrders, setIsLoading) => {
+const getOrderAllRequest = async (state, buyerCd, itemCd, orderStatus, orderCd, searchStartDate, searchEndDate, page, size, setOrders, setIsLoading) => {
     try {
         const params = {};
         if (buyerCd) params.buyerCode = buyerCd;
         if (itemCd) params.itemCode = itemCd;
         if (orderStatus) params.status = orderStatus;
-        if (orderId) params.orderId = orderId;
+        if (orderCd) params.orderCd = orderCd;
         if (searchStartDate) params.searchStartDate = searchStartDate;
         if (searchEndDate) params.searchEndDate = searchEndDate;
         params.page = page;
