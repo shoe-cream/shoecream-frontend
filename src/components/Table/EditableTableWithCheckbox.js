@@ -62,7 +62,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           const newData = [...prevData.data];
           newData[index] = {
             ...newData[index],
-            [id]: newValue
+            [id]: newValue + "T00:00:00"
           };
           return { ...prevData, data: newData };
         });
