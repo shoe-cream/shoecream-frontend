@@ -11,6 +11,7 @@ import getOrderAllRequest from '../../requests/GetOrders';
 import { useAuth } from '../../auth/AuthContext';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import EditableTableWithCheckboxYoung from '../../components/Table/EditableTableWithCheckboxYoung';
 
 
 
@@ -23,7 +24,7 @@ const OrderApprovalPage = () => {
     const [orders, setOrders] = useState([]);
     const [checkedItems, setCheckedItems] = useState([]);
     const [edited, setEdited] = useState([]);
-    const [ogData, setOgData] = useState({ data: [] });
+    const [ogData, setOgData] = useState({});
     const [status, setStatus] = useState('');
     const [isPageLoaded, setIsPageLoaded] = useState(false); // 페이지 로드 상태 추가
 
@@ -48,24 +49,27 @@ const OrderApprovalPage = () => {
     };
 
     const transformData = (orders) => {
-        return orders.flatMap(order =>
-            order.orderItems.map(item => ({
-                orderCd: order.orderCd,
-                employeeId: order.employeeId,
-                status: order.status,
-                createdAt: order.createdAt,
-                buyerNm: order.buyerNm,
-                buyerCd: order.buyerCd,
-                requestDate: order.requestDate,
+        return orders.map(order => ({
+            ...order,
+            itemDetails: order.orderItems.map(item => ({
                 itemCd: item.itemCd,
                 qty: item.qty,
                 unitPrice: item.unitPrice,
-                totalPrice: (item.unitPrice || 0) * (item.qty || 0)  // totalPrice 계산
+                totalPrice: (item.unitPrice || 0) * (item.qty || 0)
             }))
-        );
+            
+        }));
     };
 
+    const transOrderData = (data) => {
+        let obj = {};
+        for(let i = 0; i < data.length; i++) {
+            
+        }
+    }
     const BaseTable = ({ data }) => {
+        console.log("ASDASDSAD" , data);
+        console.log("data.orderItems", data.data.orderItems);
         const columns = [
             { Header: "담당자", accessor: "employeeId" },
             { Header: "주문코드", accessor: "orderCd" },
@@ -74,18 +78,41 @@ const OrderApprovalPage = () => {
             { Header: "납기일", accessor: "requestDate", editable: true },
             { Header: "고객사 명", accessor: "buyerNm" },
             { Header: "고객 코드", accessor: "buyerCd" },
-            { Header: "제품 코드", accessor: "itemCd", editable: true },
-            { Header: "수량", accessor: "qty", editable: true },
-            { Header: "제품 단가", accessor: "unitPrice" },
-            { Header: "총금액", accessor: "totalPrice" },
+            { 
+                Header: "제품 코드", 
+                accessor: "itemCd",
+                Cell: ({ row }) => 
+                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.itemCd}</div>)
+            },
+            { 
+                Header: "수량", 
+                accessor: "qty",
+                Cell: ({ row }) => 
+                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.qty}</div>)
+            },
+            { 
+                Header: "제품 단가", 
+                accessor: "unitPrice",
+                Cell: ({ row }) => 
+                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.unitPrice ? `${item.unitPrice.toLocaleString()}원` : '-'}</div>)
+            },
+            // { 
+            //     Header: "총금액", 
+            //     accessor: "totalPrice", // 고유한 accessor
+            //     Cell: ({ row }) => 
+            //         row.original.itemDetails.map((item, idx) => <div key={idx}>{item.totalPrice ? `${item.totalPrice.toLocaleString()}원` : '-'}</div>)
+            // },
         ];
+    
 
         return <EditableTableWithCheckbox columns={columns} ogData={ogData} data={data} checked={checkedItems} setChecked={setCheckedItems} edited={edited} setEdited={setEdited} />;
     };
 
+
     useEffect(() => {
         setIsLoading(true);
         getOrderAllRequest(state, null, null, null, null, null, null, page, 10, setOrders, setIsLoading);
+        console.log("orderData", orders)
     }, [page]);
 
     const handleGetOrdersAll = () => {
@@ -145,7 +172,7 @@ const OrderApprovalPage = () => {
                                     {isLoading ? (
                                         <div />
                                     ) : (
-                                        <BaseTable data={{ data: orders?.data ? transformData(orders.data) : [] }} />
+                                        <BaseTable data={orders} />
                                     )}
                                 </TabPanel>
                                 {/* 다른 TabPanel 내용 */}
