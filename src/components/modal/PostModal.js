@@ -4,7 +4,7 @@ import { useState } from 'react';
 import EditableTableWithAddrow from '../Table/EditableTableWithAddrow.js';
 import Swal from 'sweetalert2';
 
-const PostModal = ({ state, setOpened, columnData, postRequest, page, setPage, sortBy, setParentData }) => {
+const PostModal = ({setOpened, columnData, postRequest, sortBy, setParentData, requestArr }) => {
     const [data, setData] = useState([]);
     const [checked, setChecked] = useState([]);
 
@@ -39,7 +39,14 @@ const PostModal = ({ state, setOpened, columnData, postRequest, page, setPage, s
     return (
         <div className="modal-background">
             <div className='modal-container'>
-                <EditableTableWithAddrow columns={columnData} data={data} setData={(value) => setData(value)} checked={checked} setChecked={setChecked}></EditableTableWithAddrow>
+                <EditableTableWithAddrow
+                    columns={columnData}
+                    data={data} 
+                    setData={(value) => setData(value)}
+                    checked={checked} 
+                    setChecked={setChecked}
+                    requestArr={requestArr}
+                ></EditableTableWithAddrow>
                 <div className='post-modal-button-container'>
                     <button className="post-modal-button" onClick={() => {
                         /* console.log('checked: ', checked); */
@@ -54,7 +61,7 @@ const PostModal = ({ state, setOpened, columnData, postRequest, page, setPage, s
                             if (validatedData !== undefined) {
                                 checkedData.push(validatedData);
                             } else {
-                                Swal.fire({ text: '모든 필드를 정확하게 입력해주세요'});
+                                Swal.fire({ text: '모든 필드를 정확하게 입력해주세요' });
                                 return;
                             }
                         }
