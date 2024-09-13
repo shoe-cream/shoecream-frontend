@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs';
 import './OrderApprovalPage.css';
 import 'react-tabs/style/react-tabs.css';
-import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
 import OrderDatepickerSelect from '../../components/OrderPost/OrderDatepickerSelect';
 import PageContainer from '../../components/page_container/PageContainer';
 import getOrderAllRequest from '../../requests/GetOrders';
 import { useAuth } from '../../auth/AuthContext';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox'
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import EditableTableWithCheckboxYoung from '../../components/Table/EditableTableWithCheckboxYoung';
-
-
+import sendPatchMultiItemRequest from '../../requests/PatchOrders';
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -21,19 +18,55 @@ const OrderApprovalPage = () => {
     const { state } = useAuth();
     const [optionSelect, setOptionSelect] = useState('orderId');
     const [keyword, setKeyword] = useState('');
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState({ data: [] });
     const [checkedItems, setCheckedItems] = useState([]);
-    const [edited, setEdited] = useState([]);
-    const [ogData, setOgData] = useState({});
+    const [edited, setEdited] = useState({});
     const [status, setStatus] = useState('');
-    const [isPageLoaded, setIsPageLoaded] = useState(false); // 페이지 로드 상태 추가
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
 
-    // 페이지가 로드될 때 애니메이션 적용을 위해 상태 변경
+    const [originalData, setOriginalData] = useState([]);
+    const [modifiedData, setModifiedData] = useState([]);
+
     useEffect(() => {
         setTimeout(() => {
-            setIsPageLoaded(true); // 0.1초 후 애니메이션 실행
+            setIsPageLoaded(true);
         }, 100);
     }, []);
+
+    const transOrderData = useCallback(({data}) => {
+        if (!Array.isArray(data)) {
+            return [];
+        }
+        return data.flatMap(order => 
+            order.orderItems.map(item => ({
+                employeeId: order.employeeId,
+                orderCd: order.orderCd,
+                status: order.status,
+                createdAt: order.createdAt,
+                requestDate: order.requestDate,
+                buyerNm: order.buyerNm,
+                buyerCd: order.buyerCd,
+                itemCd: item.itemCd,
+                qty: item.qty,
+                unitPrice: item.unitPrice,
+            }))
+        );
+    }, []);
+
+    const fetchOrders = useCallback(() => {
+        setIsLoading(true);
+        getOrderAllRequest(state, null, null, status, keyword, null, null, page, 10, (data) => {
+            setOrders(data);
+            const transformed = transOrderData(data);
+            setOriginalData(transformed);
+            setModifiedData(transformed);
+            setIsLoading(false);
+        }, setIsLoading);
+    }, [state, status, keyword, page, transOrderData]);
+
+    useEffect(() => {
+        fetchOrders();
+    }, [fetchOrders]);
 
     const handleExportToExcel = () => {
         console.log("Export to Excel");
@@ -43,95 +76,37 @@ const OrderApprovalPage = () => {
         window.print();
     };
 
-    const handlePatchOrder = () => {
-        console.log("Patch order functionality will go here.");
-        // 여기에서 주문 수정 로직을 추가하면 됩니다.
-    };
-
-    const transformData = (orders) => {
-        return orders.map(order => ({
-            ...order,
-            itemDetails: order.orderItems.map(item => ({
-                itemCd: item.itemCd,
-                qty: item.qty,
-                unitPrice: item.unitPrice,
-                totalPrice: (item.unitPrice || 0) * (item.qty || 0)
-            }))
-            
-        }));
-    };
-
-    const transOrderData = ({data}) => {
-        let transformedData = [];
-    
-        data.forEach(order => {
-            order.orderItems.forEach(item => {
-                // 각 orderItem별로 새로운 행을 생성
-                transformedData.push({
-                    employeeId: order.employeeId,
-                    orderCd: order.orderCd,
-                    status: order.status,
-                    createdAt: order.createdAt,
-                    requestDate: order.requestDate,
-                    buyerNm: order.buyerNm,
-                    buyerCd: order.buyerCd,
-                    itemCd: item.itemCd,
+    const handlePatchOrder = useCallback(() => {
+        const itemsToUpdate = modifiedData.map((item, index) => {
+            if (edited[index]) {
+                return {
+                    orderId: item.orderCd,
+                    itemId: item.itemCd,
+                    unitPrice: item.unitPrice,
                     qty: item.qty,
-                    unitPrice: item.unitPrice
-                });
-            });
+                    startDate: item.requestDate,
+                    endDate: item.requestDate
+                };
+            }
+            return null;
+        }).filter(item => item !== null);
+
+        if (itemsToUpdate.length === 0) {
+            console.log("수정된 항목이 없습니다.");
+            return;
+        }
+
+        sendPatchMultiItemRequest(state, itemsToUpdate, () => {
+            fetchOrders();
+            setEdited({});
         });
-    
-        return transformedData;
-    };
-    const BaseTable = ({ data }) => {
-        console.log("ASDASDSAD" , data);
-        console.log("data.orderItems", data.data.orderItems);
-        const columns = [
-            { Header: "담당자", accessor: "employeeId" },
-            { Header: "주문코드", accessor: "orderCd" },
-            { Header: "주문상태", accessor: "status" },
-            { Header: "등록일", accessor: "createdAt" },
-            { Header: "납기일", accessor: "requestDate", editable: true },
-            { Header: "고객사 명", accessor: "buyerNm" },
-            { Header: "고객 코드", accessor: "buyerCd" },
-            { 
-                Header: "제품 코드", 
-                accessor: "itemCd"
-            },
-            { 
-                Header: "수량", 
-                accessor: "qty"
-            },
-            { 
-                Header: "제품 단가", 
-                accessor: "unitPrice"
-            },
-            // { 
-            //     Header: "총금액", 
-            //     accessor: "totalPrice", // 고유한 accessor
-            //     Cell: ({ row }) => 
-            //         row.original.itemDetails.map((item, idx) => <div key={idx}>{item.totalPrice ? `${item.totalPrice.toLocaleString()}원` : '-'}</div>)
-            // },
-        ];
-    
+    }, [modifiedData, edited, state, fetchOrders]);
 
-        return <EditableTableWithCheckbox columns={columns} ogData={ogData} data={data} checked={checkedItems} setChecked={setCheckedItems} edited={edited} setEdited={setEdited} />;
-    };
+    const handleGetOrdersAll = useCallback(() => {
+        fetchOrders();
+    }, [fetchOrders]);
 
-
-    useEffect(() => {
-        setIsLoading(true);
-        getOrderAllRequest(state, null, null, null, null, null, null, page, 10, setOrders, setIsLoading);
-        console.log("orderData", orders)
-    }, [page]);
-
-    const handleGetOrdersAll = () => {
-        setIsLoading(true);
-        getOrderAllRequest(state, null, null, null, keyword, null, null, page, 10, setOrders, setIsLoading);
-    };
-
-    const handleTabSelect = (index) => {
+    const handleTabSelect = useCallback((index) => {
         let currentStatus;
         switch (index) {
             case 0: currentStatus = null; break;
@@ -140,18 +115,58 @@ const OrderApprovalPage = () => {
             case 3: currentStatus = 'APPROVED'; break;
             case 4: currentStatus = 'CANCELLED'; break;
             case 5: currentStatus = 'REJECTED'; break;
+            default: currentStatus = null;
         }
         setStatus(currentStatus);
-        setIsLoading(true);
-        getOrderAllRequest(state, null, null, currentStatus, null, null, null, page, 10, setOrders, setIsLoading);
-    };
+    }, []);
 
+    const handleDataChange = useCallback((newData) => {
+        // newData와 newData.data가 존재하는지 확인
+        if (newData && Array.isArray(newData.data)) {
+            setModifiedData(newData.data);
+            
+            // 원본 데이터와 비교하여 변경된 항목 추적
+            const updatedEdited = newData.data.reduce((acc, row, index) => {
+                const originalRow = originalData[index];
+                if (originalRow) {
+                    const changedCells = Object.keys(row).reduce((cellAcc, key) => {
+                        if (row[key] !== originalRow[key]) {
+                            cellAcc[key] = row[key];
+                        }
+                        return cellAcc;
+                    }, {});
+                    if (Object.keys(changedCells).length > 0) {
+                        acc[index] = changedCells;
+                    }
+                }
+                return acc;
+            }, {});
+            setEdited(updatedEdited);
+        } else {
+            console.error('Invalid data structure received in handleDataChange');
+        }
+    }, [originalData]);
+
+    const columns = useMemo(() => [
+        { Header: "담당자", accessor: "employeeId" },
+        { Header: "주문코드", accessor: "orderCd" },
+        { Header: "주문상태", accessor: "status" },
+        { Header: "등록일", accessor: "createdAt" },
+        { Header: "납기일", accessor: "requestDate", type:"date" },
+        { Header: "고객사 명", accessor: "buyerNm" },
+        { Header: "고객 코드", accessor: "buyerCd" },
+        { Header: "제품 코드", accessor: "itemCd" },
+        { Header: "수량", accessor: "qty", type:"number" },
+        { Header: "제품 단가", accessor: "unitPrice", type:"number" },
+    ], []);
+
+    
     return (
         <div>
             <Header />
             <div className='app-container'>
                 <Sidebar />
-                <div className='app-content-container fade-in'> {/* 애니메이션 클래스 추가 */}
+                <div className={`app-content-container ${isPageLoaded ? 'fade-in' : ''}`}>
                     <div className='tab-container'>
                         <Tabs onSelect={handleTabSelect}>
                             <div className='tab-list-container'>
@@ -175,26 +190,44 @@ const OrderApprovalPage = () => {
                             <div className='tab-content'>
                                 <TabPanel>
                                     <h2>전체주문조회</h2>
-                                    <OrderDatepickerSelect GetOrdersAll={handleGetOrdersAll}
-                                        optionSelect={optionSelect} setOptionSelect={setOptionSelect}
-                                        keyword={keyword} setKeyword={setKeyword}>
-                                    </OrderDatepickerSelect>
+                                    <OrderDatepickerSelect 
+                                        GetOrdersAll={handleGetOrdersAll}
+                                        optionSelect={optionSelect} 
+                                        setOptionSelect={setOptionSelect}
+                                        keyword={keyword} 
+                                        setKeyword={setKeyword}
+                                    />
                                     {isLoading ? (
-                                    <div/>
+                                        <div>Loading...</div>
                                     ) : (
-                                        <BaseTable data={orders} />
+                                        <>
+                                            <EditableTableWithCheckbox 
+                                                columns={columns} 
+                                                ogData={{ data: originalData }}
+                                                data={{ data: modifiedData }}
+                                                setData={handleDataChange}
+                                                checked={checkedItems} 
+                                                setChecked={setCheckedItems}
+                                                edited={edited} 
+                                                setEdited={setEdited} 
+                                            />
+                                            <button onClick={handlePatchOrder} disabled={Object.keys(edited).length === 0}>
+                                                변경사항 저장
+                                            </button>
+                                        </>
                                     )}
                                 </TabPanel>
-                                {/* 다른 TabPanel 내용 */}
                             </div>
                         </Tabs>
                     </div>
-                    {isLoading ? <div /> : <PageContainer
-                        currentPage={page}
-                        setPage={setPage}
-                        pageInfo={orders.pageInfo}
-                        getPage={() => { handleGetOrdersAll() }}
-                    ></PageContainer>}
+                    {!isLoading && orders.pageInfo && (
+                        <PageContainer
+                            currentPage={page}
+                            setPage={setPage}
+                            pageInfo={orders.pageInfo}
+                            getPage={handleGetOrdersAll}
+                        />
+                    )}
                 </div>
             </div>
         </div>
