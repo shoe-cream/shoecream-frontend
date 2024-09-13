@@ -38,6 +38,8 @@ function App() {
           <Route path='/cancelled-order' element={<CancelledOrdersPage/>}/>
           <Route path='/order-approval' element={<OrderApprovalPage/>}/>
           <Route path='/order' element={<OrderPostPage/>}/>
+          <Route path="/orders" element={<OrderList />} />         
+          <Route path="/order/:orderId" element={<OrderDetail />} /> 
           <Route path='/registration' element={<RegistrationPage/>}/>
           <Route path='order-detail' element={<OrderDetail/>}/>
         </Routes>
