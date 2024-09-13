@@ -167,10 +167,10 @@ const OrderApprovalPage = () => {
                                     <OrderDatepickerSelect GetOrdersAll={handleGetOrdersAll}
                                         optionSelect={optionSelect} setOptionSelect={setOptionSelect}
                                         keyword={keyword} setKeyword={setKeyword}>
+                                        
                                     </OrderDatepickerSelect>
-                                    <button id='Approve_Purchase' onClick={handlePatchOrder}>수정</button>
                                     {isLoading ? (
-                                        <div />
+                                    <div/>
                                     ) : (
                                         <BaseTable data={orders} />
                                     )}

@@ -1,13 +1,14 @@
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
-import PostContainer from '../../components/postcontainer/PostContainer';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
-import sendGetBuyersRequest from '../../requests/GetBuyersRequest';
 import sendGetMasterBuyerItemsRequest from '../../requests/GetMasterBuyerItems';
 import PageContainer from '../../components/page_container/PageContainer';
+import PostModal from '../../components/modal/PostModal';
+import Swal from 'sweetalert2';
+import sendGetBuyersRequest from '../../requests/GetBuyersRequest';
+import sendGetItemsRequest from '../../requests/GetItemsRequest';
 
 const BuyerItemPostPage = () => {
     const { state } = useAuth();
@@ -24,43 +25,68 @@ const BuyerItemPostPage = () => {
         {
             accessor: 'buyerNm',
             Header: '고객사 명',
-            editable: false,
             /* type: 'text', */
         },
         {
             accessor: 'itemCd',
             Header: '제품 코드',
-            editable: true,
-            type: 'text',
+            type: 'cell',
         },
         {
             accessor: 'itemNm',
             Header: '제품 명',
-            editable: false,
             type: 'cell',
         },
         {
             accessor: 'unitPrice',
             Header: '단가',
-            editable: true,
             type: 'number',
         },
         {
             accessor: 'unit',
             Header: '단위',
-            editable: false,
             type: 'text',
         },
         {
             accessor: 'startDate',
             Header: '적용 시작일',
-            editable: true,
             type: 'date',
         },
         {
             accessor: 'endDate',
             Header: '적용 종료일',
-            editable: true,
+            type: 'date',
+        },
+    ]
+    const postColumnData = [
+        {
+            accessor: 'buyerNm',
+            Header: '고객사 명',
+            type: 'dropdown',
+        },
+        {
+            accessor: 'itemNm',
+            Header: '제품 명',
+            type: 'dropdown',
+        },
+        {
+            accessor: 'unitPrice',
+            Header: '단가',
+            type: 'number',
+        },
+        {
+            accessor: 'unit',
+            Header: '단위',
+            type: 'text',
+        },
+        {
+            accessor: 'startDate',
+            Header: '적용 시작일',
+            type: 'date',
+        },
+        {
+            accessor: 'endDate',
+            Header: '적용 종료일',
             type: 'date',
         },
     ]
@@ -95,6 +121,10 @@ const BuyerItemPostPage = () => {
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
                                     <button className='manufacturer-button' onClick={() => {
+                                        if (checked.length === 0) {
+                                            Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
+                                            return;
+                                        }
                                         console.log('checked: ', checked);
                                         console.log('edited: ', edited);
                                         /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
@@ -126,6 +156,10 @@ const BuyerItemPostPage = () => {
                                     }}>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
+                                            if(checked.length === 0){
+                                                Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                                                return;
+                                              }
                                             console.log('checked: ', checked);
                                             const checkedData = checked.map(item => data.data[item].buyerId);
                                             console.log('checkedData: ', checkedData);
@@ -158,6 +192,25 @@ const BuyerItemPostPage = () => {
                             setChecked={(value) => setChecked(value)}
                             setIsLoading={setIsLoading}
                         ></PageContainer>}
+                        {isPostMode ? <PostModal
+                            state={state}
+                            setOpened={setIsPostMode}
+                            columnData={postColumnData}
+                            postRequest={(checkedData, setOpened, setParentData) => {
+                                /* sendPostMultiItemRequest(state, checkedData, () => {
+                                    setOpened(false);
+                                    sendGetItemsRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
+                                }); */
+                            }}
+                            page={page}
+                            setPage={setPage}
+                            sortBy={sortBy}
+                            setParentData={(value) => resetData(value)}
+                            requestArr={[
+                                {key: 'buyerNm', function: (setData) => sendGetBuyersRequest(state, 1, undefined, 9999999, 'buyerNm', (value) => setData(value))},
+                                {key: 'itemNm', function: (setData) => sendGetItemsRequest(state, 1, undefined, 9999999, 'itemNm', (value) => setData(value))},
+                            ]}
+                        ></PostModal> : <div />}
                     </div>
                 </div>
             </div>

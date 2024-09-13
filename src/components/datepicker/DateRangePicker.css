@@ -1,14 +1,14 @@
 .date-range-picker-container{
     display: flex;
-    height: 30spx;
+    
     background-color: #769adc;
     border-radius: 5px;
     align-items: center;
-    width: 300px;
+    
 }
 .date-range-picker-label{
     display: flex;
-    height: 100%; 
+    width: 20%;
     font-size: 12px;
     padding-left: 10px;
     padding-right: 10px;
@@ -16,10 +16,11 @@
     align-items: center;    
 }
 .date-range-picker{
-    width: 200px;
-    height: 100%;
+    
+    
     text-align: center;
     /* margin-right: 15px; */
     outline: none;
     box-sizing: border-box;
+    padding-right: 10px;
 }

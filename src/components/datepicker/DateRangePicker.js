@@ -8,6 +8,7 @@ const DateRangePicker = () => {
   const [startDate, endDate] = dateRange;
 
   return (
+  
     <div className='date-range-picker-container'>
       <div className='date-range-picker-label'>조회 기간</div>
       <DatePicker className='date-range-picker'
@@ -20,7 +21,7 @@ const DateRangePicker = () => {
         isClearable={true}
         dateFormat="yyyy/MM/dd"
         placeholderText="기간 선택"
-      />
+      /> 
     </div>
   );
 };
