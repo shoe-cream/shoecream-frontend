@@ -12,6 +12,8 @@ import PostModal from "../../components/modal/PostModal";
 import sendPatchMultiBuyerRequest from "../../requests/PatchMultiBuyerRequest";
 import sendDeleteBuyersRequest from "../../requests/DeleteBuyersRequest";
 import { type } from "@testing-library/user-event/dist/type";
+import sendPostBuyersRequest from "../../requests/PostBuyersRequest";
+import Swal from "sweetalert2";
 
 const BuyerPostPage = () => {
   const { state } = useAuth();
@@ -33,7 +35,7 @@ const BuyerPostPage = () => {
     {
       accessor: 'email',
       Header: '이메일',
-      type: 'text',
+      type: 'email',
     },
     {
       accessor: 'buyerNm',
@@ -86,6 +88,10 @@ const BuyerPostPage = () => {
                 <div className='manufacturer-button-container'>
                   <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
                   <button className='manufacturer-button' onClick={() => {
+                    if(checked.length === 0){
+                      Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                      return;
+                    }
                     console.log('checked: ', checked);
                     console.log('edited: ', edited);
                     /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
@@ -117,6 +123,10 @@ const BuyerPostPage = () => {
                   }}>수정</button>
                   <button className='manufacturer-button'
                     onClick={() => {
+                      if(checked.length === 0){
+                        Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                        return;
+                      }
                       console.log('checked: ', checked);
                       const checkedData = checked.map(item => data.data[item].buyerId);
                       console.log('checkedData: ', checkedData);
@@ -153,6 +163,12 @@ const BuyerPostPage = () => {
               state={state}
               setOpened={setIsPostMode}
               columnData={columnData}
+              postRequest={(checkedData, setOpened, setParentData) => {
+                sendPostBuyersRequest(state, checkedData, () => {
+                  setOpened(false);
+                  sendGetBuyersRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
+                });
+              }}
               page={page}
               setPage={setPage}
               sortBy={sortBy}

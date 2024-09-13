@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const sendGetBuyersRequest = async (state ,page, setPage, size, sortBy, setData, setIsLoading) => {
     /* console.log("state: ", state); */
@@ -31,9 +32,11 @@ const sendGetBuyersRequest = async (state ,page, setPage, size, sortBy, setData,
             }
         } else {
             console.log('고객사 정보 GET요청 실패');
+            Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch (error) {
         console.error('고객사 정보 GET요청 실패(에러 발생)', error);
+        Swal.fire({text: `요청 실패(${error.status})`});
     }
 };
 

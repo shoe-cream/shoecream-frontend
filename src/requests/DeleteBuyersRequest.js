@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const sendDeleteBuyersRequest = async (state, pageInfo, checkedData, setChecked, executeAfter) => {
     try {
@@ -26,10 +27,11 @@ const sendDeleteBuyersRequest = async (state, pageInfo, checkedData, setChecked,
             }
         } else {
             console.log('고객사 삭제 실패: ', response.status);
-            
+            Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch (error) {
         console.error('고객사 삭제 실패(에러 발생):', error);
+        Swal.fire({text: `요청 실패(${error.status})`});
     }
 };
 
