@@ -22,8 +22,8 @@ const OrderDetail = () => {
             buyerId: 1,
             memberId: 1,
             orderItems: [
-                { orderItemId: 1, itemCd: '이광희', quantity: 10, unitPrice: 100.50 },
-                { orderItemId: 2, itemCd: '안경 돌려줘', quantity: 5, unitPrice: 200.00 }
+                { orderItemId: 1, itemCd: '황해진', quantity: 10, unitPrice: 100.50 },
+                { orderItemId: 2, itemCd: '화이팅', quantity: 5, unitPrice: 200.00 }
             ]
         };
         setOrderData(tempData);
@@ -54,11 +54,11 @@ const OrderDetail = () => {
         const element = document.getElementById('quotation-content');
 
         // PDF를 Blob 형태로 변환
-        html2pdf().from(element).toPdf().outputPdf().then((pdf) => {
+        html2pdf().from(element).toPdf().output('blob').then((pdf) => {
             const formData = new FormData();
             formData.append("email", email);
             formData.append("content", "Here is your attached file.");
-            formData.append("file", new Blob([pdf], { type: "application/pdf" }), "quotation.pdf");
+            formData.append("file", pdf, "quotation.pdf");
 
             fetch('http://localhost:8080/email/send', {
                 method: 'POST',
