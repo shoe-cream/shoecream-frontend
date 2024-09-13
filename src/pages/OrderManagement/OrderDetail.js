@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';  // 주문 ID 파라미터를 받아오기 위한 훅
 import html2pdf from 'html2pdf.js';
 import Header from '../../components/header/Header'; 
 import Sidebar from '../../components/sidebar/Sidebar';
@@ -6,18 +7,29 @@ import '../../App.css';
 import './OrderDetail.css'; 
 
 const OrderDetail = () => {
-    const [orderData, setOrderData] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false); 
-    const [email, setEmail] = useState("");  
-    const [isSending, setIsSending] = useState(false); 
+    const { orderId } = useParams();  // URL에서 orderId를 받아옴
+    const [orderData, setOrderData] = useState(null); // 주문 데이터 상태
+    const [isModalOpen, setIsModalOpen] = useState(false);  // 이메일 모달 상태
+    const [email, setEmail] = useState("");  // 이메일 입력 상태
+    const [isSending, setIsSending] = useState(false);  // 이메일 전송 상태
 
+    // API 요청으로 주문 데이터 받아오기
     useEffect(() => {
-        const orderData = {
-           
-        
-        };
-        setOrderData(orderData);
-    }, []);
+        fetch(`http://localhost:8080/orders/${orderId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer <Your_Token>',  // 인증이 필요하다면 토큰 추가
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setOrderData(data.data); // API로부터 받은 데이터 저장
+        })
+        .catch(error => {
+            console.error('Error fetching order data:', error);
+        });
+    }, [orderId]);  // orderId가 변경될 때마다 API 호출
 
     if (!orderData) {
         return <div>로딩 중...</div>;
@@ -26,24 +38,28 @@ const OrderDetail = () => {
     const totalAmount = orderData.orderItems.reduce((total, item) => total + item.quantity * item.unitPrice, 0);
     const tax = totalAmount * 0.1;
 
+    // PDF 다운로드 함수
     const handleDownloadPDF = () => {
         const element = document.getElementById('quotation-content');
         html2pdf().from(element).save('quotation.pdf');
     };
 
+    // 이메일 모달 열기
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
 
+    // 이메일 모달 닫기
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
 
+    // 이메일 전송 함수
     const handleSendEmail = () => {
-        setIsSending(true); // 전송 상태 변경
+        setIsSending(true); // 전송 중 상태 설정
         const element = document.getElementById('quotation-content');
 
-        // PDF를 Blob 형태로 변환
+        // PDF를 Blob 형태로 변환하여 이메일로 전송
         html2pdf().from(element).toPdf().output('blob').then((pdf) => {
             const formData = new FormData();
             formData.append("email", email);
@@ -66,8 +82,8 @@ const OrderDetail = () => {
                 alert("메일 전송 중 오류가 발생했습니다.");
             })
             .finally(() => {
-                setIsSending(false); 
-                handleCloseModal(); 
+                setIsSending(false);  // 전송 상태 해제
+                handleCloseModal();   // 모달 닫기
             });
         });
     };
@@ -81,36 +97,32 @@ const OrderDetail = () => {
                     <div className='quotation-content' id='quotation-content'>
                         <h1>견적서</h1>
                         <div className='quotation-info'>
-                            <p><strong>Invoice No.</strong> #002121</p>
-                            <p><strong>견적일</strong> 2024-09-04</p>
-                            <p><strong>견적서 만료일</strong> 2024-09-11</p>
+                            <p><strong>Invoice No.</strong> {orderData.orderCd}</p>
+                            <p><strong>견적일</strong> {orderData.createdAt}</p>
+                            <p><strong>견적서 만료일</strong> {orderData.requestDate}</p>
                         </div>
 
                         <h2>주문 상세 내역</h2>
-                        {orderData ? (
-                            <table className='order-table'>
-                                <thead>
-                                    <tr>
-                                        <th>제품 코드</th>
-                                        <th>수량</th>
-                                        <th>단가</th>
-                                        <th>총액</th>
+                        <table className='order-table'>
+                            <thead>
+                                <tr>
+                                    <th>제품 코드</th>
+                                    <th>수량</th>
+                                    <th>단가</th>
+                                    <th>총액</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orderData.orderItems.map(item => (
+                                    <tr key={item.orderItemId}>
+                                        <td>{item.itemCd}</td>
+                                        <td>{item.quantity}</td>
+                                        <td>{item.unitPrice.toFixed(2)}</td>
+                                        <td>{(item.quantity * item.unitPrice).toFixed(2)}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {orderData.orderItems.map(item => (
-                                        <tr key={item.orderItemId}>
-                                            <td>{item.itemCd}</td>
-                                            <td>{item.quantity}</td>
-                                            <td>{item.unitPrice.toFixed(2)}</td>
-                                            <td>{(item.quantity * item.unitPrice).toFixed(2)}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <p>로딩 중...</p>
-                        )}
+                                ))}
+                            </tbody>
+                        </table>
 
                         <div className='quotation-total'>
                             <p><strong>소계</strong>: ${totalAmount.toFixed(2)}</p>
@@ -125,7 +137,7 @@ const OrderDetail = () => {
                 </div>
             </div>
 
-            {/* 모달 */}
+            {/* 이메일 모달 */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
