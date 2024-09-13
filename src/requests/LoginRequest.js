@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const sendLoginRequest = async(emailInput, passwordInput, navigate, login) => {
     try{
@@ -20,9 +21,11 @@ const sendLoginRequest = async(emailInput, passwordInput, navigate, login) => {
             navigate('/');
         }else{
             console.log('로그인 요청 실패: ', response.status);
+            Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch(error){
         console.error('로그인 요청 실패(에러 발생): ', error);
+        Swal.fire({text: `요청 실패(${error.status})`});
     }
 }
 export default sendLoginRequest;

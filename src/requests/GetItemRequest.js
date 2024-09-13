@@ -19,10 +19,12 @@ const getItemRequest= async (state ,itemCd, setItem, setIsLoading) => {
         } else {
             console.log('Failed to fetch buyer data:', response.status);
             setIsLoading(false);
+            Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch (error) {
         console.error('Error fetching buyer data:', error);
         setIsLoading(false);
+        Swal.fire({text: `요청 실패(${error.status})`});
     }
 };
 

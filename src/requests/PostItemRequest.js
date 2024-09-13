@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const sendPostItemRequest = async(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput, executeAfter) => {
     try{
@@ -26,9 +27,11 @@ const sendPostItemRequest = async(state, nameInput, codeInput, unitInput, unitpr
             }
         }else{
             console.log('제품 등록 실패: ', response.status);
+            Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch(error){
         console.error('제품 등록 실패(에러 발생): ', error);
+        Swal.fire({text: `요청 실패(${error.status})`});
     }
 }
 export default sendPostItemRequest;

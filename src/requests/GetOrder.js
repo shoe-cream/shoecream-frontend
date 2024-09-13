@@ -17,6 +17,7 @@ const getOrderRequest = async (state, orderId, setOrders, setIsLoading) => {
             setIsLoading(false);
         } else {
             console.log('Failed to fetch orders data:', response.status);
+            Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch (error) {
         console.error('Error fetching buyer data:', error);
