@@ -1,13 +1,12 @@
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
-import PostContainer from '../../components/postcontainer/PostContainer';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
-import sendGetBuyersRequest from '../../requests/GetBuyersRequest';
 import sendGetMasterBuyerItemsRequest from '../../requests/GetMasterBuyerItems';
 import PageContainer from '../../components/page_container/PageContainer';
+import PostModal from '../../components/modal/PostModal';
+import Swal from 'sweetalert2';
 
 const BuyerItemPostPage = () => {
     const { state } = useAuth();
@@ -95,6 +94,10 @@ const BuyerItemPostPage = () => {
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
                                     <button className='manufacturer-button' onClick={() => {
+                                        if (checked.length === 0) {
+                                            Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
+                                            return;
+                                        }
                                         console.log('checked: ', checked);
                                         console.log('edited: ', edited);
                                         /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
@@ -126,6 +129,10 @@ const BuyerItemPostPage = () => {
                                     }}>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
+                                            if(checked.length === 0){
+                                                Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                                                return;
+                                              }
                                             console.log('checked: ', checked);
                                             const checkedData = checked.map(item => data.data[item].buyerId);
                                             console.log('checkedData: ', checkedData);
@@ -158,6 +165,21 @@ const BuyerItemPostPage = () => {
                             setChecked={(value) => setChecked(value)}
                             setIsLoading={setIsLoading}
                         ></PageContainer>}
+                        {isPostMode ? <PostModal
+                            state={state}
+                            setOpened={setIsPostMode}
+                            columnData={columnData}
+                            postRequest={(checkedData, setOpened, setParentData) => {
+                                /* sendPostMultiItemRequest(state, checkedData, () => {
+                                    setOpened(false);
+                                    sendGetItemsRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
+                                }); */
+                            }}
+                            page={page}
+                            setPage={setPage}
+                            sortBy={sortBy}
+                            setParentData={(value) => resetData(value)}
+                        ></PostModal> : <div />}
                     </div>
                 </div>
             </div>
