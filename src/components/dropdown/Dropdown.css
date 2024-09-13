@@ -53,4 +53,4 @@
     background-color: #0D9276; /* 짙은 녹색으로 호버 시 변경 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 추가 */
     transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
-}
+}  
