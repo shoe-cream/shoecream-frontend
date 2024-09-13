@@ -35,7 +35,7 @@ const BuyerPostPage = () => {
     {
       accessor: 'email',
       Header: '이메일',
-      type: 'email',
+      type: 'text',
     },
     {
       accessor: 'buyerNm',
