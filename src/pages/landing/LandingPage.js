@@ -37,20 +37,9 @@ const LandingPage = () => {
                         <h2>판매 추이</h2>
                         <SalesChart /> {/* 차트 컴포넌트 추가 */}
                     </div>
-                    
-                    <div style={{ width: '80%', margin: '0 auto' }}>
-                        <h2>판매 추이</h2>
-                        <MonthSalesChart /> {/* 차트 컴포넌트 추가 */}
-                    </div>
-                    
                     <div style={{ width: '80%', margin: '0 auto' }}>
                         <h2>판매 추이</h2>
                         <CircleSalesChart /> {/* 차트 컴포넌트 추가 */}
-                    </div>
-
-                    <div style={{ width: '80%', margin: '0 auto', marginTop: '20px' }}>
-                        <h2>판매 데이터</h2>
-                        <Table columns={columns} data={data} onSendData={handleSendData} />
                     </div>
                 </div>
             </div>

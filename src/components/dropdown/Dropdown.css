@@ -1,12 +1,12 @@
 .dropdown{
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: #4688E2;
     
 }
 .dropdown-title{  
     height: 40px;
-    background-color:#FFFFFF;
+    background-color:#4688E2;
     border-top: 0.5px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
     border-bottom: 0.5px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
     display: flex;
@@ -18,16 +18,20 @@
 }
 .dropdown-title-text{
     margin-left: 15px;
-    color: #313131;
+    color: #FFFFFF;
     font-size: 15px;
 }
 
 /* 드롭다운 화살표 */
 .dropdown-arrow {
+    background-color: #9a9999;
     width: 20px;
     height: 20px;
 }
 
+.dropdown-arrow:hover{
+    background-color: #c86a26; /* 짙은 녹색으로 호버 시 변경 */
+}
 .dropdown-content{
     background-color: #fafafa;
     border-radius: 5px;
@@ -42,7 +46,7 @@
 
 /* 드롭다운 타이틀 마우스오버 색상  */
 .dropdown-title:hover {
-    background-color: #0D9276; /* 짙은 녹색으로 호버 시 변경 */
+    background-color: #3876BF; /* 짙은 녹색으로 호버 시 변경 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 추가 */
     transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
   
@@ -50,7 +54,7 @@
 
 /* 드롭다운 컨탠트 마우스오버 색상  */
 .dropdown-content:hover{
-    background-color: #0D9276; /* 짙은 녹색으로 호버 시 변경 */
+    background-color: #c86a26; /* 짙은 녹색으로 호버 시 변경 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 추가 */
     transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
 }  

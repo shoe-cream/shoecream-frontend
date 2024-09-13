@@ -6,21 +6,26 @@
   display: flex; /* 컨테이너에 플렉스박스 설정 */
   height: 100vh;
   background-color: #DDDDDD;
-  
-  
+  min-height: 150vh;
+
+}
+
+body {
+  background-color: #FFFFFF !important; /* 하얀색 */
 }
 
 .app-content-container {
-  width: 85%; /* 컨테이너 너비를 100%로 설정 */
+  width: 100%; /* 컨테이너 너비를 100%로 설정 */
   display: flex; /* 플렉스박스로 설정하여 내부 요소 배치 */
   flex-direction: column; /* 내부 요소를 세로로 정렬 */
   margin-right: 25px; /* 오른쪽 여백 100px 설정 */
   margin-left: 25px;
   border-radius: 8px;
-  height: 100vh;
+  height: 200vh !important;
   border-color: #031623; /* 밝은 파란색으로 테두리 색상 변경 */
   
 }
+
 
 .app-background {
   width: 85%; /* 백그라운드 너비를 100%로 설정 */
@@ -28,5 +33,5 @@
   flex-direction: column; /* 요소를 세로로 정렬 */
   align-items: center; /* 가로 중앙 정렬 */
   border-radius: 8px; /* 모서리를 둥글게 처리 */
-  background-color: #DDDDDD;
+  background-color: #FFFFFF;
 }

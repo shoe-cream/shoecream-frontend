@@ -1,29 +1,152 @@
-
-
-/* OrderApprovalPage.css */
-.tab-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* 탭 리스트와 버튼 사이에 공간을 추가 */
-    margin: 0 auto;
+/* 페이지 전반적인 테마 적용 */
+body {
+    background-color: #FFF6E9; /* 밝은 배경색 */
 }
 
+/* 탭 컨테이너 스타일 */
+.tab-container {
+    margin: 20px 0; 
+    display: flex !important;
+    padding: 20px; 
+    background-color: #FFFFFF; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border-radius: 8px; /* Rounded corners */
+}
+
+/* 탭 리스트 스타일 */
 .tab-list-container {
     display: flex;
     flex: 1;
 }
 
-.order-date-select{
-    display: flex;
-}
-
-
 .tab-actions {
     display: flex;
     align-items: center;
-    gap: 5px; /* 버튼 사이 여백 */
+    justify-content: flex-start; /* 버튼을 왼쪽 정렬 */
+    gap: 10px; /* 버튼 사이의 간격 */
+    margin-top: 20px; /* 상단 여백 추가 */
 }
 
-.tab-actions button {
-    margin-left: 10px; /* 탭 리스트와 버튼 사이 여백 */
+
+.tab-actions button:hover {
+    background-color: #0D9276;
+}
+
+/* 주문 수정 버튼 스타일 */
+#Approve_Purchase {
+    background-color: #40A2E3;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 15px;
+}
+
+#Approve_Purchase:hover {
+    background-color: #0D9276;
+}
+
+/* 테이블 헤더 스타일링 덮어쓰기 */
+th {
+    background-color: #f5f5f5 !important; /* OrderApproval 페이지 전용 헤더 배경 */
+    border: 1px solid #bbbbbb;
+    color: #333; /* 헤더 텍스트 색상 */
+}
+
+/* 테이블 애니메이션 */
+tbody tr {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+table {
+    display: table !important;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out; /* 페이지 로드 시 페이드 인 애니메이션 */
+}
+
+/* 입력창, 검색창 스타일 */
+input[type="text"], input[type="date"], select {
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="date"]:focus, select:focus {
+    border-color: #0D9276;
+}
+
+/* 페이지 컨테이너 스타일 */
+.app-content-container {
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+/* 검색창 및 날짜 선택기 스타일 조정 */
+.search-list {
+    width: 8%;
+}
+
+.product-name {
+    width: 10% !important;
+}
+
+.date-range-picker-container {
+    display: flex;
+    align-items: center;
+    width: auto;
+    max-width: 235px; /* 필요에 따라 더 줄이거나 늘려볼 수 있습니다 */
+    margin-right: 10px; /* 오른쪽 여백 */
+    padding: 0; /* 불필요한 패딩 제거 */
+}
+
+.react-datepicker-wrapper {
+    flex: 1;
+}
+
+/* 페이지 로드 시 페이드 인 애니메이션 적용 */
+.load-btn {
+    background-color: #6aa1e8 !important;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
+}
+
+.load-btn:hover {
+    background-color: #0D9276 !important; /* 짙은 녹색으로 호버 시 변경 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 추가 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
 }
