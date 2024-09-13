@@ -44,20 +44,21 @@
 }
 
 .special-cell {
-    font-size: 14px;
+    font-size: 13px;
     /* 제목창 */
-    max-width: 60px !important; 
+    width: 100px !important; 
     font-weight: bold;
     background-color: #40679d; /* 원하는 배경색 */
     color: #FFFFFF; /* 글자 색상 */
     padding: 8px !important; /* 셀 내부 패딩 */
     text-align: center; /* 텍스트 가운데 정렬 */
-    border-radius: 4px; /* 둥근 모서리 */
+    border-radius: 5px; /* 둥근 모서리 */
     box-sizing: border-box; /* 패딩이 포함된 너비 계산 */
 }
 
 .button-container {
     display: flex;
+    margin-left: 82%;
     justify-content: flex-end; /* 버튼들이 공간을 균등하게 차지하도록 설정 */
     gap: 15px; /* 버튼 간의 간격을 설정 */
     margin-top: 20px; /* 버튼 위쪽 여백 */
@@ -76,6 +77,11 @@
     margin-right: 10px; /* 버튼 간의 오른쪽 간격 */
     margin-bottom: 5px;
     transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
+}
+
+.search-button {
+    background-color: #e7e7e7;
+
 }
 
 

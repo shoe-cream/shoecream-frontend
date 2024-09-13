@@ -9,11 +9,8 @@ import OrderDatepickerSelect from '../../components/OrderPost/OrderDatepickerSel
 import PageContainer from '../../components/page_container/PageContainer';
 import getOrderAllRequest from '../../requests/GetOrders';
 import { useAuth } from '../../auth/AuthContext';
-import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox'
+import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import EditableTableWithCheckboxYoung from '../../components/Table/EditableTableWithCheckboxYoung';
-
-
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -26,12 +23,11 @@ const OrderApprovalPage = () => {
     const [edited, setEdited] = useState([]);
     const [ogData, setOgData] = useState({});
     const [status, setStatus] = useState('');
-    const [isPageLoaded, setIsPageLoaded] = useState(false); // 페이지 로드 상태 추가
+    const [isPageLoaded, setIsPageLoaded] = useState(false);
 
-    // 페이지가 로드될 때 애니메이션 적용을 위해 상태 변경
     useEffect(() => {
         setTimeout(() => {
-            setIsPageLoaded(true); // 0.1초 후 애니메이션 실행
+            setIsPageLoaded(true);
         }, 100);
     }, []);
 
@@ -45,31 +41,9 @@ const OrderApprovalPage = () => {
 
     const handlePatchOrder = () => {
         console.log("Patch order functionality will go here.");
-        // 여기에서 주문 수정 로직을 추가하면 됩니다.
     };
 
-    const transformData = (orders) => {
-        return orders.map(order => ({
-            ...order,
-            itemDetails: order.orderItems.map(item => ({
-                itemCd: item.itemCd,
-                qty: item.qty,
-                unitPrice: item.unitPrice,
-                totalPrice: (item.unitPrice || 0) * (item.qty || 0)
-            }))
-            
-        }));
-    };
-
-    const transOrderData = (data) => {
-        let obj = {};
-        for(let i = 0; i < data.length; i++) {
-            
-        }
-    }
     const BaseTable = ({ data }) => {
-        console.log("ASDASDSAD" , data);
-        console.log("data.orderItems", data.data.orderItems);
         const columns = [
             { Header: "담당자", accessor: "employeeId" },
             { Header: "주문코드", accessor: "orderCd" },
@@ -78,42 +52,26 @@ const OrderApprovalPage = () => {
             { Header: "납기일", accessor: "requestDate", editable: true },
             { Header: "고객사 명", accessor: "buyerNm" },
             { Header: "고객 코드", accessor: "buyerCd" },
-            { 
-                Header: "제품 코드", 
-                accessor: "itemCd",
-                Cell: ({ row }) => 
-                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.itemCd}</div>)
-            },
-            { 
-                Header: "수량", 
-                accessor: "qty",
-                Cell: ({ row }) => 
-                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.qty}</div>)
-            },
-            { 
-                Header: "제품 단가", 
-                accessor: "unitPrice",
-                Cell: ({ row }) => 
-                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.unitPrice ? `${item.unitPrice.toLocaleString()}원` : '-'}</div>)
-            },
-            // { 
-            //     Header: "총금액", 
-            //     accessor: "totalPrice", // 고유한 accessor
-            //     Cell: ({ row }) => 
-            //         row.original.itemDetails.map((item, idx) => <div key={idx}>{item.totalPrice ? `${item.totalPrice.toLocaleString()}원` : '-'}</div>)
-            // },
+            { Header: "제품 코드", accessor: "itemCd" },
+            { Header: "수량", accessor: "qty" },
+            { Header: "제품 단가", accessor: "unitPrice" },
         ];
-    
 
-        return <EditableTableWithCheckbox columns={columns} ogData={ogData} data={data} checked={checkedItems} setChecked={setCheckedItems} edited={edited} setEdited={setEdited} />;
+        return <EditableTableWithCheckbox 
+            columns={columns} 
+            ogData={ogData} 
+            data={data} 
+            checked={checkedItems} 
+            setChecked={setCheckedItems} 
+            edited={edited} 
+            setEdited={setEdited} 
+        />;
     };
-
 
     useEffect(() => {
         setIsLoading(true);
         getOrderAllRequest(state, null, null, null, null, null, null, page, 10, setOrders, setIsLoading);
-        console.log("orderData", orders)
-    }, [page]);
+    }, [page, state]);
 
     const handleGetOrdersAll = () => {
         setIsLoading(true);
@@ -129,6 +87,7 @@ const OrderApprovalPage = () => {
             case 3: currentStatus = 'APPROVED'; break;
             case 4: currentStatus = 'CANCELLED'; break;
             case 5: currentStatus = 'REJECTED'; break;
+            default: currentStatus = null;
         }
         setStatus(currentStatus);
         setIsLoading(true);
@@ -140,7 +99,7 @@ const OrderApprovalPage = () => {
             <Header />
             <div className='app-container'>
                 <Sidebar />
-                <div className='app-content-container fade-in'> {/* 애니메이션 클래스 추가 */}
+                <div className={`app-content-container ${isPageLoaded ? 'fade-in' : ''}`}>
                     <div className='tab-container'>
                         <Tabs onSelect={handleTabSelect}>
                             <div className='tab-list-container'>
@@ -153,10 +112,11 @@ const OrderApprovalPage = () => {
                                     <Tab>Returned Orders</Tab>
                                 </TabList>
                                 <div className='tab-actions'>
-                                    <button className='load-btn' onClick={handleExportToExcel}>
+                                    <button className='btn btn-secondary' onClick={handleExportToExcel}>
+
                                         <i className="fas fa-file-excel"></i> 엑셀 다운로드
                                     </button>
-                                    <button className='load-btn' onClick={handlePrint}>
+                                    <button className='btn btn-secondary' onClick={handlePrint}>
                                         <i className="fas fa-print"></i> 인쇄
                                     </button>
                                 </div>
@@ -164,27 +124,52 @@ const OrderApprovalPage = () => {
                             <div className='tab-content'>
                                 <TabPanel>
                                     <h2>전체주문조회</h2>
-                                    <OrderDatepickerSelect GetOrdersAll={handleGetOrdersAll}
-                                        optionSelect={optionSelect} setOptionSelect={setOptionSelect}
-                                        keyword={keyword} setKeyword={setKeyword}>
-                                        
-                                    </OrderDatepickerSelect>
+                                    {/* 검색창과 주문코드 유지 */}
+                                    <div className="flex space-x-2 items-center">
+                                        <OrderDatepickerSelect 
+                                            GetOrdersAll={handleGetOrdersAll}
+                                            optionSelect={optionSelect} 
+                                            setOptionSelect={setOptionSelect}
+                                            keyword={keyword} 
+                                            setKeyword={setKeyword}
+                                        />
+                                       
+                                    </div>
+
+                                    {/* 조회기간과 견적서 발행, 수정 버튼을 컨테이너에 넣기 */}
+                                    <div className="flex flex-col space-y-4 mt-4 border p-4 rounded-lg shadow">
+                                        <div className="flex space-x-4 items-center">
+                                            <span>조회기간:</span>
+                                            <input type="date" className="input w-40" />
+                                            <span>~</span>
+                                            <input type="date" className="input w-40" />
+                                        </div>
+                                        <div className="flex space-x-4 items-center">
+                                            <button className='btn btn-primary' onClick={handlePatchOrder}>견적서 발행</button>
+                                            <button className='btn btn-primary' onClick={handlePatchOrder}>수정</button>
+                                        </div>
+                                    </div>
+
                                     {isLoading ? (
-                                    <div/>
+                                        <div>로딩 중...</div>
                                     ) : (
-                                        <BaseTable data={orders} />
+                                        <>
+                                            <BaseTable data={orders} />
+                                        </>
                                     )}
                                 </TabPanel>
                                 {/* 다른 TabPanel 내용 */}
                             </div>
                         </Tabs>
                     </div>
-                    {isLoading ? <div /> : <PageContainer
-                        currentPage={page}
-                        setPage={setPage}
-                        pageInfo={orders.pageInfo}
-                        getPage={() => { handleGetOrdersAll() }}
-                    ></PageContainer>}
+                    {!isLoading && (
+                        <PageContainer
+                            currentPage={page}
+                            setPage={setPage}
+                            pageInfo={orders.pageInfo}
+                            getPage={handleGetOrdersAll}
+                        />
+                    )}
                 </div>
             </div>
         </div>
