@@ -32,6 +32,7 @@ const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, ke
             <button id='searchProduct' className='search-button' onClick={() => GetOrdersAll(optionSelect, keyword)}>
                 <img src='/icons/zoom.png' alt='Search' className='search-icon' />
             </button>
+            <button id='publish'>견적서 발행</button>
             <button id='Approve_Purchase' onClick={handlePatchOrder}>수정</button>
         </div>
     );
