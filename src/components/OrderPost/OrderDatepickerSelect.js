@@ -12,7 +12,10 @@ const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, ke
     const getKeyword = (e) => {
         setKeyword(e.target.value)
     }
-
+    const handlePatchOrder = () => {
+        console.log("Patch order functionality will go here.");
+        // 여기에서 주문 수정 로직을 추가하면 됩니다.
+    };
     return (
         <div className='order-date-select'>
             <DateRangePicker></DateRangePicker>
@@ -24,11 +27,12 @@ const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, ke
             {
             optionSelect !== 'date' ? 
             <input type='text' id='productName' className='product-name' value={keyword} onChange={getKeyword} /> :
-            <input type = 'date' id= 'dateSelect' value ={keyword} onChange= {getKeyword}></input>
+            <input type='date' id= 'dateSelect' value ={keyword} onChange= {getKeyword}></input>
             }
             <button id='searchProduct' className='search-button' onClick={() => GetOrdersAll(optionSelect, keyword)}>
                 <img src='/icons/zoom.png' alt='Search' className='search-icon' />
             </button>
+            <button id='Approve_Purchase' onClick={handlePatchOrder}>수정</button>
         </div>
     );
 }
