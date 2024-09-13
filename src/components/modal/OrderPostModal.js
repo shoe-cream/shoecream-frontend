@@ -6,6 +6,7 @@ import getBuyerJoinItemsRequest from '../../requests/GetBuyerJoinItems';
 import getItemRequest from '../../requests/GetItemRequest';
 import Swal from 'sweetalert2';
 import EditableTableWithCheckboxYoung from '../Table/EditableTableWithCheckboxYoung';
+import { type } from '@testing-library/user-event/dist/type';
 
 const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     const [buyerItems, setBuyerItems] = useState({ data: [] });
@@ -60,24 +61,44 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
                 size: itemsDetails[item.itemCd]?.data.size || '',
                 unitPrice: item.unitPrice,
                 unit: item.unit,
-                quantity: 0
+                quantity: 0,
+                prepareOrder : itemsDetails[item.itemCd]?.data.prepareOrder,
+                totalStock:  itemsDetails[item.itemCd]?.data.totalStock || '',
+                startDate : item.startDate,
+                endDate: item.endDate
             }));
+            console.log("itemDetails", combinedItems)
             setItemsWithDetails({ data: combinedItems });
         }
     }, [buyerItems, itemsDetails]);
 
     const columnData = [
-        { Header: "제품코드", accessor: "itemCd" },
+        { Header: "제품코드", accessor: "itemCd", },
         { Header: "제품명", accessor: "itemNm" },
         { Header: "색상", accessor: "color" },
         { Header: "사이즈", accessor: "size" },
-        { Header: "단가", accessor: "unitPrice" },
-        { Header: "수량", accessor: "quantity", editable: true },
-        { Header: "단위", accessor: "unit" }
+        { Header: "단가", accessor: "unitPrice", type:"number" },
+        { Header: "수량", accessor: "quantity", type: "text" },
+        { Header: "단위", accessor: "unit" },
+        { Header: "발주 대기", accessor: "prepareOrder" },
+        { Header: "재고량", accessor: "totalStock" },
+        { Header: "시작일", accessor: "startDate", type:"date" },
+        { Header: "종료일", accessor: "endDate" , type:"date"}
     ];
 
     const handleSubmit = () => {
-        const selectedItems = checked.map(index => itemsWithDetails.data[index]);
+        if (checked.length === 0) {
+            Swal.fire({ text: '아이템을 선택하세요.' });
+            return;
+        }
+        const selectedItems = checked.map(index => {
+            const item = itemsWithDetails.data[index];
+            return {
+                ...item,
+                contractPeriod: `${item.startDate || ''} ~ ${item.endDate || ''}`
+            };
+        });
+        console.log("SelectedItems",selectedItems);
         onItemsSelected(selectedItems);
         setOpened(false);
     };
@@ -89,7 +110,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     return (
         <div className="modal-background">
             <div className='modal-container'>
-                <EditableTableWithCheckboxYoung
+                <EditableTableWithCheckbox
                     columns={columnData}
                     ogData={itemsWithDetails}
                     data={itemsWithDetails}

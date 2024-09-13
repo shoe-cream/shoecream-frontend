@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import axios from 'axios';
-import 'react-datepicker/dist/react-datepicker.css';
 import getBuyerRequest from '../../requests/GetBuyerRequest';
 import { useAuth } from '../../auth/AuthContext';
 import getBuyerWithItemsRequest from '../../requests/GetBuyerItems';
 import getItemRequest from '../../requests/GetItemRequest';
 import OrderPostModal from '../modal/OrderPostModal';
+import { format } from 'date-fns';
 
 const ProductSearch = ({ onAddOrder }) => {
     // State 변수들
@@ -25,12 +24,10 @@ const ProductSearch = ({ onAddOrder }) => {
         tel: '',
         category: ''
     });
-    const [dateRange, setDateRange] = useState([null, null]);
     const [buyers, setBuyers] = useState({ data: {} });
     const [isLoading, setIsLoading] = useState(true);
     const [page, setPage] = useState(1);
     const { state } = useAuth();
-    const [startDate, endDate] = dateRange;
     const [selectedItemCd, setSelectedItemCd] = useState('');
     const [selectedItems, setSelectedItems] = useState([]);
     const [findItem, setFindItem] = useState(null);
@@ -48,7 +45,7 @@ const ProductSearch = ({ onAddOrder }) => {
         setSelectedItemCd(itemCd);
 
         const selectedIndex = event.target.selectedIndex;
-        if (selectedIndex > 0) { // 첫 번째 옵션은 빈 값이므로 0보다 큰 인덱스에서 데이터 가져오기
+        if (selectedIndex > 0) {
             const selectedItem = buyers.data.buyerItems[selectedIndex - 1];
             setBuyerItemUnitPrice(selectedItem.unitPrice);
 
@@ -58,15 +55,9 @@ const ProductSearch = ({ onAddOrder }) => {
         }
     };
 
-
     const handleFetch = () => {
-        const formattedStartDate = startDate ? startDate.toISOString().split('T')[0] : '';
-        const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : '';
-        const contractPeriod = formattedStartDate && formattedEndDate
-            ? `${formattedStartDate} ~ ${formattedEndDate}`
-            : '';
-
-        console.log('Fetching with contractPeriod:', contractPeriod);
+        // 계약 기간은 이제 handleItemsSelected에서 처리됩니다.
+        console.log('Fetching data');
 
         onAddOrder({
             ...searchParams,
@@ -74,7 +65,6 @@ const ProductSearch = ({ onAddOrder }) => {
             tel: buyers.data.tel || '',
             registrationDate : new Date().toISOString().slice(0, 10),
             deliveryDate: '',
-            contractPeriod,
             itemNm: findItem ? findItem.data.itemNm : '',
             itemCd: findItem ? findItem.data.itemCd : '',
             color: findItem ? findItem.data.color : '',
@@ -100,27 +90,11 @@ const ProductSearch = ({ onAddOrder }) => {
             tel: '',
             category: ''
         });
-
-        // 날짜 범위 초기화
-        setDateRange([null, null]);
     };
 
     const handleBuyerSearch = () => {
         getBuyerWithItemsRequest(state, searchParams.buyerCd, setBuyers, setIsLoading);
     };
-
-    // 컴포넌트들
-    const DateRangePicker = () => (
-        <DatePicker
-            selectsRange
-            startDate={startDate}
-            endDate={endDate}
-            onChange={(update) => setDateRange(update)}
-            isClearable
-            dateFormat="yyyy/MM/dd"
-            placeholderText="기간 선택"
-        />
-    );
 
     const handleOpenModal = () => {
         if(searchParams.buyerCd){
@@ -131,13 +105,24 @@ const ProductSearch = ({ onAddOrder }) => {
     };
 
     const handleItemsSelected = (items) => {
+        // 선택된 아이템들의 시작일과 종료일 중 가장 빠른 시작일과 가장 늦은 종료일을 찾습니다.
+        const startDates = items.map(item => new Date(item.startDate)).filter(date => !isNaN(date));
+        const endDates = items.map(item => new Date(item.endDate)).filter(date => !isNaN(date));
+
+        const earliestStartDate = startDates.length > 0 ? Math.min(...startDates) : null;
+        const latestEndDate = endDates.length > 0 ? Math.max(...endDates) : null;
+
+        const contractPeriod = earliestStartDate && latestEndDate
+            ? `${format(earliestStartDate, 'yyyy/MM/dd')} ~ ${format(latestEndDate, 'yyyy/MM/dd')}`
+            : '';
+
         const newOrder = {
             buyerCd: searchParams.buyerCd,
             buyerNm: buyers.data.buyerNm,
             tel: buyers.data.tel,
             registrationDate: new Date().toISOString().slice(0, 10),
             requestDate: '', // You may want to add a field for this in the modal
-            contractPeriod: `${startDate ? startDate.toISOString().split('T')[0] : ''} ~ ${endDate ? endDate.toISOString().split('T')[0] : ''}`,
+            contractPeriod,
             items: items.map(item => ({
                 itemCd: item.itemCd,
                 itemNm: item.itemNm,
@@ -146,14 +131,16 @@ const ProductSearch = ({ onAddOrder }) => {
                 unitPrice: item.unitPrice,
                 qty: item.quantity,
                 unit: item.unit,
+                startDate : item.startDate,
+                endDate : item.endDate,
+                contractPeriod: `${item.startDate || ''} ~ ${item.endDate || ''}`,
             }))
         };
-
+        console.log("new Order",newOrder);
+    
         onAddOrder(newOrder);
         setIsModalOpen(false);
     };
-    
-
 
     return (
         <div className='product-search'>
@@ -179,50 +166,10 @@ const ProductSearch = ({ onAddOrder }) => {
                                 </button>
                             </div>
                         </td>
-                        <td className='title special-cell'>제품코드</td>
-                        <td>
-                            <div className='divSearch'>
-                                {
-                                    isLoading ? <input className='orderPostInput' value={''}></input> :
-                                        <select
-                                            className='buyerItemDropDown'
-                                            value={selectedItemCd}
-                                            onChange={handleSelectChange}
-                                        >
-                                            <option value="">Select an item</option>
-                                            {buyers.data.buyerItems.map((value, index) => (
-                                                <option key={index} value={value.itemCd}>{value.itemCd}</option>
-                                            ))}
-                                        </select>
-                                }
-                            </div>
-                        </td>
-                        <td className='title special-cell'>사이즈</td>
-                        <td><input type='text' id='size' className='orderPostInput' value={findItem ? findItem.data.size : ''} onChange={handleChange} /></td>
-                    </tr>
-                    <tr>
-                        <td className='title special-cell'>계약 기간</td>
-                        <td className='order-date'><DateRangePicker /></td>
-                        <td className='title special-cell'>제품명</td>
-                        <td><input type='text' id='itemNm' className='orderPostInput' value={findItem ? findItem.data.itemNm : ''} onChange={handleChange} /></td>
-                        <td className='title special-cell'>재고량</td>
-                        <td><input type='text' id='qty' className='orderPostInput' value={searchParams.qty} onChange={handleChange} /></td>
-                    </tr>
-                    <tr>
                         <td className='title special-cell'>고객사</td>
                         <td><input type='text' id='buyerNm' className='orderPostInput' value={buyers.data.buyerNm} onChange={handleChange} /></td>
-                        <td className='title special-cell'>품목</td>
-                        <td><input type='text' id='category' className='orderPostInput' value={findItem ? findItem.data.category : ''} onChange={handleChange} /></td>
-                        <td className='title special-cell'>제품 단가</td>
-                        <td><input type='text' id='unitPrice' className='orderPostInput' value={buyerItemUnitPrice ? buyerItemUnitPrice : ''} onChange={handleChange} /></td>
-                    </tr>
-                    <tr>
                         <td className='title special-cell'>고객사 연락처</td>
                         <td><input type='text' id='tel' className='orderPostInput' value={buyers.data.tel} onChange={handleChange} /></td>
-                        <td className='title special-cell'>색상</td>
-                        <td><input type='text' id='color' className='orderPostInput' value={findItem ? findItem.data.color : ''} onChange={handleChange} /></td>
-                        <td className='title special-cell'>수량 단위</td>
-                        <td><input type='text' id='unit' className='orderPostInput' value={findItem ? findItem.data.unit : ''} onChange={handleChange} /></td>
                     </tr>
                 </tbody>
             </table>
