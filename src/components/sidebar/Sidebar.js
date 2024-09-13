@@ -30,7 +30,8 @@ const Sidebar = () => {
                 {/* 영업 카테고리 */}
                 <div className='영업 카테고리'>
                     <Dropdown title={'영업'} buttons={[
-                        {name: '주문', urlTo: '/orders'}  
+                        {name: '주문', urlTo: '/order'},
+                        {name: '주문 관리', urlTo: '/order-approval'}    
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
                 </div>
 
