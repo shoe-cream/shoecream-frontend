@@ -9,7 +9,7 @@ table {
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
     /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); */
     font-size: 13px;
-    border-top: 1px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
+    border-top: 1px solid rgba(58, 140, 239, 0.92) !important; /* 상단 구분선 */
     border-bottom: 1px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
 }
 
@@ -30,7 +30,7 @@ td.body-d {
 }
 
 .body-r-edited {
-    background-color: rgb(253, 244, 190);
+    background-color: #FFFFFF;
     /* background-color: #b5c7d3; */
 }
 
@@ -60,6 +60,10 @@ th, td {
     /* border-collapse: collapse; */
     border-left: none;
     border-right: none;
+    text-align: left;
+    word-wrap: break-word; /* 단어가 긴 경우 자동 줄바꿈 */
+    white-space: normal; /* 줄바꿈을 허용 */
+
 }
 
 .th {
@@ -68,12 +72,12 @@ th, td {
 
 .cell-input {
     font-size: 11px !important;
-    width: 100%; /* 부모 요소의 너비에 맞춤 */
-    height: 100%; /* 부모 요소의 높이에 맞춤 */
-    padding: 8px; /* 필요에 따라 패딩을 조정 */
+    width: 100% !important;  /* 부모 요소의 너비에 맞춤 */
     box-sizing: border-box; /* 보더와 패딩을 포함하여 width 계산 */
-    border: none; /* 테두리를 제거하여 깔끔한 입력창 */
+    border: none !important; /* 테두리를 제거하여 깔끔한 입력창 */
     background-color: transparent; /* 필요시 배경색 설정 */
+    word-wrap: break-word !important; /* 단어가 긴 경우 자동 줄바꿈 */
+    white-space: normal !important; /* 줄바꿈을 허용 */
 }
 
 .add-row-button{

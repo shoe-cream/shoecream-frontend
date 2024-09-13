@@ -1,12 +1,13 @@
 .dropdown{
     display: flex;
     flex-direction: column;
-    background-color: #4688E2;
+    background-color: #2b538b;
+
     
 }
 .dropdown-title{  
     height: 40px;
-    background-color:#4688E2;
+    background-color:#2b538b;
     border-top: 0.5px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
     border-bottom: 0.5px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
     display: flex;
@@ -18,27 +19,31 @@
 }
 .dropdown-title-text{
     margin-left: 15px;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     font-size: 15px;
 }
 
 /* 드롭다운 화살표 */
 .dropdown-arrow {
-    background-color: #9a9999;
-    width: 20px;
-    height: 20px;
+    background-color: #ffffff ;
+    width: 15px;
+    height: 15px;
+    margin-right: 10px; /* 왼쪽으로 이동하려면 이 값을 줄이세요 */
 }
 
 .dropdown-arrow:hover{
     background-color: #c86a26; /* 짙은 녹색으로 호버 시 변경 */
 }
 .dropdown-content{
-    background-color: #fafafa;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 15px;
+    background-color: #ffffff;
     border-radius: 5px;
-    margin-left: 20px;
+    color: #2b538b;
     height: 30px;
-    border-top: 0.5px solid rgba(86, 118, 158, 0.5); /* 상단 구분선 */
-    border-bottom: 0.5px solid rgba(86, 118, 158, 0.5); /* 하단 구분선 */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5); /* 하단 구분선 */
+    border-top: none;
     border-left: none; /* 좌측 구분선 제거 */   
     border-right: none; /* 우측 구분선 제거 */
     cursor:pointer;
@@ -57,4 +62,18 @@
     background-color: #c86a26; /* 짙은 녹색으로 호버 시 변경 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 추가 */
     transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
-}  
+    color: white !important;
+}
+
+
+.dropdown-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.5s ease-in-out;
+}
+
+.dropdown-content-wrapper.active {
+    max-height: 1000px !important; /* 드롭다운 메뉴가 펼쳐질 때의 최대 높이 */
+}

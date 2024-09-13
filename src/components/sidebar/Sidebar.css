@@ -4,7 +4,7 @@
     min-height: 210vh;
     display: flex;
     flex-direction: column;
-    background-color: #6aa1e8;
+    
     color: #333;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 4px;
@@ -13,7 +13,7 @@
 
 .sidebar-container{
     height: 100vh;
-    background-color: #0f366d !important;
+    background-color: 4688E2 !important;
 }
 
 .sidebar-search::placeholder{
