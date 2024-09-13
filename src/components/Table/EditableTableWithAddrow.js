@@ -1,8 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTable } from 'react-table';
 import './ReactTable.css';
 
-const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }) => {
+const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, requestArr }) => {
+  // 빈 객체를 n개 가진 배열로 초기화
+  const [masterDataArr, setMasterDataArr] = useState(Array(requestArr.length).fill({key:'', data:[]}));
+
+  useEffect(() => {
+    if (requestArr !== undefined) {
+      setMasterDataArr(Array.from({ length: requestArr.length }, () => ({}))); 
+      requestArr.forEach((request, index) => {
+        request.function((value) => {
+          console.log('value: ', value);
+          console.log('request key: ', request.key);
+          setMasterDataArr(prevArr => {
+            const newArr = [...prevArr];
+            /* value.key =  */
+            /* console.log() */
+            newArr[index] = value; 
+            console.log('newMasterData: ', newArr);
+            return newArr;
+          });
+        });
+      });
+    }
+  }, []);
+
   // 빈 행을 생성하는 함수
   const createEmptyRow = React.useCallback(() => {
     return columns.reduce((acc, column) => {
@@ -33,7 +56,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
       checked={checked.includes(parseInt(row.id, 10))}
       onChange={() => {
         const rowId = parseInt(row.id, 10);
-        setChecked(prev => 
+        setChecked(prev =>
           prev.includes(rowId)
             ? prev.filter(id => id !== rowId)
             : [...prev, rowId]
@@ -42,14 +65,14 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
     />
   );
 
-  // 다양한 입력 타입을 지원하는 셀 컴포넌트
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type } }) => {
+  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex }, masterDataArr }) => {
     const [value, setValue] = React.useState(initialValue);
-
+    const [options, setOptions] = React.useState({key:'', data: []});
+  
     const onChange = (e) => {
       setValue(e.target.value);
     };
-
+  
     const onBlur = () => {
       const newData = [...tableData];
       if (!newData[index]) {
@@ -62,13 +85,30 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
       setTableData(newData);
       setData(newData);
     };
-
+  
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue]);
-
-    const inputType = type || 'text'; // 기본 타입은 'text'
-
+  
+    React.useEffect(() => {
+      if (type === 'dropdown' && masterDataArr && masterDataArr.length > masterDataIndex) {
+        setOptions({key:id, data: masterDataArr[masterDataIndex]?.data || []});
+      }
+    }, [masterDataArr, type, id, masterDataIndex]);
+  
+    const inputType = type || 'text';
+  
+    if (type === 'dropdown') {
+      return (
+        <select value={value} onChange={onChange} onBlur={onBlur}>
+          <option value="" hidden></option>
+          {options.data && options.data.length > 0 && options.data.map((option, index) => (
+            <option key={index} value={option[options.key]}>{option[options.key]}</option>
+          ))}
+        </select>
+      );
+    }
+  
     return (
       <input
         className='cell-input'
@@ -79,6 +119,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
       />
     );
   });
+  
 
   // 컬럼에 체크박스 컬럼 추가 및 모든 셀을 input으로 변경
   const allColumns = React.useMemo(() => [
@@ -99,17 +140,18 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
       ),
       Cell: ({ row }) => <CheckboxCell row={row} />
     },
-    ...columns.map(column => ({
-        ...column,
-        Cell: ({ value, row, column }) => (
-          <EditableCell
-            value={value}
-            row={row}
-            column={column}
-          />
-        ),
-      }))
-  ], [columns, tableData, checked, setChecked]);
+    ...columns.map((column, index) => ({
+      ...column,
+      Cell: ({ value, row, column }) => (
+        <EditableCell
+          value={value}
+          row={row}
+          column={{...column, masterDataIndex: index}}
+          masterDataArr={masterDataArr}
+        />
+      ),
+    }))
+  ], [columns, tableData, checked, setChecked, masterDataArr]);
 
   const {
     getTableProps,
@@ -146,7 +188,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked }
         <tr className="body-r">
           <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }}>
             <button onClick={() => {
-                addEmptyRow();
+              addEmptyRow();
             }} className="add-row-button">+ 추가</button>
           </td>
         </tr>
