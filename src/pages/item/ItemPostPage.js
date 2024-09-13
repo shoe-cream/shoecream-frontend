@@ -14,7 +14,9 @@ import EditableTableWithCheckbox from '../../components/Table/EditableTableWithC
 import sendPostMultiItemRequest from '../../requests/PostMultiItemRequest';
 import sendPatchMultiItemRequest from '../../requests/PatchMultiItemsRequest';
 import { type } from '@testing-library/user-event/dist/type';
+import './itemPostPage.css';
 import Swal from 'sweetalert2';
+
 
 const ItemPostPage = () => {
   const { state } = useAuth();

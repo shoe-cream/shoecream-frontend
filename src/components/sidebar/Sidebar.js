@@ -35,8 +35,8 @@ const Sidebar = () => {
                 <div className='영업 카테고리'>
                     <Dropdown title={'영업'} buttons={[
                         {name: '주문', urlTo: '#', isTitle: true}, 
-                        {name: '주문 등록', urlTo: '/order-detail'},
-                        {name: '주문 승인', urlTo: '/orders/{order-id}/approve'},  
+                        {name: '주문 등록', urlTo: '/order'},
+                        {name: '주문 승인', urlTo: '/order-approval'},  
                         {name: '반품 내역', urlTo: '/cancelled-order'},  
                         {name: '주문 히스토리 조회', urlTo: '/orders/{order-id}/histories'}  
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
