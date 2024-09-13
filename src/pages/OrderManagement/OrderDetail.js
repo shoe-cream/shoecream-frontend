@@ -2,31 +2,21 @@ import React, { useState, useEffect } from 'react';
 import html2pdf from 'html2pdf.js';
 import Header from '../../components/header/Header'; 
 import Sidebar from '../../components/sidebar/Sidebar';
-import '../../App.css'; // 공통 스타일 적용
-import './OrderDetail.css'; // OrderDetail 전용 스타일 적용
+import '../../App.css'; 
+import './OrderDetail.css'; 
 
 const OrderDetail = () => {
     const [orderData, setOrderData] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);  // 모달 상태 관리
-    const [email, setEmail] = useState("");  // 입력받은 이메일 상태
-    const [isSending, setIsSending] = useState(false); // 이메일 전송 상태
+    const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [email, setEmail] = useState("");  
+    const [isSending, setIsSending] = useState(false); 
 
     useEffect(() => {
-        // 임시 데이터 설정
-        const tempData = {
-            orderId: 1,
-            createdAt: '2024-09-12 16:22:48.745814',
-            orderCd: 'SHO97D1A00F1BE3',
-            orderStatus: 'REQUEST_TEMP',
-            requestDate: '2024-09-10 10:00:00',
-            buyerId: 1,
-            memberId: 1,
-            orderItems: [
-                { orderItemId: 1, itemCd: '황해진', quantity: 10, unitPrice: 100.50 },
-                { orderItemId: 2, itemCd: '화이팅', quantity: 5, unitPrice: 200.00 }
-            ]
+        const orderData = {
+           
+        
         };
-        setOrderData(tempData);
+        setOrderData(orderData);
     }, []);
 
     if (!orderData) {
@@ -76,8 +66,8 @@ const OrderDetail = () => {
                 alert("메일 전송 중 오류가 발생했습니다.");
             })
             .finally(() => {
-                setIsSending(false); // 전송 상태 해제
-                handleCloseModal(); // 모달 닫기
+                setIsSending(false); 
+                handleCloseModal(); 
             });
         });
     };
