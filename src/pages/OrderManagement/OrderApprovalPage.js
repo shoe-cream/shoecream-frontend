@@ -61,12 +61,29 @@ const OrderApprovalPage = () => {
         }));
     };
 
-    const transOrderData = (data) => {
-        let obj = {};
-        for(let i = 0; i < data.length; i++) {
-            
-        }
-    }
+    const transOrderData = ({data}) => {
+        let transformedData = [];
+    
+        data.forEach(order => {
+            order.orderItems.forEach(item => {
+                // 각 orderItem별로 새로운 행을 생성
+                transformedData.push({
+                    employeeId: order.employeeId,
+                    orderCd: order.orderCd,
+                    status: order.status,
+                    createdAt: order.createdAt,
+                    requestDate: order.requestDate,
+                    buyerNm: order.buyerNm,
+                    buyerCd: order.buyerCd,
+                    itemCd: item.itemCd,
+                    qty: item.qty,
+                    unitPrice: item.unitPrice
+                });
+            });
+        });
+    
+        return transformedData;
+    };
     const BaseTable = ({ data }) => {
         console.log("ASDASDSAD" , data);
         console.log("data.orderItems", data.data.orderItems);
@@ -80,21 +97,15 @@ const OrderApprovalPage = () => {
             { Header: "고객 코드", accessor: "buyerCd" },
             { 
                 Header: "제품 코드", 
-                accessor: "itemCd",
-                Cell: ({ row }) => 
-                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.itemCd}</div>)
+                accessor: "itemCd"
             },
             { 
                 Header: "수량", 
-                accessor: "qty",
-                Cell: ({ row }) => 
-                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.qty}</div>)
+                accessor: "qty"
             },
             { 
                 Header: "제품 단가", 
-                accessor: "unitPrice",
-                Cell: ({ row }) => 
-                    row.original.orderItems.map((item, idx) => <div key={idx}>{item.unitPrice ? `${item.unitPrice.toLocaleString()}원` : '-'}</div>)
+                accessor: "unitPrice"
             },
             // { 
             //     Header: "총금액", 
@@ -167,7 +178,6 @@ const OrderApprovalPage = () => {
                                     <OrderDatepickerSelect GetOrdersAll={handleGetOrdersAll}
                                         optionSelect={optionSelect} setOptionSelect={setOptionSelect}
                                         keyword={keyword} setKeyword={setKeyword}>
-                                        
                                     </OrderDatepickerSelect>
                                     {isLoading ? (
                                     <div/>
