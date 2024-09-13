@@ -8,7 +8,7 @@ import OrderDatepickerSelect from '../../components/OrderPost/OrderDatepickerSel
 import PageContainer from '../../components/page_container/PageContainer';
 import getOrderAllRequest from '../../requests/GetOrders';
 import { useAuth } from '../../auth/AuthContext';
-import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox'
+import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import sendPatchMultiItemRequest from '../../requests/PatchOrders';
 
@@ -23,7 +23,6 @@ const OrderApprovalPage = () => {
     const [edited, setEdited] = useState({});
     const [status, setStatus] = useState('');
     const [isPageLoaded, setIsPageLoaded] = useState(false);
-
     const [originalData, setOriginalData] = useState([]);
     const [modifiedData, setModifiedData] = useState([]);
 
@@ -75,6 +74,7 @@ const OrderApprovalPage = () => {
     const handlePrint = () => {
         window.print();
     };
+
 
     const handlePatchOrder = useCallback(() => {
         const itemsToUpdate = modifiedData.map((item, index) => {
@@ -179,10 +179,11 @@ const OrderApprovalPage = () => {
                                     <Tab>Returned Orders</Tab>
                                 </TabList>
                                 <div className='tab-actions'>
-                                    <button className='load-btn' onClick={handleExportToExcel}>
+                                    <button className='btn btn-secondary' onClick={handleExportToExcel}>
+
                                         <i className="fas fa-file-excel"></i> 엑셀 다운로드
                                     </button>
-                                    <button className='load-btn' onClick={handlePrint}>
+                                    <button className='btn btn-secondary' onClick={handlePrint}>
                                         <i className="fas fa-print"></i> 인쇄
                                     </button>
                                 </div>
@@ -190,13 +191,31 @@ const OrderApprovalPage = () => {
                             <div className='tab-content'>
                                 <TabPanel>
                                     <h2>전체주문조회</h2>
-                                    <OrderDatepickerSelect 
-                                        GetOrdersAll={handleGetOrdersAll}
-                                        optionSelect={optionSelect} 
-                                        setOptionSelect={setOptionSelect}
-                                        keyword={keyword} 
-                                        setKeyword={setKeyword}
-                                    />
+                                    {/* 검색창과 주문코드 유지 */}
+                                    <div className="flex space-x-2 items-center">
+                                        <OrderDatepickerSelect 
+                                            GetOrdersAll={handleGetOrdersAll}
+                                            optionSelect={optionSelect} 
+                                            setOptionSelect={setOptionSelect}
+                                            keyword={keyword} 
+                                            setKeyword={setKeyword}
+                                        />
+                                       
+                                    </div>
+
+                                    {/* 조회기간과 견적서 발행, 수정 버튼을 컨테이너에 넣기 */}
+                                    <div className="flex flex-col space-y-4 mt-4 border p-4 rounded-lg shadow">
+                                        <div className="flex space-x-4 items-center">
+                                            <span>조회기간:</span>
+                                            <input type="date" className="input w-40" />
+                                            <span>~</span>
+                                            <input type="date" className="input w-40" />
+                                        </div>
+                                        <div className="flex space-x-4 items-center">
+                                            <button className='btn btn-primary' onClick={handlePatchOrder}>견적서 발행</button>
+                                            <button className='btn btn-primary' onClick={handlePatchOrder}>수정</button>
+                                        </div>
+                                    </div> 
                                     {isLoading ? (
                                         <div>Loading...</div>
                                     ) : (

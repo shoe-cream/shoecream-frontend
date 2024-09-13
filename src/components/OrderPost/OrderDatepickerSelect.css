@@ -1,4 +1,16 @@
+.date-range-picker-container {
+    display: flex;
+    align-items: center;
+    width: fit-content; /* container가 content 크기에 맞게 조정됨 */
+    max-width: 100px !important; /* 필요에 따라 조정 가능 */
+    margin-right: 10px;
+}
+
+
+.date-range-picker {
+    width: 100% !important; /* DatePicker가 container 안에서 꽉 차게 조정 */
+}
+
 .order-date-select {
-    display: flex !important;
-    
+    display: flex;
 }

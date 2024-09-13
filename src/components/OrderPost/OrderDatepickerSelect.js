@@ -18,7 +18,6 @@ const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, ke
     };
     return (
         <div className='order-date-select'>
-            <DateRangePicker></DateRangePicker>
             <select className="search-list" onChange={handleOptionChange} value={optionSelect}>
                 <option value="orderCd">주문코드</option>
                 <option value="buyerCd">고객코드</option>
@@ -32,8 +31,6 @@ const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, ke
             <button id='searchProduct' className='search-button' onClick={() => GetOrdersAll(optionSelect, keyword)}>
                 <img src='/icons/zoom.png' alt='Search' className='search-icon' />
             </button>
-            <button id='publish'>견적서 발행</button>
-            <button id='Approve_Purchase' onClick={handlePatchOrder}>수정</button>
         </div>
     );
 }
