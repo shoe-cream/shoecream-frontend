@@ -148,8 +148,8 @@ const CancelledOrdersPage = () => {
                     </div>
                     <div className='actions-container'>
                         <button className='miscBtn' onClick={handleSearch}>조회</button>
-                        <button className='miscBtn' onClick={handleExportToExcel}>엑셀 다운</button>
-                        <button className='miscBtn' onClick={handlePrint}>인쇄</button>
+                        <button className='load-btn' onClick={handleExportToExcel}>엑셀 다운</button>
+                        <button className='load-btn' onClick={handlePrint}>인쇄</button>
                     </div>
                     <h2>취소된 주문</h2>
                     {isLoading ? (
