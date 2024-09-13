@@ -4,7 +4,7 @@ import { useState } from 'react';
 import EditableTableWithAddrow from '../Table/EditableTableWithAddrow.js';
 import Swal from 'sweetalert2';
 
-const PostModal = ({setOpened, columnData, postRequest, sortBy, setParentData, requestArr }) => {
+const PostModal = ({ setOpened, columnData, postRequest, sortBy, setParentData, requestArr }) => {
     const [data, setData] = useState([]);
     const [checked, setChecked] = useState([]);
 
@@ -41,9 +41,9 @@ const PostModal = ({setOpened, columnData, postRequest, sortBy, setParentData, r
             <div className='modal-container'>
                 <EditableTableWithAddrow
                     columns={columnData}
-                    data={data} 
+                    data={data}
                     setData={(value) => setData(value)}
-                    checked={checked} 
+                    checked={checked}
                     setChecked={setChecked}
                     requestArr={requestArr}
                 ></EditableTableWithAddrow>
@@ -67,6 +67,16 @@ const PostModal = ({setOpened, columnData, postRequest, sortBy, setParentData, r
                         }
                         console.log('checkedData: ', checkedData);
                         console.log('sortBy: ', sortBy);
+
+                        checkedData.forEach(obj => {
+                            Object.keys(obj).forEach(key => {
+                                if (key.includes('Date')) {
+                                    obj[key] = `${obj[key]}T00:00:00`;
+                                }
+                            });
+                        });
+
+                        console.log('changedCheckedData: ', checkedData);
                         postRequest(checkedData, setOpened, setParentData);
                     }}>등록</button>
                     <button className="post-modal-button" onClick={() => setOpened(false)}>취소</button>

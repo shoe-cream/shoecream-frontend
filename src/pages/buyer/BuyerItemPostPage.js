@@ -9,6 +9,9 @@ import PostModal from '../../components/modal/PostModal';
 import Swal from 'sweetalert2';
 import sendGetBuyersRequest from '../../requests/GetBuyersRequest';
 import sendGetItemsRequest from '../../requests/GetItemsRequest';
+import sendPostBuyerItemsRequest from '../../requests/PostBuyerItemsRequest';
+import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest';
+import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest';
 
 const BuyerItemPostPage = () => {
     const { state } = useAuth();
@@ -73,11 +76,6 @@ const BuyerItemPostPage = () => {
             accessor: 'unitPrice',
             Header: '단가',
             type: 'number',
-        },
-        {
-            accessor: 'unit',
-            Header: '단위',
-            type: 'text',
         },
         {
             accessor: 'startDate',
@@ -197,18 +195,20 @@ const BuyerItemPostPage = () => {
                             setOpened={setIsPostMode}
                             columnData={postColumnData}
                             postRequest={(checkedData, setOpened, setParentData) => {
-                                /* sendPostMultiItemRequest(state, checkedData, () => {
+                                sendPostBuyerItemsRequest(state, checkedData, () => {
                                     setOpened(false);
-                                    sendGetItemsRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
-                                }); */
+                                    sendGetMasterBuyerItemsRequest(state, page, 10, resetData, sortBy);
+                                });
                             }}
                             page={page}
                             setPage={setPage}
                             sortBy={sortBy}
                             setParentData={(value) => resetData(value)}
                             requestArr={[
-                                {key: 'buyerNm', function: (setData) => sendGetBuyersRequest(state, 1, undefined, 9999999, 'buyerNm', (value) => setData(value))},
-                                {key: 'itemNm', function: (setData) => sendGetItemsRequest(state, 1, undefined, 9999999, 'itemNm', (value) => setData(value))},
+                                /* {key: 'buyerNm', function: (setData) => sendGetBuyersRequest(state, 1, undefined, 9999999, 'buyerNm', (value) => setData(value))}, */
+                                {key: 'buyerNm', function: (setData) => sendGetAllBuyersRequest(state, (value) => setData(value))},
+                                /* {key: 'itemNm', function: (setData) => sendGetItemsRequest(state, 1, undefined, 9999999, 'itemNm', (value) => setData(value))}, */
+                                {key: 'itemNm', function: (setData) => sendGetAllItemsRequest(state, (value) => setData(value))},
                             ]}
                         ></PostModal> : <div />}
                     </div>
