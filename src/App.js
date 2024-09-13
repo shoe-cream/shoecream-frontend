@@ -17,6 +17,7 @@ import RegistrationPage from './pages/registration/RegistrationPage';
 import BuyerPostPage from './pages/buyer/BuyerPostPage';
 import { AuthProvider } from './auth/AuthContext';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import OrderDetail from './pages/OrderManagement/OrderDetail';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route path='/order-approval' element={<OrderApprovalPage/>}/>
           <Route path='/order' element={<OrderPostPage/>}/>
           <Route path='/registration' element={<RegistrationPage/>}/>
+          <Route path='order-detail' element={<OrderDetail/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
