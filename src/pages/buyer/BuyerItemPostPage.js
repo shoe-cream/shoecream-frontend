@@ -195,6 +195,7 @@ const BuyerItemPostPage = () => {
                             columnData={postColumnData}
                             postRequest={(checkedData, setOpened, setParentData) => {
                                 sendPostBuyerItemsRequest(state, checkedData, () => {
+                                    setChecked([]);
                                     setOpened(false);
                                     sendGetMasterBuyerItemsRequest(state, page, 10, resetData, sortBy);
                                 });

@@ -10,6 +10,8 @@ import './ManufacturerPostPage.css';
 import Sidebar from '../../components/sidebar/Sidebar';
 import sendGetManufacturersRequest from '../../requests/GetManufacturersRequest';
 import sendPostManufacturersRequest from '../../requests/PostManufacturersRequest';
+import sendPatchManufacturersRequest from '../../requests/PatchManufacturersRequest';
+import sendDeleteManufacturersRequest from '../../requests/DeleteManufacturersRequest';
 
 
 
@@ -115,20 +117,20 @@ const ManufacturerPostPage = () => {
                                         let requestBody = [];
                                         Object.keys(checkedAndEdited).forEach(key => {
                                             const index = Number(key); // key는 문자열이므로 숫자로 변환
-                                            const itemId = data.data[index].itemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
+                                            const mfId = data.data[index].mfId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
                                             const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
 
                                             // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
                                             requestBody.push({
-                                                itemId,
+                                                mfId,
                                                 ...updatedData
                                             });
                                         });
                                         console.log('requestBody: ', requestBody);
-                                        /* sendPatchMultiItemRequest(state, requestBody, () => {
-                                            sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+                                        sendPatchManufacturersRequest(state, requestBody, () => {
+                                            sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
                                             setChecked([]);
-                                        }); */
+                                        });
                                     }}>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
@@ -137,11 +139,11 @@ const ManufacturerPostPage = () => {
                                                 return;
                                             }
                                             /* console.log('checked: ', checked); */
-                                            const checkedItems = checked.map(item => data.data[item].itemId);
-                                            /* sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
-                                                sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+                                            const checkedItems = checked.map(item => data.data[item].mfId);
+                                            sendDeleteManufacturersRequest(state, checkedItems, setChecked, () => {
+                                                sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
                                                 setChecked([]);
-                                            }); */
+                                            });
                                         }}>삭제</button>
                                 </div>
                             </div>
@@ -173,6 +175,7 @@ const ManufacturerPostPage = () => {
                             columnData={postColumnData}
                             postRequest={(checkedData, setOpened, setParentData) => {
                                 sendPostManufacturersRequest(state, checkedData, () => {
+                                    setChecked([]);
                                     setOpened(false);
                                     sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
                                 });

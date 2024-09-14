@@ -131,7 +131,7 @@ const BuyerPostPage = () => {
                       console.log('checked: ', checked);
                       const checkedData = checked.map(item => data.data[item].buyerId);
                       console.log('checkedData: ', checkedData);
-                      sendDeleteBuyersRequest(state, data.pageInfo, checkedData, setChecked, () => {
+                      sendDeleteBuyersRequest(state, checkedData, setChecked, () => {
                         sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                         setChecked([]);
                       });
@@ -166,6 +166,7 @@ const BuyerPostPage = () => {
               columnData={columnData}
               postRequest={(checkedData, setOpened, setParentData) => {
                 sendPostBuyersRequest(state, checkedData, () => {
+                  setChecked([]);
                   setOpened(false);
                   sendGetBuyersRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
                 });
