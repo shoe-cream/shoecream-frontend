@@ -26,7 +26,6 @@ body {
   
 }
 
-
 .app-background {
   width: 85%; /* 백그라운드 너비를 100%로 설정 */
   display: flex; /* 플렉스박스로 설정하여 내부 요소 배치 */
@@ -34,4 +33,15 @@ body {
   align-items: center; /* 가로 중앙 정렬 */
   border-radius: 8px; /* 모서리를 둥글게 처리 */
   background-color: #FFFFFF;
+}
+
+.app-label{
+  width: 100%;
+  background-color: #2b538b;
+  text-align: center;
+  color: #fefefe;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 30px;
+  /* border-radius: 5px; */
 }

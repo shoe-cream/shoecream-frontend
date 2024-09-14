@@ -12,6 +12,7 @@ import sendGetItemsRequest from '../../requests/GetItemsRequest';
 import sendPostBuyerItemsRequest from '../../requests/PostBuyerItemsRequest';
 import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest';
 import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest';
+import sendPatchMultiBuyerItemsRequest from '../../requests/PatchMultiBuyerItemsRequest';
 
 const BuyerItemPostPage = () => {
     const { state } = useAuth();
@@ -104,6 +105,7 @@ const BuyerItemPostPage = () => {
                 <Sidebar></Sidebar>
                 <div className='app-content-container'>
                     <div className='app-background'>
+                        <h2 className="app-label">고객사 단가 관리</h2>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
                                 <select onChange={(e) => setSortBy(e.target.value)}>
@@ -137,35 +139,32 @@ const BuyerItemPostPage = () => {
                                         let requestBody = [];
                                         Object.keys(checkedAndEdited).forEach(key => {
                                             const index = Number(key); // key는 문자열이므로 숫자로 변환
-                                            const buyerId = data.data[index].buyerId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
+                                            const buyerItemId = data.data[index].buyerItemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
                                             const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
 
                                             // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
                                             requestBody.push({
-                                                buyerId,
+                                                buyerItemId,
                                                 ...updatedData
                                             });
                                         });
                                         console.log('requestBody: ', requestBody);
-                                        /* sendPatchMultiBuyerRequest(state, requestBody, () => {
-                                            sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+                                        sendPatchMultiBuyerItemsRequest(state, requestBody, () => {
+                                            sendGetMasterBuyerItemsRequest(state, page, 10, resetData, sortBy, setIsLoading);
                                             setChecked([]);
-                                        }); */
+                                        });
                                     }}>수정</button>
-                                    <button className='manufacturer-button'
+                                    {/* {<button className='manufacturer-button'
                                         onClick={() => {
-                                            if(checked.length === 0){
-                                                Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                                            if (checked.length === 0) {
+                                                Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
                                                 return;
-                                              }
+                                            }
                                             console.log('checked: ', checked);
                                             const checkedData = checked.map(item => data.data[item].buyerId);
                                             console.log('checkedData: ', checkedData);
-                                            /* sendDeleteBuyersRequest(state, data.pageInfo, checkedData, setChecked, () => {
-                                                sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
-                                                setChecked([]);
-                                            }); */
-                                        }}>삭제</button>
+                                            
+                                        }}>삭제</button>} */}
                                 </div>
                             </div>
                             <EditableTableWithCheckbox
@@ -206,9 +205,9 @@ const BuyerItemPostPage = () => {
                             setParentData={(value) => resetData(value)}
                             requestArr={[
                                 /* {key: 'buyerNm', function: (setData) => sendGetBuyersRequest(state, 1, undefined, 9999999, 'buyerNm', (value) => setData(value))}, */
-                                {key: 'buyerNm', function: (setData) => sendGetAllBuyersRequest(state, (value) => setData(value))},
+                                { key: 'buyerNm', function: (setData) => sendGetAllBuyersRequest(state, (value) => setData(value)) },
                                 /* {key: 'itemNm', function: (setData) => sendGetItemsRequest(state, 1, undefined, 9999999, 'itemNm', (value) => setData(value))}, */
-                                {key: 'itemNm', function: (setData) => sendGetAllItemsRequest(state, (value) => setData(value))},
+                                { key: 'itemNm', function: (setData) => sendGetAllItemsRequest(state, (value) => setData(value)) },
                             ]}
                         ></PostModal> : <div />}
                     </div>

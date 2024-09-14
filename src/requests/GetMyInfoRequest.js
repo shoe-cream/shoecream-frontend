@@ -2,6 +2,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const sendGetMyInfoRequest = async(state, setData, setIsLoading) => {
+    if(!state.isAuthenticated){
+        return;
+    }
     try{
         console.log('state: ', state);
         const response = await axios.get('http://localhost:8080/members/my-info',

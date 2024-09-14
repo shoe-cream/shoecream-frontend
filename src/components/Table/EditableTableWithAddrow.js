@@ -4,7 +4,9 @@ import './ReactTable.css';
 
 const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, requestArr }) => {
   // 빈 객체를 n개 가진 배열로 초기화
-  const [masterDataArr, setMasterDataArr] = useState(Array(requestArr.length).fill({key:'', data:[]}));
+  const [masterDataArr, setMasterDataArr] = useState(
+    requestArr && Array.isArray(requestArr) ? Array(requestArr.length).fill({ key: '', data: [] }) : []
+  );
 
   useEffect(() => {
     if (requestArr !== undefined) {

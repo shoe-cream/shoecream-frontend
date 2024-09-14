@@ -11,6 +11,7 @@ import { useAuth } from '../../auth/AuthContext';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import sendPatchMultiItemRequest from '../../requests/PatchOrders';
+import { FileDown, Printer, FileText, Edit } from 'lucide-react';
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -89,31 +90,6 @@ const OrderApprovalPage = () => {
         window.print();
     };
 
-    // const handlePatchOrder = () => {
-    //     // 수정된 항목을 찾기 위해 edited 배열의 인덱스를 확인
-    //     const ordersPatch= modifiedData.filter((_, index) => checkedItems.includes(index));
-    
-    //     if (ordersPatch.length === 0) {
-    //         console.log("수정된 항목이 없습니다.");
-    //         return;
-    //     }
-    
-    //     // 항목을 업데이트하기 위한 배열을 생성
-    //     const sendOrderPatch = (order) => {
-    //         const requestBody = {
-    //             orderId : order.orderId,
-
-    //         }
-    //     }
-    
-    //     // 업데이트 요청을 보내는 함수 호출
-    //     sendPatchMultiItemRequest(state, itemsToSend, () => {
-    //         // 요청 성공 후 데이터 다시 가져오기
-    //         fetchOrders();
-    //         // 수정 상태 초기화
-    //         setEdited([]);
-    //     });
-    // };
 
     const handlePatchOrder = () => {
         // modifiedData.data 배열에서 수정된 항목만 필터링
@@ -160,9 +136,6 @@ const OrderApprovalPage = () => {
         }
         setStatus(currentStatus);
     }, []);
-
-
-
     
     const columns = useMemo(() => [
         { Header: "담당자", accessor: "employeeId" },
@@ -178,7 +151,6 @@ const OrderApprovalPage = () => {
         { Header: "시작일", accessor: "startDate", type:"date"} 
     ], []);
 
-    
     return (
         <div>
             <Header />
@@ -187,7 +159,7 @@ const OrderApprovalPage = () => {
                 <div className={`app-content-container ${isPageLoaded ? 'fade-in' : ''}`}>
                     <div className='tab-container'>
                         <Tabs onSelect={handleTabSelect}>
-                            <div className='tab-list-container'>
+                        <div className='tab-list-container'>
                                 <TabList>
                                     <Tab>전체주문조회</Tab>
                                     <Tab>견적요청</Tab>
@@ -197,20 +169,12 @@ const OrderApprovalPage = () => {
                                     <Tab>Returned Orders</Tab>
                                 </TabList>
                                 <div className='tab-actions'>
-                                    <button className='btn btn-secondary' onClick={handleExportToExcel}>
-
-                                        <i className="fas fa-file-excel"></i> 엑셀 다운로드
-                                    </button>
-                                    <button className='btn btn-secondary' onClick={handlePrint}>
-                                        <i className="fas fa-print"></i> 인쇄
-                                    </button>
+                                
                                 </div>
                             </div>
                             <div className='tab-content'>
                                 <TabPanel>
-                                    <h2>전체주문조회</h2>
-                                    {/* 검색창과 주문코드 유지 */}
-                                    <div className="flex space-x-2 items-center">
+                                    <div className="search-container">
                                         <OrderDatepickerSelect 
                                             GetOrdersAll={handleGetOrdersAll}
                                             optionSelect={optionSelect} 
@@ -218,22 +182,29 @@ const OrderApprovalPage = () => {
                                             keyword={keyword} 
                                             setKeyword={setKeyword}
                                         />
-                                       
                                     </div>
-
-                                    {/* 조회기간과 견적서 발행, 수정 버튼을 컨테이너에 넣기 */}
-                                    <div className="flex flex-col space-y-4 mt-4 border p-4 rounded-lg shadow">
-                                        <div className="flex space-x-4 items-center">
+                                    <div className="date-range-container">
+                                        <div className="date-range-inputs">
                                             <span>조회기간:</span>
                                             <input type="date" className="input w-40" />
                                             <span>~</span>
                                             <input type="date" className="input w-40" />
                                         </div>
-                                        <div className="flex space-x-4 items-center">
-                                            <button className='btn btn-primary' onClick={handlePatchOrder}>견적서 발행</button>
-                                            <button className='btn btn-primary' onClick={handlePatchOrder}>수정</button>
+                                        <div className="action-buttons">
+                                            <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                <Edit className="btn-icon" size={14} /> 수정
+                                            </button>
+                                            <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                <FileText className="btn-icon" size={14} /> 견적서 발행
+                                            </button>
+                                            <button className='btn btn-secondary' onClick={handleExportToExcel}>
+                                                <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
+                                            </button>
+                                            <button className='btn btn-secondary' onClick={handlePrint}>
+                                                <Printer className="btn-icon" size={14} /> 인쇄
+                                            </button>
                                         </div>
-                                    </div> 
+                                    </div>
                                     {isLoading ? (
                                         <div>Loading...</div>
                                     ) : (
@@ -248,7 +219,7 @@ const OrderApprovalPage = () => {
                                                 edited={edited} 
                                                 setEdited={setEdited} 
                                             />
-                                            <button onClick={handlePatchOrder} disabled={Object.keys(edited).length === 0}>
+                                            <button onClick={handlePatchOrder} className='save-btn' disabled={Object.keys(edited).length === 0}>
                                                 변경사항 저장
                                             </button>
                                         </>

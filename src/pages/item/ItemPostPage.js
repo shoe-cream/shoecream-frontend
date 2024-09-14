@@ -1,10 +1,6 @@
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-import ReactTableWithCheckbox from '../../components/Table/ReactTableWithCheckbox';
-import { columnData } from '../../data/ItemData';
-import PostContainer from '../../components/postcontainer/PostContainer';
 import { useEffect, useState } from 'react';
-import sendPostItemRequest from '../../requests/PostItemRequest';
 import { useAuth } from '../../auth/AuthContext';
 import sendGetItemsRequest from '../../requests/GetItemsRequest';
 import PageContainer from '../../components/page_container/PageContainer';
@@ -13,7 +9,6 @@ import PostModal from '../../components/modal/PostModal';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import sendPostMultiItemRequest from '../../requests/PostMultiItemRequest';
 import sendPatchMultiItemRequest from '../../requests/PatchMultiItemsRequest';
-import { type } from '@testing-library/user-event/dist/type';
 import './itemPostPage.css';
 import Swal from 'sweetalert2';
 
@@ -76,6 +71,18 @@ const ItemPostPage = () => {
       Header: '단가',
       type: 'number',
     },
+    {
+      accessor: 'prepareOrder',
+      Header: '주문대기량',
+    },
+    {
+      accessor: 'unusedStock',
+      Header: '불용재고량',
+    },
+    {
+      accessor: 'totalStock',
+      Header: '총 재고량',
+    },
   ]
   const postColumnData = [
     {
@@ -119,6 +126,7 @@ const ItemPostPage = () => {
         <Sidebar></Sidebar>
         <div className='app-content-container'>
           <div className='app-background'>
+            <h2 className="app-label">제품 관리</h2>
             <div className='manufacturer-list-container'>
               <div className='manufacturer-tool-container'>
                 <select onChange={(e) => setSortBy(e.target.value)}>
@@ -173,6 +181,7 @@ const ItemPostPage = () => {
                       }
                       /* console.log('checked: ', checked); */
                       const checkedItems = checked.map(item => items.data[item].itemId);
+                      console.log('checkedItems: ', checkedItems);
                       sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
                         sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                         setChecked([]);

@@ -28,7 +28,7 @@ const Header = ()=> {
 
     return (
         <div className="header-container">
-            <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate("/")}></img>
+            <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate((state.isAuthenticated ? "/dashboard" : '/'))}></img>
             
             {/* ============검색창 추가 ============*/}
             <form onSubmit={handleSearchSubmit} className="header-search-form">

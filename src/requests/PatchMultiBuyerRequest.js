@@ -14,7 +14,7 @@ const sendPatchMultiBuyerRequest = async(state, requestBody, executeAfter) => {
             }
         );
         if(response.status === 200 || response.status === 201){
-            alert('수정 완료');
+            Swal.fire({text: '수정 완료'});
             console.log('고객사 일괄 수정 성공', response);
             if(executeAfter !== undefined){
                 executeAfter();

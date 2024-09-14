@@ -74,6 +74,7 @@ const BuyerPostPage = () => {
         <Sidebar></Sidebar>
         <div className="app-content-container">
           <div className="app-background">
+            <h2 className="app-label">고객사 관리</h2>
             <div className='manufacturer-list-container'>
               <div className='manufacturer-tool-container'>
                 <select onChange={(e) => setSortBy(e.target.value)}>
@@ -130,7 +131,7 @@ const BuyerPostPage = () => {
                       console.log('checked: ', checked);
                       const checkedData = checked.map(item => data.data[item].buyerId);
                       console.log('checkedData: ', checkedData);
-                      sendDeleteBuyersRequest(state, data.pageInfo, checkedData, setChecked, () => {
+                      sendDeleteBuyersRequest(state, checkedData, setChecked, () => {
                         sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                         setChecked([]);
                       });
