@@ -166,6 +166,7 @@ const BuyerPostPage = () => {
               columnData={columnData}
               postRequest={(checkedData, setOpened, setParentData) => {
                 sendPostBuyersRequest(state, checkedData, () => {
+                  setChecked([]);
                   setOpened(false);
                   sendGetBuyersRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
                 });
