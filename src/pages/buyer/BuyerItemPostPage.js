@@ -154,7 +154,7 @@ const BuyerItemPostPage = () => {
                                             setChecked([]);
                                         });
                                     }}>수정</button>
-                                    <button className='manufacturer-button'
+                                    {/* {<button className='manufacturer-button'
                                         onClick={() => {
                                             if (checked.length === 0) {
                                                 Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
@@ -163,11 +163,8 @@ const BuyerItemPostPage = () => {
                                             console.log('checked: ', checked);
                                             const checkedData = checked.map(item => data.data[item].buyerId);
                                             console.log('checkedData: ', checkedData);
-                                            /* sendDeleteBuyersRequest(state, data.pageInfo, checkedData, setChecked, () => {
-                                                sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
-                                                setChecked([]);
-                                            }); */
-                                        }}>삭제</button>
+                                            
+                                        }}>삭제</button>} */}
                                 </div>
                             </div>
                             <EditableTableWithCheckbox
