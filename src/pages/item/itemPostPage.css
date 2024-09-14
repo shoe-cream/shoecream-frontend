@@ -1,43 +1,156 @@
-.manufacturer-button-container {
+.app-background {
     display: flex;
-    gap: 5px; /* 버튼 사이의 간격 */
-    margin-right: 440px !important;
-    justify-content: flex-end; /* 버튼을 왼쪽으로 정렬 */
+    width: 100%;
+    justify-content: center !important;
     margin-top: 10px;
 }
 
-.manufacturer-button {
-    background-color: #40A2E3;
+.manufacturer-list-container {
+    width: 100% !important;
+    max-width: 1200px !important; /* 또는 다른 페이지와 일치하는 최대 너비 */
+    margin: 0 auto;
+    padding: 20px !important;
+  }
+
+.manufacturer-tool-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .manufacturer-button-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .manufacturer-button {
+    background-color: #2b538b !important;
     color: white;
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.manufacturer-button:hover {
-    background-color: #0D9276;
-}
-
-.manufacturer-tool-container {
-    display: flex;
-    
-    align-items: center;
-}
-
-select {
+  }
+  
+  .manufacturer-button:hover {
+    background-color: #1e3a62 !important;
+  }
+  
+  select {
     padding: 8px;
-    width: 100%; /* select 요소의 너비를 100%로 설정 */
-    max-width: 200px; /* 필요한 경우 최대 너비를 설정 */
+    width: 200px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 13px; /* 폰트 크기 조정 */
+    font-size: 13px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease;
-}
-
-select:focus {
+  }
+  
+  select:focus {
     border-color: #0D9276;
+  }
+
+  .item-post-table {
+    font-weight: bold !important;
+    width: 100% !important;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  
+
+.item-post-page table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+  
+  .item-post-page th,
+.item-post-page td {
+  /* border: 1px solid #ddd; */
+  padding: 8px;
+  font-size: 12px !important;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+  
+.item-post-page th {
+    background-color: #f2f2f2;
+  }
+
+.item-post-page th:first-child,
+.item-post-page td:first-child {
+  width: 4% !important;
+  text-align: center;
 }
 
+/* 상품명 컬럼 */
+.item-post-page th:nth-child(2),
+.item-post-page td:nth-child(2) {
+  width: 15% !important;
+}
+
+/* 상품 코드 컬럼 */
+.item-post-page th:nth-child(3),
+.item-post-page td:nth-child(3) {
+  width: 10% !important;
+}
+
+/* 카테고리 컬럼 */
+.item-post-page th:nth-child(4),
+.item-post-page td:nth-child(4) {
+  width: 10% !important;
+}
+
+/* 색상 컬럼 */
+.item-post-page th:nth-child(5),
+.item-post-page td:nth-child(5) {
+  width: 8% !important;
+}
+
+/* 사이즈 컬럼 */
+.item-post-page th:nth-child(6),
+.item-post-page td:nth-child(6) {
+  width: 8% !important;
+}
+
+/* 단위 컬럼 */
+.item-post-page th:nth-child(7),
+.item-post-page td:nth-child(7) {
+  width: 8% !important;
+}
+
+/* 단가 컬럼 */
+.item-post-page th:nth-child(8),
+.item-post-page td:nth-child(8) {
+  width: 8% !important;
+  text-align: left;
+}
+
+/* 주문대기량, 불용재고량, 총 재고량 컬럼 */
+.item-post-page th:nth-child(9),
+.item-post-page td:nth-child(9),
+.item-post-page th:nth-child(10),
+.item-post-page td:nth-child(10),
+.item-post-page th:nth-child(11),
+.item-post-page td:nth-child(11) {
+  width: 8% !important;
+  text-align: left !important;
+}
+
+ /* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 1200px) {
+    .manufacturer-list-container {
+      padding: 10px !important; 
+    }
+    
+    .item-post-table th,
+    .item-post-table td {
+      padding: 8px 10px !important;
+    }
+  }
