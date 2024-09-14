@@ -167,7 +167,7 @@ const OrderApprovalPage = () => {
                     <div className='tab-container'>
                         <Tabs onSelect={handleTabSelect}>
                         <div className='tab-list-container'>
-                                <TabList>
+                             <TabList className="centered-tabs">                                
                                     <Tab>전체주문조회</Tab>
                                     <Tab>견적요청</Tab>
                                     <Tab>발주요청</Tab>
@@ -196,8 +196,9 @@ const OrderApprovalPage = () => {
                                             <input type="date" className="input w-40" />
                                             <span>~</span>
                                             <input type="date" className="input w-40" />
-                                        </div>
-                                        <div className="action-buttons">
+                                    </div>
+                                    <div className="action-buttons-container"></div>
+                                        <div className="right-aligned-buttons">
                                             <button className='btn btn-secondary' onClick={handlePatchOrder}>
                                                 <Edit className="btn-icon" size={14} /> 수정
                                             </button>

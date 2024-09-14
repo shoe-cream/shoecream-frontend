@@ -2,9 +2,26 @@
     display: flex;
 }
 
-.app-content-container {
-    flex: 1;
-    padding: 20px;
+
+.centered-tabs {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border-bottom: 1px solid #0f0e0e;
+}
+
+.react-tabs__tab {
+    padding: 10px 20px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+.react-tabs__tab--selected {
+    color: #2b538b !important;
+}
+.react-tabs__tab:hover {
+    background-color: #f5f5f5;
 }
 
 .tab-container {
@@ -12,6 +29,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px;
+    margin-top: 5px;
     margin-bottom: 20px;
     font-size: 15px;
     font-weight: bold;
@@ -21,43 +39,36 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
+    margin-bottom: 10px;
 
-.react-tabs__tab-list {
+}
+.full-width-tabs {
     display: flex;
-    border-bottom: 1px solid #ddd;
-    padding: 0;
-    margin: 0;
+    width: 100%;
 }
 
-.react-tabs__tab {
-    padding: 10px 20px;
-    border: none;
-    background-color: transparent;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-right: 5px;
-}
-
-.react-tabs__tab--selected {
-    color: #2b538b;
-    border-bottom: 2px solid #40A2E3;
-}
-
-.react-tabs__tab:hover {
-    background-color: #f5f5f5;
+.full-width-tabs .react-tabs__tab {
+    flex: 1;
+    text-align: center;
 }
 
 .date-range-container {
-    display: flex;
+    /* 자식 요소들을 한 줄로 나열하거나 세로로 정렬 */
+    display: flex; 
+    /* 첫 번째 자식 요소는 왼쪽에, 마지막 자식 요소는 오른쪽에 배치 */
     justify-content: space-between;
+    /* 플렉스 컨테이너 내에서 자식 요소들을 수직으로 가운데 정렬 */
     align-items: center;
     background-color: #ffffff;
-    padding: 10px;
+    /* 요소 내부의 콘텐츠와 경계 사이에 2px의 여백을 줌 */
+    padding: 2px;
     border-radius: 4px;
     margin-bottom: 20px;
+}
+
+.right-aligned-buttons {
+    display: flex;
+    gap: 10px;
 }
 
 .date-range-inputs {
@@ -69,15 +80,18 @@
 
 .action-buttons {
     display: flex;
+    justify-content: flex-end;
     gap: 8px;
 }
+
 
 .btn {
     padding: 6px 12px;
     font-size: 12px;
     border-radius: 4px;
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    gap: 5px;
     justify-content: center;
     background-color: #2b538b;
     color: white;
@@ -91,9 +105,7 @@
 }
 
 .btn-icon {
-    margin-right: 6px;
-    width: 14px;
-    height: 14px;
+    margin-right: 5px;
 }
 
 input[type="date"] {
@@ -110,11 +122,119 @@ input[type="date"]:focus {
 
 .search-container {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
     margin-bottom: 20px;
+}
+
+
+.serach-list {
+    font-weight: bold !important;
+    width: 40%;
 }
 
 .save-btn {
     background-color: #2b538b;
 }
+.save-btn:hover {
+    background-color: #1e3a62;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 1200px) {
+    .tab-container {
+      padding: 15px !important;
+    }
+  
+    .btn {
+      padding: 5px 10px !important;
+      font-size: 11px !important;
+    }
+  
+    input[type="date"] {
+      padding: 5px !important;
+      font-size: 11px !important;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .full-width-tabs .react-tabs__tab {
+      padding: 8px 15px !important;
+    }
+  
+    .date-range-container {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+    }
+  
+    .right-aligned-buttons {
+      margin-top: 10px !important;
+    }
+  
+    .search-container {
+      flex-direction: column !important;
+    }
+  
+    .serach-list {
+      width: 100% !important;
+      margin-bottom: 10px !important;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .tab-container {
+      padding: 10px;
+      font-size: 13px;
+    }
+  
+    .full-width-tabs {
+      flex-wrap: wrap;
+    }
+  
+    .full-width-tabs .react-tabs__tab {
+      flex: 1 0 33.33%;
+    }
+  
+    .button-container {
+      flex-direction: column;
+    }
+  
+    .order-actions button {
+      width: 100%;
+      margin-right: 0;
+    }
+  
+    .special-cell {
+      width: auto !important;
+      font-size: 11px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .tab-container {
+      font-size: 12px;
+    }
+  
+    .full-width-tabs .react-tabs__tab {
+      flex: 1 0 50%;
+    }
+  
+    .date-range-inputs {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .btn {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+  
+    .divSearch {
+      flex-direction: column;
+    }
+  
+    .orderPostInput, .buyerItemDropDown, .input-field input {
+      font-size: 12px;
+    }
+  }
+
