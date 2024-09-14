@@ -26,7 +26,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<LoginPage />} />
-          <Route path='/landing' element={<LandingPage />} />
+          <Route path='/dashboard' element={<LandingPage />} />
           <Route path='/buyers' element={<BuyerPostPage />} />
           <Route path='/buyer-items' element={<BuyerItemPostPage />} />
           <Route path='/manufacture-history' element={<ManufactureHistoryPage />} />
