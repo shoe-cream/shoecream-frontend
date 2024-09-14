@@ -1,52 +1,34 @@
-/* 공통 버튼 스타일 */
-.btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.app-container {
+    display: flex;
 }
 
-/* 주요 액션 버튼 (파란색) */
-.btn-primary {
-    background-color: #40A2E3;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #2980b9;
-}
-
-/* 보조 액션 버튼 (녹색) */
-.btn-secondary {
-    background-color: #0D9276;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background-color: #0a7d64;
-}
-
-/* 탭 컨테이너 스타일 */
-.tab-container {
-    margin: 30px 0;
+.app-content-container {
+    flex: 1;
     padding: 20px;
+}
+
+.tab-container {
     background-color: #FFFFFF;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: bold;
 }
 
-/* 탭 리스트 스타일 */
+.tab-list-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
 .react-tabs__tab-list {
     display: flex;
     border-bottom: 1px solid #ddd;
-    margin-bottom: 20px;
     padding: 0;
+    margin: 0;
 }
 
 .react-tabs__tab {
@@ -60,7 +42,7 @@
 }
 
 .react-tabs__tab--selected {
-    color: #40A2E3;
+    color: #2b538b;
     border-bottom: 2px solid #40A2E3;
 }
 
@@ -68,51 +50,64 @@
     background-color: #f5f5f5;
 }
 
-/* 액션 버튼 컨테이너 */
-.tab-actions {
+.date-range-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.date-range-inputs {
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
     gap: 10px;
-    margin-top: 20px;
 }
 
-/* 기존 load-btn 클래스를 새로운 스타일로 대체 */
-.load-btn {
-    @extend .btn;
-    @extend .btn-secondary;
+.action-buttons {
+    display: flex;
+    gap: 8px;
 }
 
-/* 승인 버튼 스타일 */
-#Approve_Purchase {
-    @extend .btn;
-    @extend .btn-primary;
+.btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2b538b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* 검색 버튼 스타일 */
-.search-button {
-    @extend .btn;
-    @extend .btn-primary;
+.btn:hover {
+    background-color: #1e3a62;
 }
 
-/* 입력 필드 스타일 통일 */
-input[type="text"],
-input[type="date"],
-select {
-    padding: 8px;
+.btn-icon {
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
+}
+
+input[type="date"] {
+    padding: 6px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
+    font-size: 12px;
 }
 
-input[type="text"]:focus,
-input[type="date"]:focus,
-select:focus {
+input[type="date"]:focus {
     border-color: #40A2E3;
     outline: none;
 }
 
-/* 검색 영역 레이아웃 */
 .search-container {
     display: flex;
     align-items: center;
@@ -120,11 +115,6 @@ select:focus {
     margin-bottom: 20px;
 }
 
-.search-container select,
-.search-container input {
-    flex: 1;
-}
-
-.search-container .search-button {
-    flex-shrink: 0;
+.save-btn {
+    background-color: #2b538b;
 }
