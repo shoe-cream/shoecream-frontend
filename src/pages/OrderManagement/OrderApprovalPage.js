@@ -21,11 +21,12 @@ const OrderApprovalPage = () => {
     const [keyword, setKeyword] = useState('');
     const [orders, setOrders] = useState({ data: [] });
     const [checkedItems, setCheckedItems] = useState([]);
-    const [edited, setEdited] = useState({});
+    const [edited, setEdited] = useState([]);
     const [status, setStatus] = useState('');
     const [isPageLoaded, setIsPageLoaded] = useState(false);
-    const [originalData, setOriginalData] = useState([]);
-    const [modifiedData, setModifiedData] = useState([]);
+    const [originalData, setOriginalData] = useState({data: []});
+    const [modifiedData, setModifiedData] = useState({data : []});
+  
 
     useEffect(() => {
         setTimeout(() => {
@@ -33,37 +34,50 @@ const OrderApprovalPage = () => {
         }, 100);
     }, []);
 
-    const transOrderData = useCallback(({data}) => {
+    const transOrderData = ({data}) => {
         if (!Array.isArray(data)) {
-            return [];
+            return []; // data가 배열이 아니면 빈 배열 반환
         }
-        return data.flatMap(order => 
-            order.orderItems.map(item => ({
-                employeeId: order.employeeId,
-                orderCd: order.orderCd,
-                status: order.status,
-                createdAt: order.createdAt,
-                requestDate: order.requestDate,
-                buyerNm: order.buyerNm,
-                buyerCd: order.buyerCd,
-                itemCd: item.itemCd,
-                qty: item.qty,
-                unitPrice: item.unitPrice,
-            }))
-        );
-    }, []);
-
+        let result = [];
+        console.log("datadata",data);
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < data[i].orderItems.length; j++) {
+                let obj = {};
+                obj["employeeId"] = data[i].employeeId;
+                obj["orderId"] = data[i].orderId;
+                obj["orderCd"] = data[i].orderCd;
+                obj["status"] = data[i].status;
+                obj["createdAt"] = data[i].createdAt.split('T')[0];
+                obj["requestDate"] = data[i].requestDate;
+                obj["buyerNm"] = data[i].buyerNm;
+                obj["buyerCd"] = data[i].buyerCd;
+                obj["itemId"] = data[i].orderItems[j].orderItemId;
+                obj["itemCd"] = data[i].orderItems[j].itemCd;
+                obj["qty"] = data[i].orderItems[j].qty;
+                obj["unitPrice"] = data[i].orderItems[j].unitPrice;
+                obj["startDate"] = data[i].orderItems[j].startDate;
+                result.push(obj);
+            }
+        }
+        console.log("Result::::" , result);
+        return result;
+    };
+    
     const fetchOrders = useCallback(() => {
         setIsLoading(true);
         getOrderAllRequest(state, null, null, status, keyword, null, null, page, 10, (data) => {
             setOrders(data);
+            console.log("orderData", data);
             const transformed = transOrderData(data);
-            setOriginalData(transformed);
-            setModifiedData(transformed);
+            setOriginalData({data:transformed});
+            setModifiedData({data: transformed});
+            // console.log("setOrders", orders);
+            // console.log("originalData", originalData)
+            // console.log("modifiedData", modifiedData)
             setIsLoading(false);
         }, setIsLoading);
-    }, [state, status, keyword, page, transOrderData]);
-
+    }, [state, status, keyword, page]); // transOrderData는 useCallback을 사용하지 않으므로 의존성에서 제외
+    
     useEffect(() => {
         fetchOrders();
     }, [fetchOrders]);
@@ -76,31 +90,34 @@ const OrderApprovalPage = () => {
         window.print();
     };
 
-    const handlePatchOrder = useCallback(() => {
-        const itemsToUpdate = modifiedData.map((item, index) => {
-            if (edited[index]) {
-                return {
-                    orderId: item.orderCd,
-                    itemId: item.itemCd,
-                    unitPrice: item.unitPrice,
-                    qty: item.qty,
-                    startDate: item.requestDate,
-                    endDate: item.requestDate
-                };
-            }
-            return null;
-        }).filter(item => item !== null);
 
-        if (itemsToUpdate.length === 0) {
+    const handlePatchOrder = () => {
+        // modifiedData.data 배열에서 수정된 항목만 필터링
+        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+    
+        if (ordersPatch.length === 0) {
             console.log("수정된 항목이 없습니다.");
             return;
         }
-
-        sendPatchMultiItemRequest(state, itemsToUpdate, () => {
+    
+        // 항목을 업데이트하기 위한 배열을 생성
+        const itemsToSend = ordersPatch.map(item => ({
+            orderId: item.orderId,
+            itemId: item.itemId,
+            unitPrice: item.unitPrice,
+            qty: item.qty,
+            startDate: item.startDate,
+            endDate: item.endDate
+        }));
+    
+        // 업데이트 요청을 보내는 함수 호출
+        sendPatchMultiItemRequest(state, itemsToSend, () => {
+            // 요청 성공 후 데이터 다시 가져오기
             fetchOrders();
-            setEdited({});
+            // 수정 상태 초기화
+            setCheckedItems([]);
         });
-    }, [modifiedData, edited, state, fetchOrders]);
+    };
 
     const handleGetOrdersAll = useCallback(() => {
         fetchOrders();
@@ -119,32 +136,7 @@ const OrderApprovalPage = () => {
         }
         setStatus(currentStatus);
     }, []);
-
-    const handleDataChange = useCallback((newData) => {
-        if (newData && Array.isArray(newData.data)) {
-            setModifiedData(newData.data);
-            
-            const updatedEdited = newData.data.reduce((acc, row, index) => {
-                const originalRow = originalData[index];
-                if (originalRow) {
-                    const changedCells = Object.keys(row).reduce((cellAcc, key) => {
-                        if (row[key] !== originalRow[key]) {
-                            cellAcc[key] = row[key];
-                        }
-                        return cellAcc;
-                    }, {});
-                    if (Object.keys(changedCells).length > 0) {
-                        acc[index] = changedCells;
-                    }
-                }
-                return acc;
-            }, {});
-            setEdited(updatedEdited);
-        } else {
-            console.error('Invalid data structure received in handleDataChange');
-        }
-    }, [originalData]);
-
+    
     const columns = useMemo(() => [
         { Header: "담당자", accessor: "employeeId" },
         { Header: "주문코드", accessor: "orderCd" },
@@ -156,6 +148,7 @@ const OrderApprovalPage = () => {
         { Header: "제품 코드", accessor: "itemCd" },
         { Header: "수량", accessor: "qty", type:"number" },
         { Header: "제품 단가", accessor: "unitPrice", type:"number" },
+        { Header: "시작일", accessor: "startDate", type:"date"} 
     ], []);
 
     return (
@@ -218,9 +211,9 @@ const OrderApprovalPage = () => {
                                         <>
                                             <EditableTableWithCheckbox 
                                                 columns={columns} 
-                                                ogData={{ data: originalData }}
-                                                data={{ data: modifiedData }}
-                                                setData={handleDataChange}
+                                                ogData={originalData}
+                                                data={modifiedData}
+                                                setData={setModifiedData}
                                                 checked={checkedItems} 
                                                 setChecked={setCheckedItems}
                                                 edited={edited} 
