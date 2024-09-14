@@ -1,20 +1,19 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const sendDeleteBuyersRequest = async (state, checkedData, setChecked, executeAfter) => {
+const sendDeleteManufacturersRequest = async (state, checkedData, setChecked, executeAfter) => {
     try {
         console.log('checkedData in request: ', checkedData);
         /* const selected = checkedItems.map(item => item + (pageInfo.page - 1) * pageInfo.size);
         console.log('selected: ', selected); */
-        const response = await axios.delete(`http://localhost:8080/buyers`, 
+        const response = await axios.delete(`http://localhost:8080/manufacturers`, 
             {   
-                
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `${state.token}`
                 },
                 data: {
-                    buyerId: checkedData
+                    mfId: checkedData
                 }
             }
         );
@@ -35,4 +34,4 @@ const sendDeleteBuyersRequest = async (state, checkedData, setChecked, executeAf
     }
 };
 
-export default sendDeleteBuyersRequest;
+export default sendDeleteManufacturersRequest;
