@@ -14,9 +14,7 @@ const LoginPage = () => {
 
     return (
         <div>
-            <Header />
             <div className='app-container'>
-                <Sidebar />
                 <div className='app-content-container'>
                     <div className='login-container'>
                         <img src='/logo/logo-shoeCream.png' alt='Logo' className='login-logo' />
