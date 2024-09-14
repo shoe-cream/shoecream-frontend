@@ -12,6 +12,7 @@ import sendGetItemsRequest from '../../requests/GetItemsRequest';
 import sendPostBuyerItemsRequest from '../../requests/PostBuyerItemsRequest';
 import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest';
 import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest';
+import sendPatchMultiBuyerItemsRequest from '../../requests/PatchMultiBuyerItemsRequest';
 
 const BuyerItemPostPage = () => {
     const { state } = useAuth();
@@ -138,20 +139,20 @@ const BuyerItemPostPage = () => {
                                         let requestBody = [];
                                         Object.keys(checkedAndEdited).forEach(key => {
                                             const index = Number(key); // key는 문자열이므로 숫자로 변환
-                                            const buyerId = data.data[index].buyerId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
+                                            const buyerItemId = data.data[index].buyerItemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
                                             const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
 
                                             // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
                                             requestBody.push({
-                                                buyerId,
+                                                buyerItemId,
                                                 ...updatedData
                                             });
                                         });
                                         console.log('requestBody: ', requestBody);
-                                        /* sendPatchMultiBuyerRequest(state, requestBody, () => {
-                                            sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+                                        sendPatchMultiBuyerItemsRequest(state, requestBody, () => {
+                                            sendGetMasterBuyerItemsRequest(state, page, 10, resetData, sortBy, setIsLoading);
                                             setChecked([]);
-                                        }); */
+                                        });
                                     }}>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
