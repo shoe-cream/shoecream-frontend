@@ -104,6 +104,7 @@ const BuyerItemPostPage = () => {
                 <Sidebar></Sidebar>
                 <div className='app-content-container'>
                     <div className='app-background'>
+                        <h2 className="app-label">고객사 단가 관리</h2>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
                                 <select onChange={(e) => setSortBy(e.target.value)}>
@@ -154,10 +155,10 @@ const BuyerItemPostPage = () => {
                                     }}>수정</button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
-                                            if(checked.length === 0){
-                                                Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                                            if (checked.length === 0) {
+                                                Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
                                                 return;
-                                              }
+                                            }
                                             console.log('checked: ', checked);
                                             const checkedData = checked.map(item => data.data[item].buyerId);
                                             console.log('checkedData: ', checkedData);
@@ -206,9 +207,9 @@ const BuyerItemPostPage = () => {
                             setParentData={(value) => resetData(value)}
                             requestArr={[
                                 /* {key: 'buyerNm', function: (setData) => sendGetBuyersRequest(state, 1, undefined, 9999999, 'buyerNm', (value) => setData(value))}, */
-                                {key: 'buyerNm', function: (setData) => sendGetAllBuyersRequest(state, (value) => setData(value))},
+                                { key: 'buyerNm', function: (setData) => sendGetAllBuyersRequest(state, (value) => setData(value)) },
                                 /* {key: 'itemNm', function: (setData) => sendGetItemsRequest(state, 1, undefined, 9999999, 'itemNm', (value) => setData(value))}, */
-                                {key: 'itemNm', function: (setData) => sendGetAllItemsRequest(state, (value) => setData(value))},
+                                { key: 'itemNm', function: (setData) => sendGetAllItemsRequest(state, (value) => setData(value)) },
                             ]}
                         ></PostModal> : <div />}
                     </div>
