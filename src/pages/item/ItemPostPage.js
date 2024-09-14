@@ -76,6 +76,18 @@ const ItemPostPage = () => {
       Header: '단가',
       type: 'number',
     },
+    {
+      accessor: 'prepareOrder',
+      Header: '주문대기량',
+    },
+    {
+      accessor: 'totalStock',
+      Header: '총 재고량',
+    },
+    {
+      accessor: 'unusedStock',
+      Header: '불용재고량',
+    },
   ]
   const postColumnData = [
     {

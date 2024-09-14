@@ -32,8 +32,8 @@ function App() {
           <Route path='/manufacture-history' element={<ManufactureHistoryPage />} />
           <Route path='/sales-history' element={<SalesHistoryPage />} />
           <Route path='/items' element={<ItemPostPage />} />
-          <Route path='/manufacturer-item' element={<ManufacturerItemPostPage />} />
-          <Route path='/manufacturer' element={<ManufacturerPostPage />} />
+          <Route path='/manufacturer-items' element={<ManufacturerItemPostPage />} />
+          <Route path='/manufacturers' element={<ManufacturerPostPage />} />
           <Route path='/mypage' element={<MyPage />} />
           <Route path='/cancelled-order' element={<CancelledOrdersPage />} />
           <Route path='/order-approval' element={<OrderApprovalPage />} />
