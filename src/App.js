@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import LandingPage from './pages/landing/LandingPage';
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';
 import BuyerItemPostPage from './pages/buyer/BuyerItemPostPage';
 import ManufactureHistoryPage from './pages/history/ManufactureHistoryPage';
@@ -25,21 +25,21 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<LandingPage/>}/>
-          <Route path='/login' element={<LoginPage/>}/>
-          <Route path='/buyers' element={<BuyerPostPage/>}/>
-          <Route path='/buyer-items' element={<BuyerItemPostPage/>}/>
-          <Route path='/manufacture-history' element={<ManufactureHistoryPage/>}/>
-          <Route path='/sales-history' element={<SalesHistoryPage/>}/>
-          <Route path='/items' element={<ItemPostPage/>}/>
-          <Route path='/manufacturer-item' element={<ManufacturerItemPostPage/>}/>
-          <Route path='/manufacturer' element={<ManufacturerPostPage/>}/>
-          <Route path='/mypage' element={<MyPage/>}/>
-          <Route path='/cancelled-order' element={<CancelledOrdersPage/>}/>
-          <Route path='/order-approval' element={<OrderApprovalPage/>}/>
-          <Route path='/order' element={<OrderPostPage/>}/>        
-          <Route path="/order-detail" element={<OrderDetail/>} /> 
-          <Route path='/registration' element={<RegistrationPage/>}/>  
+          <Route path='/' element={<LoginPage />} />
+          <Route path='/landing' element={<LandingPage />} />
+          <Route path='/buyers' element={<BuyerPostPage />} />
+          <Route path='/buyer-items' element={<BuyerItemPostPage />} />
+          <Route path='/manufacture-history' element={<ManufactureHistoryPage />} />
+          <Route path='/sales-history' element={<SalesHistoryPage />} />
+          <Route path='/items' element={<ItemPostPage />} />
+          <Route path='/manufacturer-item' element={<ManufacturerItemPostPage />} />
+          <Route path='/manufacturer' element={<ManufacturerPostPage />} />
+          <Route path='/mypage' element={<MyPage />} />
+          <Route path='/cancelled-order' element={<CancelledOrdersPage />} />
+          <Route path='/order-approval' element={<OrderApprovalPage />} />
+          <Route path='/order' element={<OrderPostPage />} />
+          <Route path="/order-detail" element={<OrderDetail />} />
+          <Route path='/registration' element={<RegistrationPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
