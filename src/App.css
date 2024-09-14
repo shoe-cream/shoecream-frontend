@@ -1,10 +1,10 @@
 #App {
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .app-container {
   display: flex; /* 컨테이너에 플렉스박스 설정 */
-  height: 100vh;
+  /* height: 100vh; */
   background-color: #DDDDDD;
   min-height: 150vh;
 
@@ -21,7 +21,6 @@ body {
   margin-right: 25px; /* 오른쪽 여백 100px 설정 */
   margin-left: 25px;
   border-radius: 8px;
-  height: 200vh !important;
   border-color: #031623; /* 밝은 파란색으로 테두리 색상 변경 */
   
 }

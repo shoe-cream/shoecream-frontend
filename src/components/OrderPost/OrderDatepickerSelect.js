@@ -17,7 +17,7 @@ const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, ke
         // 여기에서 주문 수정 로직을 추가하면 됩니다.
     };
     return (
-        <div className='order-date-select'>
+        <div className='order-search-list'>
             <select className="search-list" onChange={handleOptionChange} value={optionSelect}>
                 <option value="orderCd">주문코드</option>
                 <option value="buyerCd">고객코드</option>

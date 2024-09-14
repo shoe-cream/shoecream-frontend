@@ -93,7 +93,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     return (
       <input
         ref={inputRef}
-        className='cell-input'
+        className='cell-input'  
         type={column.type}
         defaultValue={column.type === 'date' ? initialValue.slice(0, 10) : initialValue}
         onChange={onChange}
@@ -146,29 +146,29 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
   }, [edited]);
 
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr className={getRowClassName(row)} {...row.getRowProps()}>
-              {row.cells.map(cell => (
-                <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr className={getRowClassName(row)} {...row.getRowProps()}>
+                {row.cells.map(cell => (
+                  <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
   );
 };
 

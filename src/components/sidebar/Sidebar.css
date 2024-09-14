@@ -4,16 +4,13 @@
     min-height: 210vh;
     display: flex;
     flex-direction: column;
-    
     color: #333;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 4px;
-    border-radius: 5px;    
+    padding: 4px;    
 }
 
 .sidebar-container{
     height: 100vh;
-    background-color: 4688E2 !important;
 }
 
 .sidebar-search::placeholder{
