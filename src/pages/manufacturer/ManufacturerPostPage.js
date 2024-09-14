@@ -175,6 +175,7 @@ const ManufacturerPostPage = () => {
                             columnData={postColumnData}
                             postRequest={(checkedData, setOpened, setParentData) => {
                                 sendPostManufacturersRequest(state, checkedData, () => {
+                                    setChecked([]);
                                     setOpened(false);
                                     sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
                                 });

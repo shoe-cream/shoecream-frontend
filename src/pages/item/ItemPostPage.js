@@ -217,6 +217,7 @@ const ItemPostPage = () => {
               columnData={postColumnData}
               postRequest={(checkedData, setOpened, setParentData) => {
                 sendPostMultiItemRequest(state, checkedData, () => {
+                  setChecked([]);
                   setOpened(false);
                   sendGetItemsRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
                 });
