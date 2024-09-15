@@ -140,15 +140,21 @@ const ManufacturerItemPostPage = () => {
                                         }, {});
                                     console.log('checkedAndEdited', checkedAndEdited);
 
+                                    if (Object.keys(checkedAndEdited).length === 0) {
+                                        Swal.fire({ text: '변경된 데이터가 없습니다' });
+                                        setChecked([]);
+                                        return;
+                                    }
+
                                     let requestBody = [];
                                     Object.keys(checkedAndEdited).forEach(key => {
                                         const index = Number(key); // key는 문자열이므로 숫자로 변환
-                                        const manufactureItemId = data.data[index].manufactureItemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
+                                        const mfItemId = data.data[index].mfItemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
                                         const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
 
                                         // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
                                         requestBody.push({
-                                            manufactureItemId,
+                                            mfItemId,
                                             ...updatedData
                                         });
                                     });

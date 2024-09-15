@@ -86,9 +86,12 @@ const ItemPostPage = () => {
   ]
   const postColumnData = [
     {
-      accessor: 'itemNm',
-      Header: '상품명',
-      type: 'text',
+      accessor: 'buyerNm',
+      Header: '고객사명',
+    },
+    {
+      accessor: 'buyerCd',
+      Header: '고객사명',
     },
     {
       accessor: 'itemCd',
@@ -155,6 +158,12 @@ const ItemPostPage = () => {
                           return acc;
                         }, {});
                       console.log('checkedAndEdited', checkedAndEdited);
+
+                      if (Object.keys(checkedAndEdited).length === 0) {
+                        Swal.fire({ text: '변경된 데이터가 없습니다' });
+                        setChecked([]);
+                        return;
+                      }
 
                       let requestBody = [];
                       Object.keys(checkedAndEdited).forEach(key => {
