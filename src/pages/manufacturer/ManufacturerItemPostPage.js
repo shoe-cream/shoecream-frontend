@@ -143,12 +143,12 @@ const ManufacturerItemPostPage = () => {
                                     let requestBody = [];
                                     Object.keys(checkedAndEdited).forEach(key => {
                                         const index = Number(key); // key는 문자열이므로 숫자로 변환
-                                        const buyerItemId = data.data[index].buyerItemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
+                                        const manufactureItemId = data.data[index].manufactureItemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
                                         const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
 
                                         // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
                                         requestBody.push({
-                                            buyerItemId,
+                                            manufactureItemId,
                                             ...updatedData
                                         });
                                     });
