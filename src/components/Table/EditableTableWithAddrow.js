@@ -72,7 +72,9 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     const [options, setOptions] = React.useState({key:'', data: []});
   
     const onChange = (e) => {
-      setValue(e.target.value);
+      // number 타입 input은 문자열 말고 숫자로 들어가게 설정
+      const newValue = type === 'number' ? parseInt(e.target.value, 10) : e.target.value;
+      setValue(newValue);
     };
   
     const onBlur = () => {
