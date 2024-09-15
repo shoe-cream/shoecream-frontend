@@ -54,6 +54,7 @@ const ManufacturerItemPostPage = () => {
         {
             accessor: 'qty',
             Header: '수량',
+            /* type: 'number', */
         },
         {
             accessor: 'unitPrice',
