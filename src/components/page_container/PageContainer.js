@@ -53,7 +53,17 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, se
     }, [currentPage, pageInfo]);
 
     const changePage = (newPage) => {
-        // ... (기존 changePage 함수 로직 유지)
+        if(setIsLoading !== undefined){
+            setIsLoading(true);
+        }
+        getPage(newPage);
+        setPage(newPage);
+        if(setChecked !== undefined){
+            setChecked([]);
+        }
+        if(setPageOriginal !== undefined){
+            setPageOriginal(newPage);
+        }
     };
 
     return (
