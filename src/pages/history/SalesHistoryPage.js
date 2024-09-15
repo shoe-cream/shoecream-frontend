@@ -10,18 +10,20 @@ import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest.js';
 import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest.js';
 
 const SalesHistoryPage = () => {
-  const state = useAuth();
+  const { state } = useAuth();
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState({ data: [] });
   const [buyers, setBuyers] = useState({ data: [] });
   const [items, setItems] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(false);
-  const [buyerCdInput, setBuyerCdInput] = useState();
+  const [buyerCdInput, setBuyerCdInput] = useState('B001');
+  const [itemCdInput, setItemCdInput] = useState('AD002')
 
   useEffect(() => {
+    console.log("state: ", state);
     sendGetAllBuyersRequest(state, setBuyers);
     sendGetAllItemsRequest(state, setItems);
-    getOrderAllRequest(state, undefined, undefined, undefined, undefined, undefined, undefined, page, 10, setOrders, setIsLoading);
+    getOrderAllRequest(state, buyerCdInput, itemCdInput, undefined, undefined, undefined, undefined, page, 10, setOrders, setIsLoading);
   }, []);
 
   const search = () => {
