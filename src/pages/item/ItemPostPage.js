@@ -170,10 +170,6 @@ const ItemPostPage = () => {
                       });
                       console.log('requestBody: ', requestBody);
                       sendPatchMultiItemRequest(state, requestBody, () => {
-                      /* console.log('checked: ', checked); */
-                      const checkedItems = checked.map(item => items.data[item].itemId);
-                      console.log('checkedItems: ', checkedItems);
-                      sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
                         sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                         setChecked([]);
                       });
