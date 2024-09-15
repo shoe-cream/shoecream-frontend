@@ -21,9 +21,8 @@ const Sidebar = () => {
                         {name: '고객사', urlTo: '/buyers'},   
                         {name: '제품', urlTo:'/items'},  
                         {name: '제조사', urlTo: '/manufacturers'}, 
-                        {name: '단가', urlTo: '#', isTitle: true}, 
-                        {name: '고객사 단가 관리', urlTo: '/buyer-items'}, 
-                        {name: '제조사 단가 관리', urlTo: '/manufacturer-items'}  
+                        {name: '고객사 단가', urlTo: '/buyer-items'}, 
+                        {name: '제조사 단가', urlTo: '/manufacturer-items'}  
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
                 </div>
 
@@ -38,8 +37,8 @@ const Sidebar = () => {
                 {/* 리포트 카테고리 */}
                 <div className='리포트 카테고리'>
                     <Dropdown title={'리포트'} buttons={[
-                        {name: '판매 리포트 조회', urlTo: '/orders/report'},  
-                        {name: '재고 조회', urlTo: '/orders/inventories'}  
+                        {name: '판매 기록', urlTo: '/sales-history'},  
+                        /* {name: '재고 조회', urlTo: '/orders/inventories'}  */ 
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
                 </div>
                 
