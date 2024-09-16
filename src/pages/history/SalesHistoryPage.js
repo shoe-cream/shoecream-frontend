@@ -29,6 +29,14 @@ const SalesHistoryPage = () => {
   const search = () => {
     alert('검색 기능 공사중~')
   }
+
+  const columns = [
+    {
+      accessor: 'itemNm',
+      Header: '상품명',
+      type: 'text',
+    },
+  ]
   return (
     <div>
       <Header></Header>
@@ -47,6 +55,10 @@ const SalesHistoryPage = () => {
                 </div>
               </div>
             </div>
+            {isLoading ? <div /> :
+              <ReactTable>
+                columns = {columns}
+              </ReactTable>}
           </div>
         </div>
       </div>
