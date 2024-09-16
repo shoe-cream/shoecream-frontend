@@ -1,15 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-import ReactTable from '../../components/Table/ReactTable';
 import './HistoryPage.css';
 import DateRangePicker from '../../components/datepicker/DateRangePicker.js';
 import getOrderAllRequest from '../../requests/GetOrders.js';
 import { useAuth } from '../../auth/AuthContext.js';
 import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest.js';
 import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest.js';
-import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox.js';
-import OrderSheet from '../../components/OrderPost/OrderSheet.js';
+import ClickableTable from '../../components/Table/ClickableTable.js';
 
 const SalesHistoryPage = () => {
   const { state } = useAuth();
@@ -79,9 +77,9 @@ const SalesHistoryPage = () => {
               </div>
             </div>
             {isLoading ? <div /> :
-              <ReactTable 
-              columns = {columns} data = {orders.data}> 
-              </ReactTable>}
+              <ClickableTable 
+              columns = {columns} data = {orders.data} onRowClick={(value) => console.log('value: ', value)}> 
+              </ClickableTable>}
           </div>
         </div>
       </div>

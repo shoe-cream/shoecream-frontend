@@ -45,8 +45,14 @@ td.body-d {
 }
 
 .body-r {
-    
     animation: fadeIn 0.5s ease-in-out; /* 나타나는 애니메이션 추가 */
+}
+.body-r-clickable {
+    animation: fadeIn 0.5s ease-in-out; /* 나타나는 애니메이션 추가 */
+    cursor: pointer;
+}
+.body-r-clickable:hover, .body-r:hover{
+    background-color: #eeeeee;
 }
 
 
