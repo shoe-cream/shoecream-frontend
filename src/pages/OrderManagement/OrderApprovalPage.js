@@ -12,7 +12,10 @@ import EditableTableWithCheckbox from '../../components/Table/EditableTableWithC
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import sendPatchMultiItemRequest from '../../requests/PatchOrders';
 import sendPatchStatusRequest from '../../requests/PatchOrdersStatus';
-import { FileDown, Printer, FileText, Edit } from 'lucide-react';
+import { FileDown, Printer, FileText, Edit, Check } from 'lucide-react';
+import sendGetMyInfoRequest from '../../requests/GetMyInfoRequest';
+import sendPatchApproveRequest from '../../requests/PatchOrdersApprove';
+import sendPatchRejectRequest from '../../requests/PatchOrdersReject';
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -30,10 +33,12 @@ const OrderApprovalPage = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [searchParams, setSearchParams] = useState({});
+    const [member, setMember] = useState({data: []});
 
 
 
     useEffect(() => {
+        sendGetMyInfoRequest(state, setMember, setIsLoading);
         setTimeout(() => {
             setIsPageLoaded(true);
         }, 100);
@@ -89,6 +94,7 @@ const OrderApprovalPage = () => {
 
     useEffect(() => {
         fetchOrders();
+        console.log("State : ",state);
     }, [fetchOrders, status]);
 
 
@@ -120,11 +126,11 @@ const OrderApprovalPage = () => {
                 return;
         }
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
-        
+
         const itemsToSend = ordersPatch.map(item => ({
             orderId: item.orderId,
             requestDate: item.requestDate,
-            orderStatus : newStatus
+            orderStatus: newStatus
         }));
         sendPatchStatusRequest(state, itemsToSend, () => {
             // 요청 성공 후 데이터 다시 가져오기
@@ -132,7 +138,48 @@ const OrderApprovalPage = () => {
             // 수정 상태 초기화
             setCheckedItems([]);
         });
+    }
 
+    const handleAdminApprove = () => {
+        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+
+        if (ordersPatch.length === 0) {
+            console.log("수정된 항목이 없습니다.");
+            return;
+        }
+        const itemsToSend = ordersPatch.map(item => ({
+            orderCd : item.orderCd,
+            rejectReason : '승인완료'
+        }));
+
+        sendPatchApproveRequest(state, itemsToSend, () => {
+            // 요청 성공 후 데이터 다시 가져오기
+            fetchOrders();
+            // 수정 상태 초기화
+            setCheckedItems([]);
+        });
+
+    }
+
+    const handleAdminReject = () => {
+
+        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+
+        if (ordersPatch.length === 0) {
+            console.log("수정된 항목이 없습니다.");
+            return;
+        }
+        const itemsToSend = ordersPatch.map(item => ({
+            orderCd : item.orderCd,
+            rejectReason : '반려 완료'
+        }));
+
+        sendPatchRejectRequest(state, itemsToSend, () => {
+            // 요청 성공 후 데이터 다시 가져오기
+            fetchOrders();
+            // 수정 상태 초기화
+            setCheckedItems([]);
+        });
     }
 
 
@@ -200,7 +247,7 @@ const OrderApprovalPage = () => {
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
-
+    
     const columns = useMemo(() => [
         { Header: "담당자", accessor: "employeeId" },
         { Header: "주문코드", accessor: "orderCd" },
@@ -213,7 +260,7 @@ const OrderApprovalPage = () => {
         { Header: "수량", accessor: "qty", type: "number" },
         { Header: "제품 단가", accessor: "unitPrice", type: "number" },
         { Header: "시작일", accessor: "startDate", type: "date" },
-        { Header: "만기일", accessor: "endDate", type: "date" }
+        { Header: "만기일", accessor: "endDate", type: "date" },
     ], []);
 
     return (
@@ -228,7 +275,10 @@ const OrderApprovalPage = () => {
                                 <TabList className="centered-tabs">
                                     <Tab>전체주문조회</Tab>
                                     <Tab>견적요청</Tab>
-                                    <Tab>발주요청</Tab>
+                                    {
+                                        member.data.role === "ADMIN" ?
+                                        <Tab>발주요청</Tab> : <div></div>
+                                    }
                                     <Tab>승인된 주문</Tab>
                                     <Tab>취소된 주문</Tab>
                                     <Tab>반려된 주문</Tab>
@@ -273,9 +323,21 @@ const OrderApprovalPage = () => {
                                                         <FileText className="btn-icon" size={14} /> 견적서 발행
                                                     </button>
                                                 )}
-                                                 <button className='btn btn-secondary' onClick={handleApprove}>
-                                                    <Edit className='"btn-icon' size={14} /> 승인
-                                                </button>
+                                                {tabIndex === 1 && (
+                                                    <button className='btn btn-secondary' onClick={handleApprove}>
+                                                        <Check className='"btn-icon' size={14} /> 발주 요청
+                                                    </button>
+                                                )}
+                                                {tabIndex === 2 && member.data.role === 'ADMIN' && (
+                                                    <button className='btn btn-secondary' onClick={handleAdminApprove}>
+                                                        <Check className='"btn-icon' size={14} /> 주문 승인
+                                                    </button>
+                                                )}
+                                                {tabIndex === 2 && member.data.role === 'ADMIN' && (
+                                                    <button className='btn btn-secondary' onClick={handleAdminReject}>
+                                                        <Check className='"btn-icon' size={14} /> 주문 반려
+                                                    </button>
+                                                )}
                                                 <button className='btn btn-secondary' onClick={handleExportToExcel}>
                                                     <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
                                                 </button>
