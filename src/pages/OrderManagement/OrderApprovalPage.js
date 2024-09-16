@@ -33,12 +33,13 @@ const OrderApprovalPage = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [searchParams, setSearchParams] = useState({});
-    const [member, setMember] = useState({data: []});
+    const [member, setMember] = useState({ data: [] });
 
 
 
     useEffect(() => {
         sendGetMyInfoRequest(state, setMember, setIsLoading);
+        console.log("sadasdasdasd", member.data.roles);
         setTimeout(() => {
             setIsPageLoaded(true);
         }, 100);
@@ -94,7 +95,7 @@ const OrderApprovalPage = () => {
 
     useEffect(() => {
         fetchOrders();
-        console.log("State : ",state);
+        console.log("State : ", state);
     }, [fetchOrders, status]);
 
 
@@ -148,8 +149,8 @@ const OrderApprovalPage = () => {
             return;
         }
         const itemsToSend = ordersPatch.map(item => ({
-            orderCd : item.orderCd,
-            rejectReason : '승인완료'
+            orderCd: item.orderCd,
+            rejectReason: '승인완료'
         }));
 
         sendPatchApproveRequest(state, itemsToSend, () => {
@@ -170,8 +171,8 @@ const OrderApprovalPage = () => {
             return;
         }
         const itemsToSend = ordersPatch.map(item => ({
-            orderCd : item.orderCd,
-            rejectReason : '반려 완료'
+            orderCd: item.orderCd,
+            rejectReason: '반려 완료'
         }));
 
         sendPatchRejectRequest(state, itemsToSend, () => {
@@ -247,7 +248,7 @@ const OrderApprovalPage = () => {
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
-    
+
     const columns = useMemo(() => [
         { Header: "담당자", accessor: "employeeId" },
         { Header: "주문코드", accessor: "orderCd" },
@@ -275,10 +276,9 @@ const OrderApprovalPage = () => {
                                 <TabList className="centered-tabs">
                                     <Tab>전체주문조회</Tab>
                                     <Tab>견적요청</Tab>
-                                    {
-                                        member.data.role === "ADMIN" ?
-                                        <Tab>발주요청</Tab> : <div></div>
-                                    }
+                                    {member?.data?.roles?.includes('ROLE_ADMIN') && (
+                                        <Tab>발주요청</Tab>
+                                    )}
                                     <Tab>승인된 주문</Tab>
                                     <Tab>취소된 주문</Tab>
                                     <Tab>반려된 주문</Tab>
@@ -328,12 +328,12 @@ const OrderApprovalPage = () => {
                                                         <Check className='"btn-icon' size={14} /> 발주 요청
                                                     </button>
                                                 )}
-                                                {tabIndex === 2 && member.data.role === 'ADMIN' && (
+                                                {tabIndex === 2 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminApprove}>
                                                         <Check className='"btn-icon' size={14} /> 주문 승인
                                                     </button>
                                                 )}
-                                                {tabIndex === 2 && member.data.role === 'ADMIN' && (
+                                                {tabIndex === 2 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminReject}>
                                                         <Check className='"btn-icon' size={14} /> 주문 반려
                                                     </button>
