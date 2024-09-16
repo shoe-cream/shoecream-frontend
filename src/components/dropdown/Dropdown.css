@@ -17,20 +17,10 @@
 .dropdown-title-text{
     margin-left: 15px;
     color: #FFFFFF !important;
-    font-size: 15px;
+    font-size: 13px;
+    font-weight: bold;
 }
 
-/* 드롭다운 화살표 */
-.dropdown-arrow {
-    background-color: #ffffff ;
-    width: 15px;
-    height: 15px;
-    margin-right: 10px; /* 왼쪽으로 이동하려면 이 값을 줄이세요 */
-}
-
-.dropdown-arrow:hover{
-    background-color: #16a34a; /* 짙은 녹색으로 호버 시 변경 */
-}
 .dropdown-content{
     text-align: left;
     font-weight: bold;
@@ -73,4 +63,14 @@
 
 .dropdown-content-wrapper.active {
     max-height: 500px !important; /* 드롭다운 메뉴가 펼쳐질 때의 최대 높이 */
+}
+
+.dropdown-arrow {
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    color: #FFFFFF;
+}
+
+.dropdown-title:hover .dropdown-arrow {
+    color: #2b538b; /* 호버 시 아이콘 색상 변경 */
 }

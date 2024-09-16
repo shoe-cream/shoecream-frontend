@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './Dropdown.css';
 import { useNavigate } from 'react-router-dom';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const Dropdown = ({ title, buttons, expandedDropdown, setExpandedDropdown }) => {
     const navigate = useNavigate();
@@ -19,10 +20,10 @@ const Dropdown = ({ title, buttons, expandedDropdown, setExpandedDropdown }) => 
                     }
                 }}>
                 <div className="dropdown-title-text">{title}</div>
-                <img 
-                    src={isExpanded ? 'icons/uparrow.png' : 'icons/downarrow.png'} 
-                    className={`dropdown-arrow ${isExpanded ? 'up' : ''}`} 
-                />
+                {isExpanded ? 
+                    <ChevronUp className="dropdown-arrow" size={18} /> : 
+                    <ChevronDown className="dropdown-arrow" size={18} />
+                }
             </div>
             <div className={`dropdown-content-wrapper ${isExpanded ? 'active' : ''}`}>
                 {buttons.map((value) => (
