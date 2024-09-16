@@ -1,9 +1,8 @@
 .pagination-container {
     display: flex;
     justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
-}
+    margin-top: 20px;
+  }
 
 .pagination {
     display: flex;
@@ -57,3 +56,7 @@
     outline: none;
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
 }
+
+.pagination-button.active {
+    background-color: #2b538b;
+  }
