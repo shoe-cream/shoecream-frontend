@@ -52,7 +52,7 @@ const Sidebar = () => {
                         {name: '고객사 단가', urlTo: '/buyer-items'}, 
                         {name: '제조사 단가', urlTo: '/manufacturer-items'}  
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
-                </div>
+                
                 <Dropdown 
                     title={'영업'} 
                     icon={renderIcon('영업')}
