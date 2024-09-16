@@ -8,6 +8,8 @@ import getOrderAllRequest from '../../requests/GetOrders.js';
 import { useAuth } from '../../auth/AuthContext.js';
 import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest.js';
 import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest.js';
+import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox.js';
+import OrderSheet from '../../components/OrderPost/OrderSheet.js';
 
 const SalesHistoryPage = () => {
   const { state } = useAuth();
@@ -23,7 +25,7 @@ const SalesHistoryPage = () => {
     console.log("state: ", state);
     sendGetAllBuyersRequest(state, setBuyers);
     sendGetAllItemsRequest(state, setItems);
-    getOrderAllRequest(state, buyerCdInput, itemCdInput, undefined, undefined, undefined, undefined, page, 10, setOrders, setIsLoading);
+    getOrderAllRequest(state, [buyerCdInput, itemCdInput], page, 10, setOrders, setIsLoading);
   }, []);
 
   const search = () => {
@@ -32,10 +34,31 @@ const SalesHistoryPage = () => {
 
   const columns = [
     {
-      accessor: 'itemNm',
-      Header: '상품명',
-      type: 'text',
+      accessor: 'orderCd',
+      Header: '주문코드',
     },
+    {
+      accessor: 'buyerCd',
+      Header: '고객사 코드',
+    },
+    {
+      accessor: 'buyerNm',
+      Header: '고객사 명',
+    },
+    {
+      accessor: 'orderItems',
+      Header: '상품명',
+      /* type: 'arrayCell', */
+    },
+    {
+      accessor: 'employeeId',
+      Header: '영업사원번호',
+    },    
+    {
+      accessor: 'createdAt',
+      Header: '등록일',
+    },
+    
   ]
   return (
     <div>
@@ -56,8 +79,8 @@ const SalesHistoryPage = () => {
               </div>
             </div>
             {isLoading ? <div /> :
-              <ReactTable>
-                columns = {columns} data = {orders}
+              <ReactTable 
+              columns = {columns} data = {orders.data}> 
               </ReactTable>}
           </div>
         </div>
