@@ -89,8 +89,8 @@ const BuyerPostPage = () => {
                 <div className='manufacturer-button-container'>
                   <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
                   <button className='manufacturer-button' onClick={() => {
-                    if(checked.length === 0){
-                      Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                    if (checked.length === 0) {
+                      Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
                       return;
                     }
                     console.log('checked: ', checked);
@@ -103,6 +103,12 @@ const BuyerPostPage = () => {
                         return acc;
                       }, {});
                     console.log('checkedAndEdited', checkedAndEdited);
+
+                    if (Object.keys(checkedAndEdited).length === 0) {
+                      Swal.fire({ text: '변경된 데이터가 없습니다' });
+                      setChecked([]);
+                      return;
+                    }
 
                     let requestBody = [];
                     Object.keys(checkedAndEdited).forEach(key => {
@@ -124,8 +130,8 @@ const BuyerPostPage = () => {
                   }}>수정</button>
                   <button className='manufacturer-button'
                     onClick={() => {
-                      if(checked.length === 0){
-                        Swal.fire({text: "하나 이상의 데이터를 선택해주세요"});
+                      if (checked.length === 0) {
+                        Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
                         return;
                       }
                       console.log('checked: ', checked);

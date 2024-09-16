@@ -44,7 +44,11 @@ const OrderPostPage = () => {
         const ordersToRegister = orderData.filter((_, index) => selectedOrders.includes(index));
         
         const sendOrderRequests = (order) => {
-            const [startDateStr, endDateStr] = order.contractPeriod.split(' ~ ');
+            if (!order.requestDate) {
+                console.warn(`납기일이 없는 주문이 있습니다: ${order.buyerCd}. 이 주문은 건너뜁니다.`);
+                return Promise.resolve(null); // null을 반환하여 이 주문을 건너뜁니다.
+            }
+    
             const orderItemDtoList = order.orderItems.map(item => ({
                 itemCd: item.itemCd,
                 unitPrice: item.unitPrice,
@@ -53,21 +57,23 @@ const OrderPostPage = () => {
                 endDate: item.endDate,
                 unit: item.unit
             }));
-            if(!order.requestDate){
-                alert(`납기일이 없는 주문이 있습니다: ${order.buyerCd}`);
-                return;
-            }
-           
+    
             return sendPostOrder(state, order.buyerCd, `${order.requestDate}T00:00:00.000`, orderItemDtoList);
         };
     
         Promise.all(ordersToRegister.map(sendOrderRequests))
             .then(results => {
-                console.log("모든 주문이 성공적으로 등록되었습니다:", results);
-                alert("선택한 주문이 성공적으로 등록되었습니다.");
-                // 등록된 주문 제거
-                setOrderData(prevData => prevData.filter((_, index) => !selectedOrders.includes(index)));
-                setSelectedOrders([]); // 선택 초기화
+                const successfulOrders = results.filter(result => result !== null);
+                console.log("성공적으로 등록된 주문 수:", successfulOrders.length);
+                
+                if (successfulOrders.length > 0) {
+                    alert(`${successfulOrders.length}개의 주문이 성공적으로 등록되었습니다.`);
+                    // 등록된 주문 제거
+                    setOrderData(prevData => prevData.filter((_, index) => !selectedOrders.includes(index)));
+                    setSelectedOrders([]); // 선택 초기화
+                } else {
+                    alert("등록할 수 있는 주문이 없습니다. 모든 선택된 주문에 납기일이 없습니다.");
+                }
             })
             .catch(error => {
                 console.error("주문 등록 중 오류 발생:", error);

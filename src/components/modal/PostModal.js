@@ -21,16 +21,10 @@ const PostModal = ({ setOpened, columnData, postRequest, sortBy, setParentData, 
             const value = dataItem[accessor];
 
             // Check if the value is empty or undefined
-            if (value === undefined || value === null || value.trim() === '') {
+            if (value === undefined || value === null || (typeof value === 'string' && value.trim() === '')) {
                 return undefined;
             }
-
-            if (accessor === 'size' || accessor === 'unitPrice') {
-                // 문자열 대신 숫자가 들어가야 하는 항목
-                result[accessor] = parseInt(value, 10);
-            } else {
-                result[accessor] = value;
-            }
+            result[accessor] = value;
         }
 
         // All checks passed

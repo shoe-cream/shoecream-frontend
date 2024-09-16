@@ -36,7 +36,7 @@ const ManufacturerPostPage = () => {
 
     useEffect(() => {
         sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
-      }, [page, sortBy]);
+    }, [page, sortBy]);
 
     const columnData = [
         {
@@ -116,6 +116,12 @@ const ManufacturerPostPage = () => {
                                                 return acc;
                                             }, {});
                                         console.log('checkedAndEdited', checkedAndEdited);
+
+                                        if (Object.keys(checkedAndEdited).length === 0) {
+                                            Swal.fire({ text: '변경된 데이터가 없습니다' });
+                                            setChecked([]);
+                                            return;
+                                        }
 
                                         let requestBody = [];
                                         Object.keys(checkedAndEdited).forEach(key => {

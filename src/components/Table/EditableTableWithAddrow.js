@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTable } from 'react-table';
 import './ReactTable.css';
 
@@ -46,10 +46,31 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
 
   const [tableData, setTableData] = React.useState(initialData);
 
+  const tableRef = useRef(null);
+
   // 행 추가하는 함수
   const addEmptyRow = React.useCallback(() => {
-    setTableData(prevData => [...prevData, createEmptyRow()]);
+    setTableData(prevData => {
+      const newData = [...prevData, createEmptyRow()];
+      
+      // 새 행이 추가된 후 스크롤 조정
+      setTimeout(() => {
+        if (tableRef.current) {
+          const tableHeight = tableRef.current.scrollHeight;
+          const currentScroll = tableRef.current.scrollTop;
+          const viewportHeight = tableRef.current.clientHeight;
+          
+          // 새로운 행이 뷰포트 밖에 있는 경우에만 스크롤 조정
+          if (tableHeight - currentScroll > viewportHeight) {
+            tableRef.current.scrollTop = tableHeight - viewportHeight;
+          }
+        }
+      }, 0);
+
+      return newData;
+    });
   }, [createEmptyRow]);
+
 
   // 체크박스를 렌더링하는 셀 컴포넌트
   const CheckboxCell = ({ row }) => (
@@ -72,7 +93,9 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     const [options, setOptions] = React.useState({key:'', data: []});
   
     const onChange = (e) => {
-      setValue(e.target.value);
+      // number 타입 input은 문자열 말고 숫자로 들어가게 설정
+      const newValue = type === 'number' ? parseInt(e.target.value, 10) : e.target.value;
+      setValue(newValue);
     };
   
     const onBlur = () => {
@@ -164,38 +187,36 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
   } = useTable({ columns: allColumns, data: tableData });
 
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr className='body-r' {...row.getRowProps()}>
-              {row.cells.map(cell => (
-                <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
+    <div ref={tableRef} style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
-          );
-        })}
-
-        {/* 마지막 줄에 + 버튼 추가 */}
-        <tr className="body-r">
-          <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }}>
-            <button onClick={() => {
-              addEmptyRow();
-            }} className="add-row-button">+ 추가</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr className='body-r' {...row.getRowProps()}>
+                {row.cells.map(cell => (
+                  <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                ))}
+              </tr>
+            );
+          })}
+          <tr className="body-r">
+            <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }}>
+              <button onClick={addEmptyRow} className="add-row-button">+ 추가</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 };
 

@@ -12,10 +12,13 @@
     display: flex;
     flex-direction: column;
 }
-.post-modal-button-container{
+
+
+.post-modal-button-container {
     display: flex;
 }
-.post-modal-button{
+
+.post-modal-button {
     width: 100px;
     height: 50px;
     background-color: #769adc;
@@ -26,6 +29,7 @@
     margin-right: 5px;
     cursor: pointer;
 }
-.post-modal-button:hover{
+
+.post-modal-button:hover {
     background-color: #8aabe9;
 }
