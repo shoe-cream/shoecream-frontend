@@ -5,6 +5,8 @@ import './ReactTable.css';
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   // 원본 데이터와 테이블 데이터를 비교해서 수정됨 상태 업데이트
   useEffect(() => {
+    console.log('data in editableTable: ', data);
+    
     if (ogData && data && ogData.data && data.data) {
       const updatedEdited = data.data.reduce((acc, row, index) => {
         const ogRow = ogData.data[index];

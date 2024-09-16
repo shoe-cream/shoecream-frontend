@@ -18,7 +18,7 @@ const getOrderAllRequest = async (state, searchParams, page, size, setOrders, se
         });
 
         if (response.status === 200) {
-            console.log(response.data);
+            console.log('주문 GET요청 성공: ', response.data);
             if (response.data.data && response.data.data.length > 0) {
                 setOrders(response.data);
             } else {

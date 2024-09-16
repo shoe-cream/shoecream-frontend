@@ -14,7 +14,7 @@ const sendPatchManufacturerItemsRequest = async(state, requestBody, executeAfter
             }
         );
         if(response.status === 200 || response.status === 201){
-            Swal.fire({text: '수정 완료'});
+            Swal.fire({text: '수정 완료', icon: 'success'});
             console.log('제조사 단가 일괄 수정 성공', response);
             if(executeAfter !== undefined){
                 executeAfter();
