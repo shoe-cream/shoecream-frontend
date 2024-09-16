@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './HistoryPage.css';
@@ -8,6 +8,9 @@ import { useAuth } from '../../auth/AuthContext.js';
 import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest.js';
 import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest.js';
 import ClickableTable from '../../components/Table/ClickableTable.js';
+import Swal from 'sweetalert2';
+import sendGetSaleHistoryRequest from '../../requests/GetSaleHistoryRequest.js';
+import TableModal from '../../components/modal/TableModal.js';
 
 const SalesHistoryPage = () => {
   const { state } = useAuth();
@@ -17,7 +20,9 @@ const SalesHistoryPage = () => {
   const [items, setItems] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [buyerCdInput, setBuyerCdInput] = useState('B001');
-  const [itemCdInput, setItemCdInput] = useState('AD002')
+  const [itemCdInput, setItemCdInput] = useState('AD002');
+  const [historyData, setHistoryData] = useState({ data: [] });
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   useEffect(() => {
     console.log("state: ", state);
@@ -51,13 +56,28 @@ const SalesHistoryPage = () => {
     {
       accessor: 'employeeId',
       Header: '영업사원번호',
-    },    
+    },
     {
       accessor: 'createdAt',
       Header: '등록일',
     },
-    
+
   ]
+
+  const handleRowClick = useCallback((value) => {
+    sendGetSaleHistoryRequest(
+      {
+        state: state,
+        rowData: value, 
+        page: 1,
+        size: 10,
+        setData: setHistoryData,
+        setIsModalOpen: setIsHistoryModalOpen,
+      }
+    );
+    setIsHistoryModalOpen(true);
+  }, [state, setHistoryData, setIsHistoryModalOpen])
+
   return (
     <div>
       <Header></Header>
@@ -77,10 +97,14 @@ const SalesHistoryPage = () => {
               </div>
             </div>
             {isLoading ? <div /> :
-              <ClickableTable 
-              columns = {columns} data = {orders.data} onRowClick={(value) => console.log('value: ', value)}> 
+              <ClickableTable
+                columns={columns}
+                data={orders.data}
+                onRowClick={handleRowClick}>
               </ClickableTable>}
           </div>
+          {isHistoryModalOpen ? <TableModal setOpened={setIsHistoryModalOpen} columnData = {columns} data = {historyData}
+          ></TableModal> : <div />}
         </div>
       </div>
     </div>

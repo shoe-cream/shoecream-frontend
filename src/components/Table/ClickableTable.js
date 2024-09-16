@@ -1,7 +1,7 @@
 import { useTable } from "react-table";
 import './ReactTable.css';
 
-const ReactTableOnRowClick = ({ columns, data, onRowClick }) => {
+const ClickableTable = ({ columns, data, onRowClick }) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
     const renderCellContent = (cell) => {
@@ -70,4 +70,4 @@ const ReactTableOnRowClick = ({ columns, data, onRowClick }) => {
     );
 }
 
-export default ReactTableOnRowClick;
+export default ClickableTable;
