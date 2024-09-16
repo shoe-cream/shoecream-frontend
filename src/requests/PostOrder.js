@@ -24,7 +24,7 @@ const sendPostOrder = async(state, buyerCd, requestDate, orderItemDtoList) => {
         );
         if (response.status === 200 || response.status === 201) {
             console.log('주문 등록 성공', response);
-            alert("등록에 성공했습니다.")
+            Swal.fire({text: '등록 완료', icon: 'success'});
         } else {
             console.log('주문 등록 실패: ', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});

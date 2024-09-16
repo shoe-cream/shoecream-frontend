@@ -67,7 +67,7 @@ const OrderPostPage = () => {
                 console.log("성공적으로 등록된 주문 수:", successfulOrders.length);
                 
                 if (successfulOrders.length > 0) {
-                    alert(`${successfulOrders.length}개의 주문이 성공적으로 등록되었습니다.`);
+                    // alert(`${successfulOrders.length}개의 주문이 성공적으로 등록되었습니다.`);
                     // 등록된 주문 제거
                     setOrderData(prevData => prevData.filter((_, index) => !selectedOrders.includes(index)));
                     setSelectedOrders([]); // 선택 초기화
