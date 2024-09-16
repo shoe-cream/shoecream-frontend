@@ -3,12 +3,12 @@
     height: 45px;
     margin: 0 auto;
     background-color: white;
-    margin-bottom: 7px; /* 컴포넌트 밑 여백 */ 
+    margin-bottom: 10px; /* 컴포넌트 밑 여백 */ 
     margin-top: 7px;
     display: flex; /* 자식들의 가로 방향으로 정렬됨 */
     /* flex-direction: column; 애는 세로로 바뀜 */
     justify-content: space-between;
-    border-bottom: 1px solid #000000;  
+    /* border-bottom: 1px solid #000000;   */
     align-items: center; /* 자식들의 flex수직방향 정렬 기준 정해줌 */
 }
 .header-logo{

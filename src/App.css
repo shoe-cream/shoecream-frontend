@@ -7,7 +7,8 @@
   /* height: 100vh; */
   background-color: #DDDDDD;
   min-height: 150vh;
-
+  /* 논의필요 */
+  border-top: 1px solid #000000 !important; 
 }
 
 body {
@@ -32,6 +33,7 @@ body {
   align-items: center; /* 가로 중앙 정렬 */
   border-radius: 8px; /* 모서리를 둥글게 처리 */
   background-color: #FFFFFF;
+  
 }
 
 .app-label{

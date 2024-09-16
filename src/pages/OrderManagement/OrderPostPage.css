@@ -63,8 +63,7 @@
 .button-container {
     display: flex;
     justify-content: flex-end !important; /* 버튼들이 공간을 균등하게 차지하도록 설정 */
-    gap: 15px; /* 버튼 간의 간격을 설정 */
-    margin-top: 20px; /* 버튼 위쪽 여백 */
+    gap: 10px; /* 버튼 간의 간격을 설정 */
     margin-bottom: 15px;
 }
 
@@ -82,11 +81,31 @@
     transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 추가 */
 }
 
+.add-items-button {
+    margin-right: 5px; /* 버튼 간의 오른쪽 간격 */
+    background-color: #2b538b;
+}
+
 .search-button {
     background-color: #e7e7e7;
 
 }
 
+.modal-submit-btn {
+    background-color: #2b538b;
+    margin-left: 5px !important;
+    margin-right: 10PX !important;
+}
+
+.modal-close-btn {
+    background-color: #2b538b;
+    margin-left: 5px !important;
+    margin-right: 10PX !important;
+}
+
+.modal-footer {
+
+}
 @media (max-width: 768px) {
     .input-container {
       flex-direction: column !important;

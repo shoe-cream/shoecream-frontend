@@ -12,6 +12,7 @@ import sendGetManufacturersRequest from '../../requests/GetManufacturersRequest'
 import sendPostManufacturersRequest from '../../requests/PostManufacturersRequest';
 import sendPatchManufacturersRequest from '../../requests/PatchManufacturersRequest';
 import sendDeleteManufacturersRequest from '../../requests/DeleteManufacturersRequest';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
 
 
@@ -97,7 +98,9 @@ const ManufacturerPostPage = () => {
                                 </select>
                                 <div />
                                 <div className='manufacturer-button-container'>
-                                    <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
+                                <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>
+                                        <Plus size={16} /> 추가
+                                    </button>
                                     <button className='manufacturer-button' onClick={() => {
                                         if (checked.length === 0) {
                                             Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
@@ -131,7 +134,9 @@ const ManufacturerPostPage = () => {
                                             sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
                                             setChecked([]);
                                         });
-                                    }}>수정</button>
+                                    }}>
+                                        <Edit size={16} /> 수정
+                                    </button>
                                     <button className='manufacturer-button'
                                         onClick={() => {
                                             if (checked.length === 0) {
@@ -144,9 +149,11 @@ const ManufacturerPostPage = () => {
                                                 sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
                                                 setChecked([]);
                                             });
-                                        }}>삭제</button>
+                                        }}>
+                                        <Trash2 size={16} /> 삭제                                    
+                                            </button>
+                                    </div>  
                                 </div>
-                            </div>
                             <EditableTableWithCheckbox
                                 columns={columnData}
                                 ogData={dbData}
@@ -191,4 +198,5 @@ const ManufacturerPostPage = () => {
         </div>
     );
 }
+
 export default ManufacturerPostPage;

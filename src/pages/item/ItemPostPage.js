@@ -147,7 +147,6 @@ const ItemPostPage = () => {
                       }
                       console.log('checked: ', checked);
                       console.log('edited: ', edited);
-                      /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
                       const checkedAndEdited = Object.keys(edited)
                         .filter(key => checked.includes(Number(key)))
                         .reduce((acc, key) => {
@@ -158,11 +157,9 @@ const ItemPostPage = () => {
 
                       let requestBody = [];
                       Object.keys(checkedAndEdited).forEach(key => {
-                        const index = Number(key); // key는 문자열이므로 숫자로 변환
-                        const itemId = items.data[index].itemId; // data.data 배열에서 해당 인덱스의 원래 데이터를 가져옴
-                        const updatedData = checkedAndEdited[key]; // 수정된 데이터를 가져옴
-
-                        // 원래 데이터에 수정된 데이터를 덮어씌움 (업데이트된 필드만 반영)
+                        const index = Number(key);
+                        const itemId = items.data[index].itemId;
+                        const updatedData = checkedAndEdited[key];
                         requestBody.push({
                           itemId,
                           ...updatedData
@@ -170,10 +167,6 @@ const ItemPostPage = () => {
                       });
                       console.log('requestBody: ', requestBody);
                       sendPatchMultiItemRequest(state, requestBody, () => {
-                      /* console.log('checked: ', checked); */
-                      const checkedItems = checked.map(item => items.data[item].itemId);
-                      console.log('checkedItems: ', checkedItems);
-                      sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
                         sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                         setChecked([]);
                       });
