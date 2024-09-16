@@ -236,16 +236,6 @@ const ItemPostPage = () => {
                 setParentData={(value) => resetData(value)}
               ></PostModal> : <div />}
             </div>
-            {isLoading ? <div /> : <PageContainer
-              currentPage={page}
-              setPage={setPage}
-              pageInfo={items.pageInfo}
-              getPage={(page) => {
-                sendGetItemsRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
-              }}
-              setChecked={(value) => setChecked(value)}
-              setIsLoading={setIsLoading}
-            ></PageContainer>}
             {isPostMode ? <PostModal
               state={state}
               setOpened={setIsPostMode}
