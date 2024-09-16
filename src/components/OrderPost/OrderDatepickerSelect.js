@@ -1,21 +1,26 @@
 import React, { useState } from "react";
-import DateRangePicker from "../datepicker/DateRangePicker";
 import "../OrderPost/OrderDatepickerSelect.css";
 
-
-const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, keyword, setKeyword }) => {
+const OrderDatepickerSelect = ({ handleSearch }) => {
+    const [optionSelect, setOptionSelect] = useState('orderCd');
+    const [keyword, setKeyword] = useState('');
 
     const handleOptionChange = (e) => {
         setOptionSelect(e.target.value);
     };
 
     const getKeyword = (e) => {
-        setKeyword(e.target.value)
-    }
-    const handlePatchOrder = () => {
-        console.log("Patch order functionality will go here.");
-        // 여기에서 주문 수정 로직을 추가하면 됩니다.
+        setKeyword(e.target.value);
     };
+
+    const handleSearchClick = () => {
+        const params = {};
+        if (keyword.trim() !== '') {
+            params[optionSelect] = keyword;
+        }
+        handleSearch(params);
+    };
+
     return (
         <div className='order-date-select'>
             <select className="search-list" onChange={handleOptionChange} value={optionSelect}>
@@ -23,16 +28,18 @@ const OrderDatepickerSelect = ({ GetOrdersAll, optionSelect, setOptionSelect, ke
                 <option value="buyerCd">고객코드</option>
                 <option value="itemCd">제품코드</option>
             </select>
-            {
-            optionSelect !== 'date' ? 
-            <input type='text' id='productName' className='product-name' value={keyword} onChange={getKeyword} /> :
-            <input type='date' id= 'dateSelect' value ={keyword} onChange= {getKeyword}></input>
-            }
-            <button id='searchProduct' className='search-button' onClick={() => GetOrdersAll(optionSelect, keyword)}>
+            <input 
+                type='text' 
+                id='productName' 
+                className='product-name' 
+                value={keyword} 
+                onChange={getKeyword} 
+            />
+            <button id='searchProduct' className='search-button' onClick={handleSearchClick}>
                 <img src='/icons/zoom.png' alt='Search' className='search-icon' />
             </button>
         </div>
     );
-}
+};
 
 export default OrderDatepickerSelect;

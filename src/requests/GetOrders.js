@@ -1,19 +1,13 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-
-const getOrderAllRequest = async (state, buyerCd, itemCd, orderStatus, orderCd, searchStartDate, searchEndDate, page, size, setOrders, setIsLoading) => {
+const getOrderAllRequest = async (state, searchParams, page, size, setOrders, setIsLoading) => {
     try {
-        const params = {};
-        if (buyerCd) params.buyerCode = buyerCd;
-        if (itemCd) params.itemCode = itemCd;
-        if (orderStatus) params.status = orderStatus;
-        if (orderCd) params.orderCd = orderCd;
-        if (searchStartDate) params.searchStartDate = searchStartDate;
-        if (searchEndDate) params.searchEndDate = searchEndDate;
-        params.page = page;
-        params.size = size;
-
+        const params = {
+            ...searchParams,
+            page,
+            size
+        };
 
         const response = await axios.get(`http://localhost:8080/orders`, {
             headers: {
@@ -25,15 +19,23 @@ const getOrderAllRequest = async (state, buyerCd, itemCd, orderStatus, orderCd, 
 
         if (response.status === 200) {
             console.log(response.data);
-            setOrders(response.data);
+            if (response.data.data && response.data.data.length > 0) {
+                setOrders(response.data);
+            } else {
+                setOrders({ data: [] });
+            }
             setIsLoading(false);
         } else {
             console.log('Failed to fetch orders data:', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});
+            setOrders({ data: [] });
         }
     } catch (error) {
         console.error('Error fetching buyer data:', error);
-        Swal.fire({ text: '해당되는 주문이 없어요' });
+        Swal.fire({ text: '데이터를 가져오는 중 오류가 발생했습니다.' });
+        setOrders({ data: [] });
+    } finally {
+        setIsLoading(false);
     }
 };
 

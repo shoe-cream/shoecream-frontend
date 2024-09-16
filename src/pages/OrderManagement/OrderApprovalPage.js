@@ -11,6 +11,7 @@ import { useAuth } from '../../auth/AuthContext';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import sendPatchMultiItemRequest from '../../requests/PatchOrders';
+import sendPatchStatusRequest from '../../requests/PatchOrdersStatus';
 import { FileDown, Printer, FileText, Edit } from 'lucide-react';
 
 const OrderApprovalPage = () => {
@@ -24,9 +25,13 @@ const OrderApprovalPage = () => {
     const [edited, setEdited] = useState([]);
     const [status, setStatus] = useState('');
     const [isPageLoaded, setIsPageLoaded] = useState(false);
-    const [originalData, setOriginalData] = useState({data: []});
-    const [modifiedData, setModifiedData] = useState({data : []});
-  
+    const [originalData, setOriginalData] = useState({ data: [] });
+    const [modifiedData, setModifiedData] = useState({ data: [] });
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [searchParams, setSearchParams] = useState({});
+
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -34,12 +39,12 @@ const OrderApprovalPage = () => {
         }, 100);
     }, []);
 
-    const transOrderData = ({data}) => {
+    const transOrderData = ({ data }) => {
         if (!Array.isArray(data)) {
             return []; // data가 배열이 아니면 빈 배열 반환
         }
         let result = [];
-        console.log("datadata",data);
+        console.log("datadata", data);
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < data[i].orderItems.length; j++) {
                 let obj = {};
@@ -56,31 +61,80 @@ const OrderApprovalPage = () => {
                 obj["qty"] = data[i].orderItems[j].qty;
                 obj["unitPrice"] = data[i].orderItems[j].unitPrice;
                 obj["startDate"] = data[i].orderItems[j].startDate;
+                obj["endDate"] = data[i].orderItems[j].endDate;
                 result.push(obj);
             }
         }
-        console.log("Result::::" , result);
+        console.log("Result::::", result);
         return result;
     };
-    
+
     const fetchOrders = useCallback(() => {
         setIsLoading(true);
-        getOrderAllRequest(state, null, null, status, keyword, null, null, page, 10, (data) => {
-            setOrders(data);
-            console.log("orderData", data);
-            const transformed = transOrderData(data);
-            setOriginalData({data:transformed});
-            setModifiedData({data: transformed});
-            // console.log("setOrders", orders);
-            // console.log("originalData", originalData)
-            // console.log("modifiedData", modifiedData)
-            setIsLoading(false);
-        }, setIsLoading);
-    }, [state, status, keyword, page]); // transOrderData는 useCallback을 사용하지 않으므로 의존성에서 제외
-    
+        getOrderAllRequest(
+            state,
+            searchParams,
+            page,
+            10,
+            (data) => {
+                setOrders(data);
+                const transformed = transOrderData(data);
+                setOriginalData({ data: transformed });
+                setModifiedData({ data: transformed });
+                setIsLoading(false);
+            },
+            setIsLoading
+        );
+    }, [state, searchParams, page]);
+
     useEffect(() => {
         fetchOrders();
-    }, [fetchOrders]);
+    }, [fetchOrders, status]);
+
+
+    const handleSearch = (params) => {
+        setSearchParams(params);
+        setPage(1);
+    };
+
+    const handleApprove = () => {
+        if (checkedItems.length === 0) {
+            alert("승인할 항목을 선택해주세요.");
+            return;
+        }
+
+        let newStatus;
+        switch (status) {
+            case 'REQUEST_TEMP':
+                newStatus = 'PURCHASE_REQUEST';
+                break;
+            case 'PURCHASE_REQUEST':
+                newStatus = 'APPROVED';
+                break;
+            // case 'CANCELLED':
+            // case 'REJECTED':
+            //     newStatus = 'REQUEST_TEMP';
+            //     break;
+            default:
+                alert("현재 상태에서는 승인 작업을 수행할 수 없습니다.");
+                return;
+        }
+        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+        
+        const itemsToSend = ordersPatch.map(item => ({
+            orderId: item.orderId,
+            requestDate: item.requestDate,
+            orderStatus : newStatus
+        }));
+        sendPatchStatusRequest(state, itemsToSend, () => {
+            // 요청 성공 후 데이터 다시 가져오기
+            fetchOrders();
+            // 수정 상태 초기화
+            setCheckedItems([]);
+        });
+
+    }
+
 
     const handleExportToExcel = () => {
         console.log("Export to Excel");
@@ -94,12 +148,12 @@ const OrderApprovalPage = () => {
     const handlePatchOrder = () => {
         // modifiedData.data 배열에서 수정된 항목만 필터링
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
-    
+
         if (ordersPatch.length === 0) {
             console.log("수정된 항목이 없습니다.");
             return;
         }
-    
+
         // 항목을 업데이트하기 위한 배열을 생성
         const itemsToSend = ordersPatch.map(item => ({
             orderId: item.orderId,
@@ -109,7 +163,7 @@ const OrderApprovalPage = () => {
             startDate: item.startDate,
             endDate: item.endDate
         }));
-    
+
         // 업데이트 요청을 보내는 함수 호출
         sendPatchMultiItemRequest(state, itemsToSend, () => {
             // 요청 성공 후 데이터 다시 가져오기
@@ -120,6 +174,7 @@ const OrderApprovalPage = () => {
     };
 
     const handleGetOrdersAll = useCallback(() => {
+        setPage(1);
         fetchOrders();
     }, [fetchOrders]);
 
@@ -135,20 +190,30 @@ const OrderApprovalPage = () => {
             default: currentStatus = null;
         }
         setStatus(currentStatus);
+        setSearchParams(prev => ({ ...prev, status: currentStatus }));
     }, []);
-    
+
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
+    };
+
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
+
     const columns = useMemo(() => [
         { Header: "담당자", accessor: "employeeId" },
         { Header: "주문코드", accessor: "orderCd" },
         { Header: "주문상태", accessor: "status" },
         { Header: "등록일", accessor: "createdAt" },
-        { Header: "납기일", accessor: "requestDate", type:"date" },
+        { Header: "납기일", accessor: "requestDate", type: "date" },
         { Header: "고객사 명", accessor: "buyerNm" },
         { Header: "고객 코드", accessor: "buyerCd" },
         { Header: "제품 코드", accessor: "itemCd" },
-        { Header: "수량", accessor: "qty", type:"number" },
-        { Header: "제품 단가", accessor: "unitPrice", type:"number" },
-        { Header: "시작일", accessor: "startDate", type:"date"} 
+        { Header: "수량", accessor: "qty", type: "number" },
+        { Header: "제품 단가", accessor: "unitPrice", type: "number" },
+        { Header: "시작일", accessor: "startDate", type: "date" },
+        { Header: "만기일", accessor: "endDate", type: "date" }
     ], []);
 
     return (
@@ -159,73 +224,93 @@ const OrderApprovalPage = () => {
                 <div className={`app-content-container ${isPageLoaded ? 'fade-in' : ''}`}>
                     <div className='tab-container'>
                         <Tabs onSelect={handleTabSelect}>
-                        <div className='tab-list-container'>
-                             <TabList className="centered-tabs">                                
+                            <div className='tab-list-container'>
+                                <TabList className="centered-tabs">
                                     <Tab>전체주문조회</Tab>
                                     <Tab>견적요청</Tab>
                                     <Tab>발주요청</Tab>
-                                    <Tab>Completed Orders</Tab>
+                                    <Tab>승인된 주문</Tab>
                                     <Tab>취소된 주문</Tab>
-                                    <Tab>Returned Orders</Tab>
+                                    <Tab>반려된 주문</Tab>
                                 </TabList>
-                                <div className='tab-actions'>
-                                
-                                </div>
                             </div>
                             <div className='tab-content'>
-                                <TabPanel>
-                                    <div className="search-container">
-                                        <OrderDatepickerSelect 
-                                            GetOrdersAll={handleGetOrdersAll}
-                                            optionSelect={optionSelect} 
-                                            setOptionSelect={setOptionSelect}
-                                            keyword={keyword} 
-                                            setKeyword={setKeyword}
-                                        />
-                                    </div>
-                                    <div className="date-range-container">
-                                        <div className="date-range-inputs">
-                                            <span>조회기간:</span>
-                                            <input type="date" className="input w-40" />
-                                            <span>~</span>
-                                            <input type="date" className="input w-40" />
-                                    </div>
-                                    <div className="action-buttons-container"></div>
-                                        <div className="right-aligned-buttons">
-                                            <button className='btn btn-secondary' onClick={handlePatchOrder}>
-                                                <Edit className="btn-icon" size={14} /> 수정
-                                            </button>
-                                            <button className='btn btn-secondary' onClick={handlePatchOrder}>
-                                                <FileText className="btn-icon" size={14} /> 견적서 발행
-                                            </button>
-                                            <button className='btn btn-secondary' onClick={handleExportToExcel}>
-                                                <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
-                                            </button>
-                                            <button className='btn btn-secondary' onClick={handlePrint}>
-                                                <Printer className="btn-icon" size={14} /> 인쇄
-                                            </button>
-                                        </div>
-                                    </div>
-                                    {isLoading ? (
-                                        <div></div>
-                                    ) : (
-                                        <>
-                                            <EditableTableWithCheckbox 
-                                                columns={columns} 
-                                                ogData={originalData}
-                                                data={modifiedData}
-                                                setData={setModifiedData}
-                                                checked={checkedItems} 
-                                                setChecked={setCheckedItems}
-                                                edited={edited} 
-                                                setEdited={setEdited} 
+                                {[0, 1, 2, 3, 4, 5].map((tabIndex) => (
+                                    <TabPanel key={tabIndex}>
+                                        <div className="search-container">
+                                            <OrderDatepickerSelect
+                                                handleSearch={handleSearch}
+                                                startDate={startDate}
+                                                endDate={endDate}
+                                                setStartDate={setStartDate}
+                                                setEndDate={setEndDate}
                                             />
-                                            <button onClick={handlePatchOrder} className='save-btn' disabled={Object.keys(edited).length === 0}>
-                                                변경사항 저장
-                                            </button>
-                                        </>
-                                    )}
-                                </TabPanel>
+                                        </div>
+                                        <div className="date-range-container">
+                                            <div className="date-range-inputs">
+                                                <span>조회기간:</span>
+                                                <input
+                                                    type="date"
+                                                    className="input w-40"
+                                                    value={startDate}
+                                                    onChange={handleStartDateChange}
+                                                />
+                                                <span>~</span>
+                                                <input
+                                                    type="date"
+                                                    className="input w-40"
+                                                    value={endDate}
+                                                    onChange={handleEndDateChange}
+                                                />
+                                            </div>
+                                            <div className="action-buttons-container"></div>
+                                            <div className="right-aligned-buttons">
+                                                <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                    <Edit className="btn-icon" size={14} /> 수정
+                                                </button>
+                                                {tabIndex === 1 && (
+                                                    <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                        <FileText className="btn-icon" size={14} /> 견적서 발행
+                                                    </button>
+                                                )}
+                                                 <button className='btn btn-secondary' onClick={handleApprove}>
+                                                    <Edit className='"btn-icon' size={14} /> 승인
+                                                </button>
+                                                <button className='btn btn-secondary' onClick={handleExportToExcel}>
+                                                    <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
+                                                </button>
+                                                <button className='btn btn-secondary' onClick={handlePrint}>
+                                                    <Printer className="btn-icon" size={14} /> 인쇄
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {isLoading ? (
+                                            <div></div>
+                                        ) : (
+                                            <>
+                                                {modifiedData.data.length > 0 ? (
+                                                    <EditableTableWithCheckbox
+                                                        columns={columns}
+                                                        ogData={originalData}
+                                                        data={modifiedData}
+                                                        setData={setModifiedData}
+                                                        checked={checkedItems}
+                                                        setChecked={setCheckedItems}
+                                                        edited={edited}
+                                                        setEdited={setEdited}
+                                                    />
+                                                ) : (
+                                                    <div>검색 결과가 없습니다.</div>
+                                                )}
+                                                {modifiedData.data.length > 0 && (
+                                                    <button onClick={handlePatchOrder} className='save-btn' disabled={Object.keys(edited).length === 0}>
+                                                        변경사항 저장
+                                                    </button>
+                                                )}
+                                            </>
+                                        )}
+                                    </TabPanel>
+                                ))}
                             </div>
                         </Tabs>
                     </div>
