@@ -57,7 +57,7 @@ const SalesHistoryPage = () => {
             </div>
             {isLoading ? <div /> :
               <ReactTable>
-                columns = {columns}
+                columns = {columns} data = {orders}
               </ReactTable>}
           </div>
         </div>

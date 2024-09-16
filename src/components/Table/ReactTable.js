@@ -3,6 +3,8 @@ import './ReactTable.css';
 
 const ReactTable = ({ columns, data }) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
+
+    console.log('data: ', data);
     return (
         <table {...getTableProps()}>
             <thead>

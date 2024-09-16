@@ -90,8 +90,8 @@ const ItemPostPage = () => {
       Header: '고객사명',
     },
     {
-      accessor: 'buyerCd',
-      Header: '고객사명',
+      accessor: 'itemNm',
+      Header: '상품명',
     },
     {
       accessor: 'itemCd',
