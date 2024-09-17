@@ -23,10 +23,18 @@ const Header = ()=> {
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        // ==========여기서 검색 기능을 추가=============
-        console.log('Search:', searchTerm);
-    };
 
+        // 검색어에 따라 해당 페이지로 이동
+        if (searchTerm === '제조사') {
+            navigate('/manufacturers');
+        } else if (searchTerm === '고객사') {
+            navigate('/buyers');
+        } else if (searchTerm === '주문 승인') {
+            navigate('/order-approval');
+        } else {
+            alert('검색 결과가 없습니다.');
+        }
+    };
     return (
         <div className="header-container">
             <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate((state.isAuthenticated ? "/dashboard" : '/'))}></img>
