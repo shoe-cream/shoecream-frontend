@@ -1,35 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';  // 주문 ID 파라미터를 받아오기 위한 훅
+import { useParams } from 'react-router-dom';  
 import html2pdf from 'html2pdf.js';
 import Header from '../../components/header/Header'; 
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../App.css'; 
 import './OrderDetail.css'; 
+import { useLocation } from 'react-router-dom';
 
 const OrderDetail = () => {
-    const { orderId } = useParams();  // URL에서 orderId를 받아옴
-    const [orderData, setOrderData] = useState(null); // 주문 데이터 상태
-    const [isModalOpen, setIsModalOpen] = useState(false);  // 이메일 모달 상태
-    const [email, setEmail] = useState("");  // 이메일 입력 상태
-    const [isSending, setIsSending] = useState(false);  // 이메일 전송 상태
+    const { orderCd } = useParams();  
+    const [orderData, setOrderData] = useState(null); 
+    const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [email, setEmail] = useState(""); 
+    const [isSending, setIsSending] = useState(false); 
+    const location = useLocation(); // navigate로부터 넘겨받은 state 접근
+    const token = location.state?.token;
 
     // API 요청으로 주문 데이터 받아오기
     useEffect(() => {
-        fetch(`http://localhost:8080/orders/${orderId}`, {
+        if (!token) {
+            console.error('토큰이 없습니다!');
+            return;
+        }
+
+        fetch(`http://localhost:8080/orders/${orderCd}`, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer <Your_Token>',  // 인증이 필요하다면 토큰 추가
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `${token}` // 토큰을 Authorization 헤더로 전달
             }
         })
         .then(response => response.json())
         .then(data => {
-            setOrderData(data.data); // API로부터 받은 데이터 저장
+            setOrderData(data.data); 
         })
         .catch(error => {
             console.error('Error fetching order data:', error);
         });
-    }, [orderId]);  // orderId가 변경될 때마다 API 호출
+    }, [orderCd, token]);   
 
     if (!orderData) {
         return <div>로딩 중...</div>;
@@ -38,28 +46,23 @@ const OrderDetail = () => {
     const totalAmount = orderData.orderItems.reduce((total, item) => total + item.quantity * item.unitPrice, 0);
     const tax = totalAmount * 0.1;
 
-    // PDF 다운로드 함수
     const handleDownloadPDF = () => {
         const element = document.getElementById('quotation-content');
         html2pdf().from(element).save('quotation.pdf');
     };
 
-    // 이메일 모달 열기
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
 
-    // 이메일 모달 닫기
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
 
-    // 이메일 전송 함수
     const handleSendEmail = () => {
-        setIsSending(true); // 전송 중 상태 설정
+        setIsSending(true); 
         const element = document.getElementById('quotation-content');
 
-        // PDF를 Blob 형태로 변환하여 이메일로 전송
         html2pdf().from(element).toPdf().output('blob').then((pdf) => {
             const formData = new FormData();
             formData.append("email", email);
@@ -82,8 +85,8 @@ const OrderDetail = () => {
                 alert("메일 전송 중 오류가 발생했습니다.");
             })
             .finally(() => {
-                setIsSending(false);  // 전송 상태 해제
-                handleCloseModal();   // 모달 닫기
+                setIsSending(false); 
+                handleCloseModal();  
             });
         });
     };
@@ -114,7 +117,7 @@ const OrderDetail = () => {
                             </thead>
                             <tbody>
                                 {orderData.orderItems.map(item => (
-                                    <tr key={item.orderItemId}>
+                                    <tr key={item.orderItemCd}>
                                         <td>{item.itemCd}</td>
                                         <td>{item.quantity}</td>
                                         <td>{item.unitPrice.toFixed(2)}</td>

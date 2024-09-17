@@ -8,6 +8,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import PageContainer from '../../components/page_container/PageContainer';
 import sendPostOrder from '../../requests/PostOrder';
 import { useAuth } from '../../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const OrderPostPage = () => {
     const [orderData, setOrderData] = useState([]);
@@ -16,7 +17,7 @@ const OrderPostPage = () => {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
     const { state } = useAuth();
-
+    const navigate = useNavigate();
     const handleAddOrder = (newOrder) => {
         setOrderData(prevData => {
             
@@ -81,6 +82,9 @@ const OrderPostPage = () => {
             });
     };
 
+        
+
+
     return (
         <div>
             <Header />
@@ -91,8 +95,8 @@ const OrderPostPage = () => {
                         <ProductSearch onAddOrder={handleAddOrder}/>
                         <OrderActions 
                         onRegisterOrder={handleRegisterOrder} 
-                        selectedOrders={selectedOrders}/>
-
+                        selectedOrders={selectedOrders}
+                        />
                         <OrderSheet
                             ogData={{ data: orderData }}
                             data={{ data: orderData }}
