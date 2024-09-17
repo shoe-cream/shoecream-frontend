@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './OrderPostPage.css';
-import OrderActions from '../../components/page_container/OrderPost/OrderActions'; 
-import OrderSheet from '../../components/page_container/OrderPost/OrderSheet';     
-import ProductSearch from '../../components/page_container/OrderPost/ProductSearch'; 
+import OrderActions from '../../components/OrderPost/OrderActions';
+import OrderSheet from '../../components/OrderPost/OrderSheet';
+import ProductSearch from '../../components/OrderPost/ProductSearch';
 import Header from "../../components/header/Header";
 import Sidebar from "../../components/sidebar/Sidebar";
 import PageContainer from '../../components/page_container/PageContainer';
