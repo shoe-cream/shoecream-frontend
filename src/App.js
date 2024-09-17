@@ -38,7 +38,7 @@ function App() {
           <Route path='/cancelled-order' element={<CancelledOrdersPage />} />
           <Route path='/order-approval' element={<OrderApprovalPage />} />
           <Route path='/order' element={<OrderPostPage />} />
-          <Route path="/order-detail" element={<OrderDetail />} />
+          <Route path="/order-detail" element={<OrderDetail/>} />
           <Route path='/registration' element={<RegistrationPage />} />
         </Routes>
       </BrowserRouter>
