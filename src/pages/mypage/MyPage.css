@@ -55,3 +55,60 @@
     outline: none;
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
 }
+
+.modal-container-narrow{
+
+}
+
+.profile-image-container{
+    display: flex;
+    flex-direction: column;
+    max-width: 150px;
+    background-color: #2b538b;
+    border-radius: 5px;
+    padding: 4px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.profile-image{
+    border-radius: 5px;
+}
+.profile-upload-button{
+    margin-top: 1px;
+}
+.profile-upload-button:hover{
+    margin-top: 1px;
+    background-color: #5797f0;
+}
+.mypage-column{
+    min-width: 100px;
+    background-color: #8faeda;
+}
+.mypage-cell{
+    min-width: 100px;
+    background-color: #eeeeee;
+}
+.profile-modify-input-container{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-bottom: 50px;
+}
+.profile-modify-input-empty{
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    border:2px solid #dddddd;
+}
+.profile-modify-input{
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: rgb(240, 226, 166);
+    border:2px solid rgb(201, 201, 138);
+}

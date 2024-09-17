@@ -3,13 +3,11 @@ import './PostModal.css';
 import { useEffect, useState } from 'react';
 import ReactTable from '../../components/Table/ReactTable';
 
-const TableModal = ({ setOpened, columnData, data }) => {
-    const [checked, setChecked] = useState([]);
-    const [isLoading, setIsLoading] = useState({data: {}});
-
+const TableModal = ({ setOpened, columnData, label, data }) => {
     return (
         <div className="modal-background">
             <div className='modal-container'>
+                <h2 className="app-label">{label}</h2>
                 <ReactTable
                     columns={columnData}
                     data={data.data}
