@@ -58,22 +58,22 @@ const LoginPage = () => {
                                     onKeyDown={(e) => onPressKey(e)}
                                 />
                             </div>
-                            <div className='form-group'>
+                            {/* <div className='form-group'>
                                 <input
                                     type='checkbox'
                                     id='remember'
                                     name='remember'
                                 />
                                 <label htmlFor='remember' className='checkbox-label'>아이디 저장</label>
-                            </div>
+                            </div> */}
                             <button className='login-button'
                                 onClick={handleLogin}
                             >로그인</button>
-                        <div className='login-options'>
+                        {/* <div className='login-options'>
                             <button type='button' className='option-button'>ID/PW 찾기</button>
                             <button type='button' className='option-button'
                             onClick={() => navigate('/registration')}>회원가입</button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
