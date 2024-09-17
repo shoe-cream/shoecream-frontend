@@ -346,6 +346,7 @@ const OrderApprovalPage = () => {
                                                 </button>
                                             </div>
                                         </div>
+                                        
                                         {isLoading ? (
                                             <div></div>
                                         ) : (
@@ -364,11 +365,7 @@ const OrderApprovalPage = () => {
                                                 ) : (
                                                     <div>검색 결과가 없습니다.</div>
                                                 )}
-                                                {modifiedData.data.length > 0 && (
-                                                    <button onClick={handlePatchOrder} className='save-btn' disabled={Object.keys(edited).length === 0}>
-                                                        변경사항 저장
-                                                    </button>
-                                                )}
+
                                             </>
                                         )}
                                     </TabPanel>
