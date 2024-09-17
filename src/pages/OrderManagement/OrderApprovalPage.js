@@ -465,7 +465,12 @@ const OrderApprovalPage = () => {
                             getPage={handleGetOrdersAll}
                         />
                     )}
-                    {isHistoryModalOpen ? <TableModal setOpened={setIsHistoryModalOpen} columnData={historyColumns} data={historyData}
+                    {isHistoryModalOpen ? 
+                    <TableModal 
+                        setOpened={setIsHistoryModalOpen} 
+                        columnData={historyColumns} 
+                        label = {('주문 상태 히스토리 - ' + historyData.data[0].orderCd)}
+                        data={historyData}
                     ></TableModal> : <div />}
                 </div>
             </div>
