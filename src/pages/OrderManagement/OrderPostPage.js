@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './OrderPostPage.css';
-import OrderActions from '../../components/OrderPost/OrderActions';
-import OrderSheet from '../../components/OrderPost/OrderSheet';
-import ProductSearch from "../../components/OrderPost/ProductSearch";
+import OrderActions from '../../components/page_container/OrderPost/OrderActions'; 
+import OrderSheet from '../../components/page_container/OrderPost/OrderSheet';     
+import ProductSearch from '../../components/page_container/OrderPost/ProductSearch'; 
 import Header from "../../components/header/Header";
 import Sidebar from "../../components/sidebar/Sidebar";
 import PageContainer from '../../components/page_container/PageContainer';
@@ -19,7 +19,7 @@ const OrderPostPage = () => {
 
     const handleAddOrder = (newOrder) => {
         setOrderData(prevData => {
-            // 동일한 buyerCd를 가진 주문이 있는지 확인
+            
             const existingOrderIndex = prevData.findIndex(order => order.buyerCd === newOrder.buyerCd);
             
             if (existingOrderIndex !== -1) {
@@ -89,7 +89,9 @@ const OrderPostPage = () => {
                 <div className='app-content-container'>
                     <div className='order-registration'>
                         <ProductSearch onAddOrder={handleAddOrder}/>
-                        <OrderActions onRegisterOrder={handleRegisterOrder} />
+                        <OrderActions 
+                        onRegisterOrder={handleRegisterOrder} 
+                        selectedOrders={selectedOrders}/>
 
                         <OrderSheet
                             ogData={{ data: orderData }}
