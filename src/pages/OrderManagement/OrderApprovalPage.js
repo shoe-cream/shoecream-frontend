@@ -377,7 +377,7 @@ const handleIssueQuotation = () => {
                                                     </button>
                                                 )}
                                                 {tabIndex === 1 && (
-                                                    <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                    <button className='btn btn-secondary' onClick={handleApprove}>
                                                         <Check className='"btn-icon' size={14} /> 발주 요청
                                                     </button>
                                                 )}
