@@ -127,10 +127,16 @@ input[type="date"]:focus {
     margin-bottom: 20px;
 }
 
+.search-list {
+    font-weight: bold;
+    width: auto;
+    min-width: 0;
+    flex-shrink: 1;
+}
 
-.serach-list {
-    font-weight: bold !important;
-    width: 40%;
+select.search-list {
+    width: auto;
+    max-width: 150px; /* 원하는 최대 너비로 조정 */
 }
 
 .save-btn {
@@ -139,6 +145,11 @@ input[type="date"]:focus {
 .save-btn:hover {
     background-color: #1e3a62;
 }
+.input w-40 {
+    width: 15px !important;
+    
+}
+
 
 /* 반응형 디자인을 위한 미디어 쿼리 */
 @media (max-width: 1200px) {

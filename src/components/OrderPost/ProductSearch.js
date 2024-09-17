@@ -6,6 +6,7 @@ import getBuyerWithItemsRequest from '../../requests/GetBuyerItems';
 import getItemRequest from '../../requests/GetItemRequest';
 import OrderPostModal from '../modal/OrderPostModal';
 import { format } from 'date-fns';
+import { Search } from 'lucide-react';
 
 const ProductSearch = ({ onAddOrder }) => {
     // State 변수들
@@ -144,35 +145,31 @@ const ProductSearch = ({ onAddOrder }) => {
 
     return (
         <div className='product-search'>
-            <table>
-                <tbody>
-                    <tr>
-                        <td className='title special-cell'>고객코드</td>
-                        <td>
-                            <div className='divSearch'>
-                                <input
-                                    type='text'
-                                    id='buyerCd'
-                                    className='orderPostInput'
-                                    value={searchParams.buyerCd}
-                                    onChange={handleChange}
-                                />
-                                <button
-                                    id='searchBuyer'
-                                    className='search-button'
-                                    onClick={handleBuyerSearch}
-                                >
-                                    <img src='/icons/zoom.png' alt='Search' className='search-icon' />
-                                </button>
-                            </div>
-                        </td>
-                        <td className='title special-cell'>고객사</td>
-                        <td><input type='text' id='buyerNm' className='orderPostInput' value={buyers.data.buyerNm} onChange={handleChange} /></td>
-                        <td className='title special-cell'>고객사 연락처</td>
-                        <td><input type='text' id='tel' className='orderPostInput' value={buyers.data.tel} onChange={handleChange} /></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div className="search-container">
+                <div className="search-box">
+                    <span className="search-label">고객코드</span>
+                    <div className='divSearch'>
+                        <input
+                            type='text'
+                            id='buyerCd'
+                            className='orderPostInput'
+                            value={searchParams.buyerCd}
+                            onChange={handleChange}
+                        />
+                        <button id="searchBuyer" className="search-button" onClick={handleBuyerSearch}>
+                        <Search size={16} color="#ffffff" />
+                        </button>
+                    </div>
+                </div>  
+                <div className="search-box">
+                    <span className="search-label">고객사</span>
+                    <input type='text' id='buyerNm' className='orderPostInput' value={buyers.data.buyerNm} onChange={handleChange} readOnly />
+                </div>
+                <div className="search-box">
+                    <span className="search-label">고객사 연락처</span>
+                    <input type='text' id='tel' className='orderPostInput' value={buyers.data.tel} onChange={handleChange} readOnly />
+                </div>
+            </div>
 
             <div className='button-container'>
                 <button onClick={handleOpenModal} className="add-items-button">주문 아이템 추가</button>

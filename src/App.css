@@ -5,7 +5,9 @@
 .app-container {
   display: flex; /* 컨테이너에 플렉스박스 설정 */
   /* height: 100vh; */
-  background-color: #DDDDDD;
+  /* background-color: white; */
+  background-color: #F5F5F5 !important;
+  /* background-color: #EFEFEF !important; */
   min-height: 150vh;
   /* 논의필요 */
   border-top: 1px solid #000000 !important; 

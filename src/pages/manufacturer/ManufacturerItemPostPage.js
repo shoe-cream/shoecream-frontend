@@ -109,6 +109,7 @@ const ManufacturerItemPostPage = () => {
             <div className='app-container'>
                 <Sidebar></Sidebar>
                 <div className='app-content-container'>
+                    <div className='app-background'>
                     <h2 className="app-label">제조사 단가 관리</h2>
                     <div className='manufacturer-list-container'>
                         <div className='manufacturer-tool-container'>
@@ -224,6 +225,7 @@ const ManufacturerItemPostPage = () => {
                 </div>
             </div>
         </div>
+    </div>
     );
 }
 export default ManufacturerItemPostPage;

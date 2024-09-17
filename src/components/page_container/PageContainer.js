@@ -45,6 +45,7 @@ const getPageRange = (currentPage, pageInfo) => {
 
 const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, setPageOriginal, setIsLoading }) => {
     const [range, setRange] = useState(getPageRange(currentPage, pageInfo));
+    const [isChanging, setIsChanging] = useState(false);
 
     useEffect(() => {
         if(pageInfo.totalPage > 0){
@@ -53,6 +54,11 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, se
     }, [currentPage, pageInfo]);
 
     const changePage = (newPage) => {
+    if (newPage === currentPage) return;
+
+    setIsChanging(true);
+    
+    setTimeout(() => {
         if(setIsLoading !== undefined){
             setIsLoading(true);
         }
@@ -64,10 +70,16 @@ const PageContainer = ({ currentPage, setPage, pageInfo, getPage, setChecked, se
         if(setPageOriginal !== undefined){
             setPageOriginal(newPage);
         }
-    };
+        
+        // 페이지 변경 후 애니메이션 효과 제거
+        setTimeout(() => {
+            setIsChanging(false);
+        }, 300);
+    }, 300);
+};
 
     return (
-        <nav className="pagination-container">
+        <nav className={`pagination-container ${isChanging ? 'changing' : ''}`}>
             <ul className="pagination">
                 <li className={`pagination-item ${currentPage === 1 ? 'disabled' : ''}`}>
                     <button className="pagination-link" onClick={() => changePage(1)} disabled={currentPage === 1}>
