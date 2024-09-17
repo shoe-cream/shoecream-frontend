@@ -16,12 +16,14 @@ import { FileDown, Printer, FileText, Edit, Check } from 'lucide-react';
 import sendGetMyInfoRequest from '../../requests/GetMyInfoRequest';
 import sendPatchApproveRequest from '../../requests/PatchOrdersApprove';
 import sendPatchRejectRequest from '../../requests/PatchOrdersReject';
+import { useNavigate } from 'react-router-dom'; 
+import * as XLSX from 'xlsx';
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
     const { state } = useAuth();
-    const [optionSelect, setOptionSelect] = useState('orderId');
+    const [optionSelect, setOptionSelect] = useState('orderCd');
     const [keyword, setKeyword] = useState('');
     const [orders, setOrders] = useState({ data: [] });
     const [checkedItems, setCheckedItems] = useState([]);
@@ -34,7 +36,8 @@ const OrderApprovalPage = () => {
     const [endDate, setEndDate] = useState('');
     const [searchParams, setSearchParams] = useState({});
     const [member, setMember] = useState({ data: [] });
-
+    const [selectedOrders, setSelectedOrders] = useState([]);  
+    const navigate = useNavigate(); 
 
 
     useEffect(() => {
@@ -74,7 +77,17 @@ const OrderApprovalPage = () => {
         console.log("Result::::", result);
         return result;
     };
-
+    const handleCheckboxChange = (order) => {
+        setSelectedOrders(prevSelectedOrders => {
+            const exists = prevSelectedOrders.find(o => o.orderCd === order.orderCd);
+                if (exists) {
+                return prevSelectedOrders.filter(o => o.orderCd !== order.orderCd);
+                } else {
+                return [...prevSelectedOrders, order];
+                }
+        });
+    };
+    
     const fetchOrders = useCallback(() => {
         setIsLoading(true);
         getOrderAllRequest(
@@ -176,18 +189,47 @@ const OrderApprovalPage = () => {
         }));
 
         sendPatchRejectRequest(state, itemsToSend, () => {
-            // 요청 성공 후 데이터 다시 가져오기
+            
             fetchOrders();
-            // 수정 상태 초기화
+        
             setCheckedItems([]);
         });
     }
 
 
     const handleExportToExcel = () => {
-        console.log("Export to Excel");
+        if (checkedItems.length === 0) {
+            alert("엑셀로 내보낼 항목을 선택해주세요.");
+            return;
+        }
+    
+        // 체크된 항목을 필터링
+        const ordersToExport = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+    
+        // 데이터를 엑셀로 변환하기 위한 배열 생성
+        const exportData = ordersToExport.map(order => ({
+            '담당자': order.employeeId,
+            '주문코드': order.orderCd,
+            '주문상태': order.status,
+            '등록일': order.createdAt,
+            '납기일': order.requestDate,
+            '고객사명': order.buyerNm,
+            '고객코드': order.buyerCd,
+            '제품코드': order.itemCd,
+            '수량': order.qty,
+            '단가': order.unitPrice,
+            '시작일': order.startDate,
+            '만기일': order.endDate,
+        }));
+    
+        // 워크시트 생성
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "주문내역");
+    
+        // 엑셀 파일 다운로드
+        XLSX.writeFile(workbook, '주문내역.xlsx');
     };
-
     const handlePrint = () => {
         window.print();
     };
@@ -248,6 +290,17 @@ const OrderApprovalPage = () => {
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
+    
+// 견적서 발행 함수
+const handleIssueQuotation = () => {
+    if (selectedOrders.length === 1) {  // 주문이 하나만 선택되었을 때
+        const orderCd = selectedOrders[0].orderCd;
+        console.log('Selected Order:', selectedOrders[0]);
+        navigate(`/order-detail/${orderCd}`, { state: { token: state.token } });  // OrderDetail 페이지로 이동
+    } else {
+        alert("하나의 주문만 선택해주세요.");
+    }
+};
 
     const columns = useMemo(() => [
         { Header: "담당자", accessor: "employeeId" },
@@ -319,12 +372,12 @@ const OrderApprovalPage = () => {
                                                     <Edit className="btn-icon" size={14} /> 수정
                                                 </button>
                                                 {tabIndex === 1 && (
-                                                    <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                    <button className='btn btn-secondary' onClick={handleIssueQuotation}>
                                                         <FileText className="btn-icon" size={14} /> 견적서 발행
                                                     </button>
                                                 )}
                                                 {tabIndex === 1 && (
-                                                    <button className='btn btn-secondary' onClick={handleApprove}>
+                                                    <button className='btn btn-secondary' onClick={handlePatchOrder}>
                                                         <Check className='"btn-icon' size={14} /> 발주 요청
                                                     </button>
                                                 )}
@@ -360,6 +413,7 @@ const OrderApprovalPage = () => {
                                                         setChecked={setCheckedItems}
                                                         edited={edited}
                                                         setEdited={setEdited}
+                                                        onCheckboxChange={handleCheckboxChange}
                                                     />
                                                 ) : (
                                                     <div>검색 결과가 없습니다.</div>
