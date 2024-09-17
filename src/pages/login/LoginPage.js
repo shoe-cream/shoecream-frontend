@@ -12,6 +12,24 @@ const LoginPage = () => {
     const [passwordInput, setPasswordInput] = useState('');
     const { login } = useAuth();
 
+    const handleLogin = () => {
+        if(emailInput === ''){
+            alert('이메일을 입력해주세요');
+            return;
+        }
+        if(passwordInput === ''){
+            alert('비밀번호를 입력해주세요');
+            return;
+        }
+        sendLoginRequest(emailInput, passwordInput, navigate, login);
+        }
+
+    const onPressKey = (e) => {
+        if(e.key === 'Enter'){
+            handleLogin();
+        }
+    }
+
     return (
         <div>
             <div className='app-container'>
@@ -26,6 +44,7 @@ const LoginPage = () => {
                                 placeholder='사원번호'
                                 required
                                 onChange={(e) => setEmailInput(e.target.value)}
+                                onKeyDown={(e) => onPressKey(e)}
                             />
                             </div>
                             <div className='form-group'>
@@ -36,6 +55,7 @@ const LoginPage = () => {
                                     placeholder='패스워드'
                                     required
                                     onChange={(e) => setPasswordInput(e.target.value)}
+                                    onKeyDown={(e) => onPressKey(e)}
                                 />
                             </div>
                             <div className='form-group'>
@@ -47,17 +67,8 @@ const LoginPage = () => {
                                 <label htmlFor='remember' className='checkbox-label'>아이디 저장</label>
                             </div>
                             <button className='login-button'
-                            onClick={() => {
-                                if(emailInput === ''){
-                                    alert('이메일을 입력해주세요');
-                                    return;
-                                }
-                                if(passwordInput === ''){
-                                    alert('비밀번호를 입력해주세요');
-                                    return;
-                                }
-                                sendLoginRequest(emailInput, passwordInput, navigate, login);
-                                }}>로그인</button>
+                                onClick={handleLogin}
+                            >로그인</button>
                         <div className='login-options'>
                             <button type='button' className='option-button'>ID/PW 찾기</button>
                             <button type='button' className='option-button'
