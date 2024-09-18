@@ -26,9 +26,9 @@ const Dropdown = ({ title, buttons, expandedDropdown, setExpandedDropdown }) => 
                 }
             </div>
             <div className={`dropdown-content-wrapper ${isExpanded ? 'active' : ''}`}>
-                {buttons.map((value) => (
+                {buttons.map((value, index) => (
                     <button 
-                        key={value.id} 
+                        key={index} 
                         className="dropdown-content" 
                         onClick={() => navigate(value.urlTo)}
                     >

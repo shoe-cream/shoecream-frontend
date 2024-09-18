@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useTable } from 'react-table';
 import './ReactTable.css';
 
-const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited }) => {
+const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited,  onCheckboxChange}) => {
   // 원본 데이터와 테이블 데이터를 비교해서 수정됨 상태 업데이트
   useEffect(() => {
     console.log('data in editableTable: ', data);
@@ -47,6 +47,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
             ? prev.filter(id => id !== rowId)
             : [...prev, rowId]
         );
+        onCheckboxChange(row.original);
       }}
     />
   ));
