@@ -88,12 +88,11 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     />
   );
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex }, masterDataArr }) => {
+  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex, options }, masterDataArr }) => {
     const [value, setValue] = React.useState(initialValue);
-    const [options, setOptions] = React.useState({key:'', data: []});
+    const [dropdownOptions, setDropdownOptions] = useState([]);
   
     const onChange = (e) => {
-      // number 타입 input은 문자열 말고 숫자로 들어가게 설정
       const newValue = type === 'number' ? parseInt(e.target.value, 10) : e.target.value;
       setValue(newValue);
     };
@@ -116,10 +115,16 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     }, [initialValue]);
   
     React.useEffect(() => {
-      if (type === 'dropdown' && masterDataArr && masterDataArr.length > masterDataIndex) {
-        setOptions({key:id, data: masterDataArr[masterDataIndex]?.data || []});
+      if (type === 'dropdown') {
+        if (options) {
+          // 고정 옵션 사용
+          setDropdownOptions(options);
+        } else if (masterDataArr && masterDataArr.length > masterDataIndex) {
+          // 동적 옵션 사용
+          setDropdownOptions(masterDataArr[masterDataIndex]?.data || []);
+        }
       }
-    }, [masterDataArr, type, id, masterDataIndex]);
+    }, [masterDataArr, type, id, masterDataIndex, options]);
   
     const inputType = type || 'text';
   
@@ -127,8 +132,10 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
       return (
         <select value={value} onChange={onChange} onBlur={onBlur}>
           <option value="" hidden></option>
-          {options.data && options.data.length > 0 && options.data.map((option, index) => (
-            <option key={index} value={option[options.key]}>{option[options.key]}</option>
+          {dropdownOptions.map((option, index) => (
+            <option key={index} value={typeof option === 'object' ? option[id] : option}>
+              {typeof option === 'object' ? option[id] : option}
+            </option>
           ))}
         </select>
       );
