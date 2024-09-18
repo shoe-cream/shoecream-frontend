@@ -17,6 +17,7 @@ import sendGetManufacturerItemsRequest from '../../requests/GetManufacturerItems
 import sendGetAllManufacturersRequest from '../../requests/GetAllManufacturersRequest';
 import sendPostManufacturerItemsRequest from '../../requests/PostManufacturerItemsRequest';
 import sendPatchManufacturerItemsRequest from '../../requests/PatchManufacturerItemsRequest';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
 const ManufacturerItemPostPage = () => {
     const { state } = useAuth();
@@ -124,7 +125,7 @@ const ManufacturerItemPostPage = () => {
                                 <option value='modifiedAt'>최신 수정순</option>
                             </select>
                             <div className='manufacturer-button-container'>
-                                <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
+                                <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                                 <button className='manufacturer-button' onClick={() => {
                                     if (checked.length === 0) {
                                         Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
@@ -164,7 +165,7 @@ const ManufacturerItemPostPage = () => {
                                         sendGetManufacturerItemsRequest(state, page, 10, resetData, sortBy, setIsLoading);
                                         setChecked([]);
                                     });
-                                }}>수정</button>
+                                }}><Edit size={16} /> 수정</button>
                                 {/* {<button className='manufacturer-button'
                                         onClick={() => {
                                             if (checked.length === 0) {

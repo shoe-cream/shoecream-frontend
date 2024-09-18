@@ -4,7 +4,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { useEffect, useState } from "react";
 import sendGetMyInfoRequest from "../../requests/GetMyInfoRequest";
 import sendLogoutRequest from '../../requests/LogoutRequest';
-import { Search } from 'lucide-react';  // Lucide 아이콘 import
+import { Search, User, LogOut } from 'lucide-react';  // Lucide 아이콘 import
 
 const Header = ()=> {
     const { state, logout } = useAuth();
@@ -56,12 +56,18 @@ const Header = ()=> {
             <div className="header-userinfo-container">
                 {state.isAuthenticated ? <div className="header-welcome-text">{myData.data.name} 님</div> : 
                 <button className="header-login-button" onClick={() => navigate('/login')}>로그인</button>}
-                {state.isAuthenticated ? <img src="icons/profile-icon.png" className="header-profile-icon"
-                onClick={() => navigate('/mypage')}></img> : <div></div>}
                 {state.isAuthenticated ? 
-                <img src="icons/logout-icon.png" className="header-logout-icon"
-                onClick={() => sendLogoutRequest(state, logout, navigate)}
-                ></img> : <div></div>}
+                    <User 
+                        size={20} 
+                        className="header-profile-icon"
+                        onClick={() => navigate('/mypage')}
+                    /> : <div></div>}
+                {state.isAuthenticated ? 
+                    <LogOut 
+                        size={20} 
+                        className="header-logout-icon"
+                        onClick={() => sendLogoutRequest(state, logout, navigate)}
+                    /> : <div></div>}
             </div>
         </div>
     );
