@@ -13,6 +13,7 @@ import sendPostBuyerItemsRequest from '../../requests/PostBuyerItemsRequest';
 import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest';
 import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest';
 import sendPatchMultiBuyerItemsRequest from '../../requests/PatchMultiBuyerItemsRequest';
+import './BuyerItemPostPage.css';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 
 const BuyerItemPostPage = () => {
@@ -25,6 +26,18 @@ const BuyerItemPostPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [sortBy, setSortBy] = useState('buyerItemId');
     const [isPostMode, setIsPostMode] = useState(false);
+
+
+    const columnWidths = {
+        'buyerNm': '150px',
+        'itemCd': '100px',
+        'itemNm': '100px',
+        'unitPrice': '100px',
+        'unit': '80px',
+        'startDate': '120px',
+        'endDate': '120px'
+    };
+
 
     const columnData = [
         {
