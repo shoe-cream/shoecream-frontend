@@ -76,16 +76,18 @@ const LandingPage = () => {
             const monthlyTotals = [];
 
             for (const range of ranges) {
-                await sendGetReportsRequest(state, range.startDate, range.endDate, setMonthReport, setIsLoading);
-                console.log("MOnthReport", monthReport)
-                const totalAmount = flatData(monthReport);  // 월별 총 금액 계산
-                monthlyTotals.push({
-                    name: new Date(range.startDate).toLocaleString('default', { month: 'short' }),  // 월 이름 (예: Jan)
-                    totalAmount: totalAmount,
-                });
+                await sendGetReportsRequest(state, range.startDate, range.endDate, (data) => {
+                    setMonthReport(data);
+                    const totalAmount = flatData(monthReport);  // 월별 총 금액 계산
+                    monthlyTotals.push({
+                        name: new Date(range.startDate).toLocaleString('default', { month: 'short' }),  // 월 이름 (예: Jan)
+                        totalAmount: totalAmount,
+                    });
+                }, setIsLoading);
             }
             setMonthlyData(monthlyTotals);  // 월별 데이터를 상태로 저장
         };
+        console.log("MOnthReport", monthReport)
         fetchMonthlyReports();
     }, [state]);
 

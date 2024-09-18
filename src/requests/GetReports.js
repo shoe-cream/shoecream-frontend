@@ -16,7 +16,7 @@ const sendGetReportsRequest = async (state, startDate, endDate, setReports, setI
         });
 
         if (response.status === 200) {
-            console.log(response.data);
+            console.log("sadasdasd",response.data);
             setReports(response.data);
             setIsLoading(false);
         } else {
