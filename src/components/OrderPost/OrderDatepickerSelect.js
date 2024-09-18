@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../OrderPost/OrderDatepickerSelect.css";
+import { Search } from 'lucide-react';  // Lucide 아이콘 import
 
 const OrderDatepickerSelect = ({ handleSearch }) => {
     const [optionSelect, setOptionSelect] = useState('orderCd');
@@ -36,7 +37,7 @@ const OrderDatepickerSelect = ({ handleSearch }) => {
                 onChange={getKeyword} 
             />
             <button id='searchProduct' className='search-button' onClick={handleSearchClick}>
-                <img src='/icons/zoom.png' alt='Search' className='search-icon' />
+                <Search size={15} />  {/* Lucide 아이콘 사용 */}
             </button>
         </div>
     );

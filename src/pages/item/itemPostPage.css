@@ -1,3 +1,7 @@
+.app-label {
+    margin-bottom: 10px;
+}
+
 .app-background {
     display: flex;
     width: 100%;

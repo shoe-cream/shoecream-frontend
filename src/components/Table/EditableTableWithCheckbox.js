@@ -3,6 +3,7 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited,  onCheckboxChange}) => {
+
   // 원본 데이터와 테이블 데이터를 비교해서 수정됨 상태 업데이트
   useEffect(() => {
     console.log('data in editableTable: ', data);
@@ -148,6 +149,14 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     return edited.hasOwnProperty(rowIndex) ? 'body-r-edited' : 'body-r';
   }, [edited]);
 
+  const handleRowClick = useCallback((e, row) => {
+    // 클릭한 요소가 input이면 onRowClick 이벤트 무시
+    if (e.target.tagName === 'INPUT') {
+      return;
+    }
+    onRowClick && onRowClick(row.original);
+  }, [onRowClick]);
+
   return (
       <table {...getTableProps()}>
         <thead>
@@ -163,7 +172,9 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           {rows.map(row => {
             prepareRow(row);
             return (
-              <tr className={getRowClassName(row)} {...row.getRowProps()}>
+              <tr className={getRowClassName(row)} {...row.getRowProps()}
+                onClick={(e) => handleRowClick(e, row)}
+              >
                 {row.cells.map(cell => (
                   <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
                 ))}

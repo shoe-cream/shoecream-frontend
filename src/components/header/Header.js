@@ -4,6 +4,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { useEffect, useState } from "react";
 import sendGetMyInfoRequest from "../../requests/GetMyInfoRequest";
 import sendLogoutRequest from '../../requests/LogoutRequest';
+import { Search } from 'lucide-react';  // Lucide 아이콘 import
 
 const Header = ()=> {
     const { state, logout } = useAuth();
@@ -40,7 +41,7 @@ const Header = ()=> {
                     className="header-search-input"
                 />
                 <button type="submit" className="header-search-button">
-                    검색
+                <Search size={15} /> 
                 </button>
             </form>
 
