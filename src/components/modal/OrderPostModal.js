@@ -62,9 +62,9 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
                 unitPrice: item.unitPrice,
                 unit: item.unit,
                 quantity: 0,
-                prepareOrder : itemsDetails[item.itemCd]?.data.prepareOrder,
-                totalStock:  itemsDetails[item.itemCd]?.data.totalStock || '',
-                startDate : item.startDate,
+                prepareOrder: itemsDetails[item.itemCd]?.data.prepareOrder,
+                totalStock: itemsDetails[item.itemCd]?.data.totalStock || '',
+                startDate: item.startDate,
                 endDate: item.endDate
             }));
             console.log("itemDetails", combinedItems)
@@ -77,13 +77,13 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
         { Header: "제품명", accessor: "itemNm" },
         { Header: "색상", accessor: "color" },
         { Header: "사이즈", accessor: "size" },
-        { Header: "단가", accessor: "unitPrice", type:"number" },
+        { Header: "단가", accessor: "unitPrice", type: "number" },
         { Header: "수량", accessor: "quantity", type: "number" },
         { Header: "단위", accessor: "unit" },
         { Header: "발주 대기", accessor: "prepareOrder" },
         { Header: "재고량", accessor: "totalStock" },
-        { Header: "시작일", accessor: "startDate", type:"date" },
-        { Header: "종료일", accessor: "endDate" , type:"date"}
+        { Header: "시작일", accessor: "startDate", type: "date" },
+        { Header: "종료일", accessor: "endDate", type: "date" }
     ];
 
     const handleSubmit = () => {
@@ -97,6 +97,13 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
 
         if (itemWithZeroQuantity) {
             Swal.fire({ text: '체크된 아이템의 수량을 입력해주세요.' });
+            return;
+        }
+
+        // quantity가 totalStock보다 클 경우 경고를 표시
+        const itemWithExcessQuantity = selectedItems.find(item => Number(item.quantity) > Number(item.totalStock));
+        if (itemWithExcessQuantity) {
+            Swal.fire({ text: `수량이 재고량을 초과했습니다. (제품: ${itemWithExcessQuantity.itemNm})` });
             return;
         }
 

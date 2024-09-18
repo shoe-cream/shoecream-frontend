@@ -129,7 +129,7 @@ const OrderApprovalPage = () => {
             alert("승인할 항목을 선택해주세요.");
             return;
         }
-
+    
         let newStatus;
         switch (status) {
             case 'REQUEST_TEMP':
@@ -138,27 +138,64 @@ const OrderApprovalPage = () => {
             case 'PURCHASE_REQUEST':
                 newStatus = 'APPROVED';
                 break;
-            // case 'CANCELLED':
-            // case 'REJECTED':
-            //     newStatus = 'REQUEST_TEMP';
-            //     break;
+            case 'REJECTED':
+                newStatus = 'CANCELLED';
+                break;
             default:
                 alert("현재 상태에서는 승인 작업을 수행할 수 없습니다.");
                 return;
         }
+    
+        // checkedItems에 해당하는 항목 필터링
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
-
-        const itemsToSend = ordersPatch.map(item => ({
+    
+        // 중복된 orderId를 제거한 배열 생성
+        const uniqueItems = ordersPatch.reduce((acc, item) => {
+            if (!acc.some(existingItem => existingItem.orderId === item.orderId)) {
+                acc.push(item);
+            }
+            return acc;
+        }, []);
+    
+        const itemsToSend = uniqueItems.map(item => ({
             orderId: item.orderId,
             requestDate: item.requestDate,
             orderStatus: newStatus
         }));
+    
         sendPatchStatusRequest(state, itemsToSend, () => {
             // 요청 성공 후 데이터 다시 가져오기
             fetchOrders();
             // 수정 상태 초기화
             setCheckedItems([]);
         });
+    };
+
+
+    const handleAdminPurchase = () => {
+          // checkedItems에 해당하는 항목 필터링
+          const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+    
+          // 중복된 orderId를 제거한 배열 생성
+          const uniqueItems = ordersPatch.reduce((acc, item) => {
+              if (!acc.some(existingItem => existingItem.orderId === item.orderId)) {
+                  acc.push(item);
+              }
+              return acc;
+          }, []);
+      
+          const itemsToSend = uniqueItems.map(item => ({
+              orderId: item.orderId,
+              requestDate: item.requestDate,
+              orderStatus: 'PURCHASE_REQUEST'
+          }));
+      
+          sendPatchStatusRequest(state, itemsToSend, () => {
+              // 요청 성공 후 데이터 다시 가져오기
+              fetchOrders();
+              // 수정 상태 초기화
+              setCheckedItems([]);
+          });
     }
 
     const handleAdminApprove = () => {
@@ -424,6 +461,16 @@ const OrderApprovalPage = () => {
                                                 {tabIndex === 2 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminReject}>
                                                         <Check className='"btn-icon' size={14} /> 주문 반려
+                                                    </button>
+                                                )}
+                                                {tabIndex === 5 && member?.data?.roles?.includes('ROLE_ADMIN') && (
+                                                    <button className='btn btn-secondary' onClick={handleApprove}>
+                                                        <Check className='"btn-icon' size={14} /> 주문 취소
+                                                    </button>
+                                                )}
+                                                {tabIndex === 5 && member?.data?.roles?.includes('ROLE_ADMIN') && (
+                                                    <button className='btn btn-secondary' onClick={handleAdminPurchase}>
+                                                        <Check className='"btn-icon' size={14} /> 주문 발주 재요청
                                                     </button>
                                                 )}
                                                 <button className='btn btn-secondary' onClick={handleExportToExcel}>
