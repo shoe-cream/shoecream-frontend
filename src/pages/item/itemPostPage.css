@@ -70,7 +70,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
-  
+
 
 .item-post-page table {
     width: 100%;
@@ -81,6 +81,8 @@
 .item-post-page th,
 .item-post-page td {
   /* border: 1px solid #ddd; */
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: bold;
   padding: 8px;
   font-size: 12px !important;
   text-align: left;
@@ -93,57 +95,57 @@
     background-color: #f2f2f2;
   }
 
-.item-post-page th:first-child,
+/* .item-post-page th:first-child,
 .item-post-page td:first-child {
   width: 4% !important;
   text-align: center;
-}
+} */
 
 /* 상품명 컬럼 */
-.item-post-page th:nth-child(2),
+/* .item-post-page th:nth-child(2),
 .item-post-page td:nth-child(2) {
   width: 15% !important;
-}
+} */
 
 /* 상품 코드 컬럼 */
-.item-post-page th:nth-child(3),
+/* .item-post-page th:nth-child(3),
 .item-post-page td:nth-child(3) {
   width: 10% !important;
-}
+} */
 
 /* 카테고리 컬럼 */
-.item-post-page th:nth-child(4),
+/* .item-post-page th:nth-child(4),
 .item-post-page td:nth-child(4) {
   width: 10% !important;
-}
+} */
 
 /* 색상 컬럼 */
-.item-post-page th:nth-child(5),
+/* .item-post-page th:nth-child(5),
 .item-post-page td:nth-child(5) {
   width: 8% !important;
-}
+} */
 
 /* 사이즈 컬럼 */
-.item-post-page th:nth-child(6),
+/* .item-post-page th:nth-child(6),
 .item-post-page td:nth-child(6) {
   width: 8% !important;
-}
+} */
 
 /* 단위 컬럼 */
-.item-post-page th:nth-child(7),
+/* .item-post-page th:nth-child(7),
 .item-post-page td:nth-child(7) {
   width: 8% !important;
-}
+} */
 
 /* 단가 컬럼 */
-.item-post-page th:nth-child(8),
+/* .item-post-page th:nth-child(8),
 .item-post-page td:nth-child(8) {
   width: 8% !important;
   text-align: left;
-}
+} */
 
 /* 주문대기량, 불용재고량, 총 재고량 컬럼 */
-.item-post-page th:nth-child(9),
+/* .item-post-page th:nth-child(9),
 .item-post-page td:nth-child(9),
 .item-post-page th:nth-child(10),
 .item-post-page td:nth-child(10),
@@ -151,10 +153,10 @@
 .item-post-page td:nth-child(11) {
   width: 8% !important;
   text-align: left !important;
-}
+} */
 
  /* 반응형 디자인을 위한 미디어 쿼리 */
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
     .manufacturer-list-container {
       padding: 10px !important; 
     }
@@ -163,4 +165,4 @@
     .item-post-table td {
       padding: 8px 10px !important;
     }
-  }
+  } */

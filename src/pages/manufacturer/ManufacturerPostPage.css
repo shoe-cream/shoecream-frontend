@@ -108,7 +108,7 @@
     vertical-align: middle;
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .manufacturer-list-container {
       width: 100%;
     }
@@ -122,4 +122,4 @@
       width: 100%;
       margin-bottom: 10px;
     }
-  }
+  } */
