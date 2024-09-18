@@ -14,6 +14,7 @@ import sendDeleteBuyersRequest from "../../requests/DeleteBuyersRequest";
 import { type } from "@testing-library/user-event/dist/type";
 import sendPostBuyersRequest from "../../requests/PostBuyersRequest";
 import Swal from "sweetalert2";
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
 const BuyerPostPage = () => {
   const { state } = useAuth();
@@ -87,7 +88,7 @@ const BuyerPostPage = () => {
                 </select>
                 <div />
                 <div className='manufacturer-button-container'>
-                  <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>추가</button>
+                  <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                   <button className='manufacturer-button' onClick={() => {
                     if (checked.length === 0) {
                       Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
@@ -127,7 +128,7 @@ const BuyerPostPage = () => {
                       sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                       setChecked([]);
                     });
-                  }}>수정</button>
+                  }}><Edit size={16} /> 수정</button>
                   <button className='manufacturer-button'
                     onClick={() => {
                       if (checked.length === 0) {
@@ -141,7 +142,7 @@ const BuyerPostPage = () => {
                         sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
                         setChecked([]);
                       });
-                    }}>삭제</button>
+                    }}><Trash2 size={16} /> 삭제</button>
                 </div>
               </div>
               {isLoading ? <div /> : <EditableTableWithCheckbox

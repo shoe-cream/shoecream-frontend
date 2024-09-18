@@ -6,7 +6,8 @@ import getBuyerWithItemsRequest from '../../requests/GetBuyerItems';
 import getItemRequest from '../../requests/GetItemRequest';
 import OrderPostModal from '../modal/OrderPostModal';
 import { format } from 'date-fns';
-import { Search } from 'lucide-react';
+import { Search , Edit, Plus} from 'lucide-react';
+
 
 const ProductSearch = ({ onAddOrder }) => {
     // State 변수들
@@ -172,7 +173,9 @@ const ProductSearch = ({ onAddOrder }) => {
             </div>
 
             <div className='button-container'>
-                <button onClick={handleOpenModal} className="add-items-button">주문 아이템 추가</button>
+                <button onClick={handleOpenModal} className="add-items-button"><Plus size={13} /> 추가</button>
+                <button className='load-btn' onClick={handleFetch}>불러오기</button>
+
             </div>
             {isModalOpen && (
                 <OrderPostModal

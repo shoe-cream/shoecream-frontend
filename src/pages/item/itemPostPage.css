@@ -1,3 +1,8 @@
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
 .app-label {
     margin-bottom: 10px;
 }
@@ -7,6 +12,7 @@
     width: 100%;
     justify-content: center !important;
     margin-top: 10px;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .manufacturer-list-container {
@@ -72,7 +78,7 @@
     border-collapse: collapse;
   }
   
-  .item-post-page th,
+.item-post-page th,
 .item-post-page td {
   /* border: 1px solid #ddd; */
   padding: 8px;
