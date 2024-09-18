@@ -4,7 +4,6 @@ import './ReactTable.css';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited, onRowClick ,onCheckboxChange}) => {
 
-  // 원본 데이터와 테이블 데이터를 비교해서 수정됨 상태 업데이트
   useEffect(() => {
     console.log('data in editableTable: ', data);
     
@@ -50,9 +49,9 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         );
         if (typeof onCheckboxChange === 'function') {
           onCheckboxChange(row.original);
-      } else {
+        } else {
           console.warn('onCheckboxChange는 함수가 아닙니다.');
-      }
+        }
       }}
     />
   ));
@@ -101,11 +100,12 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     return (
       <input
         ref={inputRef}
-        className='cell-input'  
+        className={`cell-input ${id === 'qty' || id === '수량' ? 'qty-input' : ''}`}
         type={column.type}
         defaultValue={column.type === 'date' ? initialValue.slice(0, 10) : initialValue}
         onChange={onChange}
         onBlur={onBlur}
+        style={id === 'qty' || id === '수량' ? { textAlign: 'right', paddingRight: '5px' } : {}}
       />
     );
   });
@@ -167,8 +167,12 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         {headerGroups.map(headerGroup => (
           <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}
-              
+              <th 
+                className='header-h' 
+                {...column.getHeaderProps()}
+                style={column.id === 'qty' || column.id === '수량' ? { width: '60px', minWidth: '60px', maxWidth: '60px' } : {}}
+              >
+                {column.render('Header')}
               </th>
             ))}
           </tr>
@@ -182,15 +186,20 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
                 onClick={(e) => handleRowClick(e, row)}
             >
               {row.cells.map(cell => (
-                <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                <td 
+                  className='body-d' 
+                  {...cell.getCellProps()}
+                  style={cell.column.id === 'qty' || cell.column.id === '수량' ? { textAlign: 'right', paddingRight: '10px' } : {}}
+                >
+                  {cell.render('Cell')}
+                </td>
               ))}
             </tr>
           );
         })}
       </tbody>
     </table>
-);
+  );
 };
-
 
 export default React.memo(EditableTableWithCheckbox);

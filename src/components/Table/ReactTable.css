@@ -90,8 +90,6 @@
   }
   
   td {
-    white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
   
@@ -112,4 +110,18 @@
   td:nth-child(3), td:nth-child(4) {
     white-space: normal;
     word-wrap: break-word;
+  }
+
+  .qty-input {
+    width: 100% !important;
+    text-align: left !important;
+    /* padding-right: 5px; */
+  }
+  
+  th:nth-child(10), 
+  td:nth-child(10) {
+    width: 55px !important;
+    min-width: 55px !important;
+    max-width: 60px !important;
+    text-align: left !important;
   }

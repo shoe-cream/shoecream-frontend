@@ -11,7 +11,7 @@
     justify-content: space-between;
     align-items: center;
     cursor:pointer;
-    transition: background-color 0.3s ease;
+    
     /* border-radius: 5px;s */
 }
 .dropdown-title-text{
@@ -58,7 +58,6 @@
     flex-direction: column;
     overflow: hidden;
     max-height: 0;
-    transition: max-height 0.5s ease-in-out;
 }
 
 .dropdown-content-wrapper.active {
