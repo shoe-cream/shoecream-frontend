@@ -18,8 +18,9 @@ const OrderDetail = () => {
 
     // API 요청으로 주문 데이터 받아오기
     useEffect(() => {
+        console.log('Token:', token); 
         if (!token) {
-            console.error('토큰이 없습니다!');
+            console.error('토큰이 없습니다');
             return;
         }
 

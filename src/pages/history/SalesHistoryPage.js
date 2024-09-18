@@ -51,7 +51,6 @@ const SalesHistoryPage = () => {
     {
       accessor: 'orderItems',
       Header: '상품명',
-      /* type: 'arrayCell', */
     },
     {
       accessor: 'employeeId',
@@ -61,14 +60,21 @@ const SalesHistoryPage = () => {
       accessor: 'createdAt',
       Header: '등록일',
     },
-
+  ]
+  const historyColumns = [
+    { accessor: 'orderCd', Header: '주문코드', },
+    { accessor: 'buyerCd', Header: '고객사 코드', },
+    { accessor: 'buyerNm', Header: '고객사 명', },
+    { accessor: 'saleHistoryItems', Header: '품목', },
+    { accessor: 'employeeId', Header: '영업사원번호', },
+    { accessor: 'createdAt', Header: '등록일', },
   ]
 
   const handleRowClick = useCallback((value) => {
     sendGetSaleHistoryRequest(
       {
         state: state,
-        rowData: value, 
+        rowData: value,
         page: 1,
         size: 10,
         setData: setHistoryData,
@@ -76,7 +82,7 @@ const SalesHistoryPage = () => {
       }
     );
     setIsHistoryModalOpen(true);
-  }, [state, setHistoryData, setIsHistoryModalOpen])
+  }, [state, setHistoryData, setIsHistoryModalOpen]);
 
   return (
     <div>
@@ -103,7 +109,7 @@ const SalesHistoryPage = () => {
                 onRowClick={handleRowClick}>
               </ClickableTable>}
           </div>
-          {isHistoryModalOpen ? <TableModal setOpened={setIsHistoryModalOpen} columnData = {columns} data = {historyData}
+          {isHistoryModalOpen ? <TableModal setOpened={setIsHistoryModalOpen} columnData={historyColumns} data={historyData}
           ></TableModal> : <div />}
         </div>
       </div>

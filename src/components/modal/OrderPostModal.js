@@ -91,20 +91,27 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
             Swal.fire({ text: '아이템을 선택하세요.' });
             return;
         }
-        const selectedItems = checked.map(index => {
-            const item = itemsWithDetails.data[index];
-            return {
-                ...item,
-                contractPeriod: `${item.startDate || ''} ~ ${item.endDate || ''}`
-            };
-        });
-        console.log("SelectedItems",selectedItems);
-        onItemsSelected(selectedItems);
+
+        const selectedItems = checked.map(index => itemsWithDetails.data[index]);
+        const itemWithZeroQuantity = selectedItems.find(item => item.quantity === 0 || item.quantity === '0');
+
+        if (itemWithZeroQuantity) {
+            Swal.fire({ text: '체크된 아이템의 수량을 입력해주세요.' });
+            return;
+        }
+
+        const formattedItems = selectedItems.map(item => ({
+            ...item,
+            contractPeriod: `${item.startDate || ''} ~ ${item.endDate || ''}`
+        }));
+
+        onItemsSelected(formattedItems);
         setOpened(false);
     };
 
+
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div></div>;
     }
 
     return (

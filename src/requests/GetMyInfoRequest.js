@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const sendGetMyInfoRequest = async(state, setData, setIsLoading) => {
+const sendGetMyInfoRequest = async(state, setData, setIsLoading, executeAfter) => {
     if(!state.isAuthenticated){
         return;
     }
@@ -19,6 +19,9 @@ const sendGetMyInfoRequest = async(state, setData, setIsLoading) => {
             console.log('내 정보 GET요청 성공: ', response.data);
             setData(response.data);
             setIsLoading(false);
+            if(executeAfter !== undefined){
+                executeAfter(response.data.data);
+            }
         }else{
             console.log('내 정보 GET요청 실패: ', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});

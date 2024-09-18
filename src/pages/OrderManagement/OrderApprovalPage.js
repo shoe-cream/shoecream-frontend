@@ -16,8 +16,10 @@ import { FileDown, Printer, FileText, Edit, Check } from 'lucide-react';
 import sendGetMyInfoRequest from '../../requests/GetMyInfoRequest';
 import sendPatchApproveRequest from '../../requests/PatchOrdersApprove';
 import sendPatchRejectRequest from '../../requests/PatchOrdersReject';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
+import TableModal from '../../components/modal/TableModal';
+import sendGetSaleHistoryRequest from '../../requests/GetSaleHistoryRequest';
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -36,8 +38,11 @@ const OrderApprovalPage = () => {
     const [endDate, setEndDate] = useState('');
     const [searchParams, setSearchParams] = useState({});
     const [member, setMember] = useState({ data: [] });
-    const [selectedOrders, setSelectedOrders] = useState([]);  
-    const navigate = useNavigate(); 
+    const [selectedOrders, setSelectedOrders] = useState([]);
+    const navigate = useNavigate();
+
+    const [historyData, setHistoryData] = useState({ data: [] });
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
 
     useEffect(() => {
@@ -80,19 +85,19 @@ const OrderApprovalPage = () => {
     const handleCheckboxChange = (order) => {
         setSelectedOrders(prevSelectedOrders => {
             const exists = prevSelectedOrders.find(o => o.orderCd === order.orderCd);
-                if (exists) {
+            if (exists) {
                 return prevSelectedOrders.filter(o => o.orderCd !== order.orderCd);
-                } else {
+            } else {
                 return [...prevSelectedOrders, order];
-                }
+            }
         });
     };
-    
+
     const fetchOrders = useCallback(() => {
         setIsLoading(true);
         getOrderAllRequest(
             state,
-            searchParams,
+            searchParams,  
             page,
             10,
             (data) => {
@@ -189,9 +194,9 @@ const OrderApprovalPage = () => {
         }));
 
         sendPatchRejectRequest(state, itemsToSend, () => {
-            
+
             fetchOrders();
-        
+
             setCheckedItems([]);
         });
     }
@@ -202,10 +207,10 @@ const OrderApprovalPage = () => {
             alert("엑셀로 내보낼 항목을 선택해주세요.");
             return;
         }
-    
+
         // 체크된 항목을 필터링
         const ordersToExport = modifiedData.data.filter((_, index) => checkedItems.includes(index));
-    
+
         // 데이터를 엑셀로 변환하기 위한 배열 생성
         const exportData = ordersToExport.map(order => ({
             '담당자': order.employeeId,
@@ -221,12 +226,12 @@ const OrderApprovalPage = () => {
             '시작일': order.startDate,
             '만기일': order.endDate,
         }));
-    
+
         // 워크시트 생성
         const worksheet = XLSX.utils.json_to_sheet(exportData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "주문내역");
-    
+
         // 엑셀 파일 다운로드
         XLSX.writeFile(workbook, '주문내역.xlsx');
     };
@@ -290,17 +295,17 @@ const OrderApprovalPage = () => {
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
-    
-// 견적서 발행 함수
-const handleIssueQuotation = () => {
-    if (selectedOrders.length === 1) {  // 주문이 하나만 선택되었을 때
-        const orderCd = selectedOrders[0].orderCd;
-        console.log('Selected Order:', selectedOrders[0]);
-        navigate(`/order-detail/${orderCd}`, { state: { token: state.token } });  // OrderDetail 페이지로 이동
-    } else {
-        alert("하나의 주문만 선택해주세요.");
-    }
-};
+
+    // 견적서 발행 함수
+    const handleIssueQuotation = () => {
+        if (selectedOrders.length === 1) {  // 주문이 하나만 선택되었을 때
+            const orderCd = selectedOrders[0].orderCd;
+            console.log('Selected Order:', selectedOrders[0]);
+            navigate(`/order-detail/${orderCd}`, { state: { token: state.token } });  // OrderDetail 페이지로 이동
+        } else {
+            alert("하나의 주문만 선택해주세요.");
+        }
+    };
 
     const columns = useMemo(() => [
         { Header: "담당자", accessor: "employeeId" },
@@ -316,6 +321,30 @@ const handleIssueQuotation = () => {
         { Header: "시작일", accessor: "startDate", type: "date" },
         { Header: "만기일", accessor: "endDate", type: "date" },
     ], []);
+    const historyColumns = [
+        { accessor: 'orderCd', Header: '주문코드', },
+        { accessor: 'orderStatus', Header: '주문 상태', },
+        { accessor: 'buyerCd', Header: '고객사 코드', },
+        { accessor: 'saleHistoryItems', Header: '품목', },
+        { accessor: 'requestDate', Header: '납기일', },
+        { accessor: 'orderDate', Header: '주문일', },
+        { accessor: 'createdAt', Header: '등록일', },
+        { accessor: 'employeeId', Header: '영업사원번호', },
+    ]
+
+    const handleRowClick = useCallback((value) => {
+        sendGetSaleHistoryRequest(
+            {
+                state: state,
+                rowData: value,
+                page: 1,
+                size: 10,
+                setData: setHistoryData,
+                setIsModalOpen: setIsHistoryModalOpen,
+            }
+        );
+        setIsHistoryModalOpen(true);
+    }, [state, setHistoryData, setIsHistoryModalOpen]);
 
     return (
         <div>
@@ -338,7 +367,7 @@ const handleIssueQuotation = () => {
                                 </TabList>
                             </div>
                             <div className='tab-content'>
-                                {[0, 1, 2, 3, 4, 5].map((tabIndex) => (
+                                {[0, 1, 2, 3, 4].map((tabIndex) => (
                                     <TabPanel key={tabIndex}>
                                         <div className="search-container">
                                             <OrderDatepickerSelect
@@ -399,7 +428,7 @@ const handleIssueQuotation = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                        
+
                                         {isLoading ? (
                                             <div></div>
                                         ) : (
@@ -415,6 +444,7 @@ const handleIssueQuotation = () => {
                                                         edited={edited}
                                                         setEdited={setEdited}
                                                         onCheckboxChange={handleCheckboxChange}
+                                                        onRowClick={handleRowClick}
                                                     />
                                                 ) : (
                                                     <div>검색 결과가 없습니다.</div>
@@ -435,6 +465,13 @@ const handleIssueQuotation = () => {
                             getPage={handleGetOrdersAll}
                         />
                     )}
+                    {isHistoryModalOpen ? 
+                    <TableModal 
+                        setOpened={setIsHistoryModalOpen} 
+                        columnData={historyColumns} 
+                        label = {('주문 상태 히스토리 - ' + historyData.data[0].orderCd)}
+                        data={historyData}
+                    ></TableModal> : <div />}
                 </div>
             </div>
         </div>
