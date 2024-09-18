@@ -7,9 +7,7 @@ const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#d84c73', '#b884d8'];
 // 차트 컴포넌트
 const SalesChart = ({ data }) => {
   // 데이터가 없을 경우 처리
-  if (!data || data.length === 0) {
-    return <div>No data available</div>;
-  }
+  
 
   return (
     <ResponsiveContainer width="100%" height={400}>

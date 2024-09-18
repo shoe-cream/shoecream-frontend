@@ -78,7 +78,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
         { Header: "색상", accessor: "color" },
         { Header: "사이즈", accessor: "size" },
         { Header: "단가", accessor: "unitPrice", type:"number" },
-        { Header: "수량", accessor: "quantity", type: "text" },
+        { Header: "수량", accessor: "quantity", type: "number" },
         { Header: "단위", accessor: "unit" },
         { Header: "발주 대기", accessor: "prepareOrder" },
         { Header: "재고량", accessor: "totalStock" },
