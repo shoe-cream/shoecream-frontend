@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import TableModal from '../../components/modal/TableModal';
 import sendGetSaleHistoryRequest from '../../requests/GetSaleHistoryRequest';
+import MessageModal from '../../components/modal/MessageModal';
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -41,13 +42,14 @@ const OrderApprovalPage = () => {
     const [selectedOrders, setSelectedOrders] = useState([]);
     const navigate = useNavigate();
 
-    const [historyData, setHistoryData] = useState({ data: [] });
+    const [historyData, setHistoryData] = useState({ data: [{orderCd: 'Loading'}] });
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+    const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+    const [modalAction, setModalAction] = useState(null);
 
 
     useEffect(() => {
         sendGetMyInfoRequest(state, setMember, setIsLoading);
-        console.log("sadasdasdasd", member.data.roles);
         setTimeout(() => {
             setIsPageLoaded(true);
         }, 100);
@@ -97,7 +99,7 @@ const OrderApprovalPage = () => {
         setIsLoading(true);
         getOrderAllRequest(
             state,
-            searchParams,  
+            searchParams,
             page,
             10,
             (data) => {
@@ -166,39 +168,43 @@ const OrderApprovalPage = () => {
             console.log("수정된 항목이 없습니다.");
             return;
         }
-        const itemsToSend = ordersPatch.map(item => ({
-            orderCd: item.orderCd,
-            rejectReason: '승인완료'
-        }));
 
-        sendPatchApproveRequest(state, itemsToSend, () => {
-            // 요청 성공 후 데이터 다시 가져오기
-            fetchOrders();
-            // 수정 상태 초기화
-            setCheckedItems([]);
-        });
-
+        setModalAction('approve');
+        setIsMessageModalOpen(true);
     }
 
     const handleAdminReject = () => {
-
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
 
         if (ordersPatch.length === 0) {
             console.log("수정된 항목이 없습니다.");
             return;
         }
+        
+        setModalAction('reject');
+        setIsMessageModalOpen(true);
+    }
+
+    const handleMessageSubmit = (message) => {
+        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
         const itemsToSend = ordersPatch.map(item => ({
             orderCd: item.orderCd,
-            rejectReason: '반려 완료'
+            rejectReason: message
         }));
 
-        sendPatchRejectRequest(state, itemsToSend, () => {
+        if (modalAction === 'approve') {
+            sendPatchApproveRequest(state, itemsToSend, () => {
+                fetchOrders();
+                setCheckedItems([]);
+            });
+        } else if (modalAction === 'reject') {
+            sendPatchRejectRequest(state, itemsToSend, () => {
+                fetchOrders();
+                setCheckedItems([]);
+            });
+        }
 
-            fetchOrders();
-
-            setCheckedItems([]);
-        });
+        setIsMessageModalOpen(false);
     }
 
 
@@ -367,7 +373,7 @@ const OrderApprovalPage = () => {
                                 </TabList>
                             </div>
                             <div className='tab-content'>
-                                {[0, 1, 2, 3, 4].map((tabIndex) => (
+                                {[0, 1, 2, 3, 4, 5].map((tabIndex) => (
                                     <TabPanel key={tabIndex}>
                                         <div className="search-container">
                                             <OrderDatepickerSelect
@@ -465,13 +471,19 @@ const OrderApprovalPage = () => {
                             getPage={handleGetOrdersAll}
                         />
                     )}
-                    {isHistoryModalOpen ? 
-                    <TableModal 
-                        setOpened={setIsHistoryModalOpen} 
-                        columnData={historyColumns} 
-                        label = {('주문 상태 히스토리 - ' + historyData.data[0].orderCd)}
-                        data={historyData}
-                    ></TableModal> : <div />}
+                    {isHistoryModalOpen ?
+                        <TableModal
+                            setOpened={setIsHistoryModalOpen}
+                            columnData={historyColumns}
+                            label={('주문 상태 히스토리 - ' + historyData.data[0].orderCd)}
+                            data={historyData}
+                        ></TableModal> : <div />}
+                    <MessageModal
+                        isOpen={isMessageModalOpen}
+                        onClose={() => setIsMessageModalOpen(false)}
+                        onSubmit={handleMessageSubmit}
+                        title={modalAction === 'approve' ? '승인 메시지' : '반려 메시지'}
+                    />
                 </div>
             </div>
         </div>
