@@ -173,7 +173,6 @@ const ProductSearch = ({ onAddOrder }) => {
 
             <div className='button-container'>
                 <button onClick={handleOpenModal} className="add-items-button">주문 아이템 추가</button>
-                <button className='load-btn' onClick={handleFetch}>불러오기</button>
             </div>
             {isModalOpen && (
                 <OrderPostModal
