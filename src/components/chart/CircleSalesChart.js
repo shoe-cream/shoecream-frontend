@@ -7,9 +7,7 @@ const COLORS = ['#82ca9d', '#8884d8', '#ff7300', '#0088FE', '#00C49F', '#FFBB28'
 // 차트 컴포넌트
 const SalesCircleChart = ({ data }) => {
   // 데이터가 없을 경우 처리
-  if (!data || data.length === 0) {
-    return <div>No data available</div>;
-  }
+ 
 
   // Legend에 표시될 내용을 itemNm으로 포맷
   const renderLegendText = (value, entry) => {
