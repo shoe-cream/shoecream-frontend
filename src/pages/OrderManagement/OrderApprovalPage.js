@@ -97,7 +97,7 @@ const OrderApprovalPage = () => {
         setIsLoading(true);
         getOrderAllRequest(
             state,
-            searchParams,
+            searchParams,  
             page,
             10,
             (data) => {
@@ -367,7 +367,7 @@ const OrderApprovalPage = () => {
                                 </TabList>
                             </div>
                             <div className='tab-content'>
-                                {[0, 1, 2, 3, 4, 5].map((tabIndex) => (
+                                {[0, 1, 2, 3, 4].map((tabIndex) => (
                                     <TabPanel key={tabIndex}>
                                         <div className="search-container">
                                             <OrderDatepickerSelect
