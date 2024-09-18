@@ -14,7 +14,7 @@ const generateData = () => {
 };
 
 // 차트 컴포넌트
-const SalesChart = () => {
+const LineChart = () => {
   const data = generateData(); // 데이터 생성
 
   return (
@@ -30,4 +30,4 @@ const SalesChart = () => {
   );
 };
 
-export default SalesChart;
+export default LineChart;

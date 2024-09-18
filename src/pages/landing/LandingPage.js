@@ -1,49 +1,84 @@
-import Header from '../../components/header/Header';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../App.css';
-import SalesChart from '../../components/chart/SalesChart';  // 방금 만든 차트 컴포넌트
-import MonthSalesChart from '../../components/chart/MonthSalesChart'
-import CircleSalesChart from '../../components/chart/CircleSalesChart'
+import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-import Table from '../../components/Table/TableExample';
+import SalesChart from '../../components/chart/SalesChart';
+import SalesCircleChart from '../../components/chart/CircleSalesChart';
 import { useAuth } from '../../auth/AuthContext';
+import sendGetReportsRequest from '../../requests/GetReports';
 
 const LandingPage = () => {
     const { state } = useAuth();
-    const [selectedRows, setSelectedRows] = useState([]);
-    const columns = ['Name', 'Age', 'Location'];
-    const data = [
-      { Name: 'John Doe', Age: 30, Location: 'New York' },
-      { Name: 'Jane Smith', Age: 25, Location: 'Los Angeles' },
-      { Name: 'Sam Green', Age: 35, Location: 'Chicago' },
-    ];
-  
-    const handleSendData = (selected) => {
-      setSelectedRows(selected);
-      console.log('Selected Rows in LandingPage:', selected);
-      // 선택된 데이터를 다른 컴포넌트로 전달하거나 API 호출 등을 할 수 있습니다.
+    const [reports, setReports] = useState([]);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        sendGetReportsRequest(state, startDate, endDate, setReports, setIsLoading);
+    }, [state, startDate, endDate]);
+
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
     };
+
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
+
+    // 막대 차트 데이터 가공
+    const barChartData = reports.map(report => ({
+        itemCd: report.itemCd,
+        itemNm: report.itemNm,
+        totalOrderedPrice: report.totalOrderedPrice
+    }));
+
+    // 원형 차트 데이터 가공
+    const pieChartData = reports.map(report => ({
+        itemCd: report.itemCd,
+        itemNm: report.itemNm,
+        totalOrdered: report.totalOrdered
+    }));
+
     return (
         <div>
-            <Header></Header>
+            <Header />
             <div className='app-container'>
-                <Sidebar></Sidebar>
+                <Sidebar />
                 <div className='app-content-container'>
-                    {/* <div>랜딩 페이지~</div>
-                    <p>이 페이지는 데이터를 시각화하여 보여줍니다.</p> */}
-
-                    {/* 차트 삽입 */}
-                    <div style={{ width: '80%', margin: '0 auto' }}>
-                        <h2>판매 추이</h2>
-                        <SalesChart /> {/* 차트 컴포넌트 추가 */}
+                    <div className="date-range-inputs">
+                        <span>조회기간:</span>
+                        <input
+                            type="date"
+                            className="input w-40"
+                            value={startDate}
+                            onChange={handleStartDateChange}
+                        />
+                        <span>~</span>
+                        <input
+                            type="date"
+                            className="input w-40"
+                            value={endDate}
+                            onChange={handleEndDateChange}
+                        />
                     </div>
-                    <div style={{ width: '80%', margin: '0 auto' }}>
-                        <h2>판매 추이</h2>
-                        <CircleSalesChart /> {/* 차트 컴포넌트 추가 */}
-                    </div>
+                    {isLoading ? (
+                        <div></div>
+                    ) : (
+                        <>
+                            <div style={{ width: '80%', margin: '20px auto' }}>
+                                <h2>아이템 코드별 주문 금액</h2>
+                                <SalesChart data={barChartData} />
+                            </div>
+                            <div style={{ width: '80%', margin: '20px auto' }}>
+                                <h2>아이템 코드별 주문 수량</h2>
+                                <SalesCircleChart data={pieChartData} />
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
-        </div> 
+        </div>
     );
 }
 
