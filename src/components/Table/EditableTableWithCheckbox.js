@@ -48,11 +48,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
             ? prev.filter(id => id !== rowId)
             : [...prev, rowId]
         );
-        if (row.original) {
+        if (typeof onCheckboxChange === 'function') {
           onCheckboxChange(row.original);
-        } else {
-          console.warn('row.original 데이터가 정의되지 않았습니다.');
-        }
+      } else {
+          console.warn('onCheckboxChange는 함수가 아닙니다.');
+      }
       }}
     />
   ));
