@@ -68,9 +68,25 @@ const PostModal = ({ setOpened, columnData, postRequest, sortBy, setParentData, 
                                     obj[key] = `${obj[key]}T00:00:00`;
                                 }
                             });
-                        });
+                        });                        
 
                         console.log('changedCheckedData: ', checkedData);
+                        
+                        let areDatesValid = true;
+                        checkedData.forEach((data, index) => {
+                            if('startDate' in data && 'endDate' in data){
+                                console.log('시작일 & 종료일 발견!');
+                                const startDate = new Date(data.startDate);
+                                const endDate = new Date(data.endDate);
+                                if(startDate > endDate){
+                                    Swal.fire({text: `${index + 1}번 행 기간 설정 오류: 종료일이 시작일보다 앞설 수 없습니다.`});
+                                    areDatesValid = false;
+                                    return;
+                                }
+                            }
+                        })
+                        if(!areDatesValid) return;
+                        
                         postRequest(checkedData, setOpened, setParentData);
                     }}>등록</button>
                     <button className="post-modal-button" onClick={() => setOpened(false)}>취소</button>

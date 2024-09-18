@@ -105,6 +105,8 @@ const ItemPostPage = () => {
     {
       accessor: 'color',
       Header: '색상',
+      type: 'dropdown',
+      options: ['Black', 'White', 'Gray', 'Red', 'Blue', 'Yellow'],
     },
     {
       accessor: 'size',
@@ -114,7 +116,8 @@ const ItemPostPage = () => {
     {
       accessor: 'unit',
       Header: '단위',
-      type: 'text',
+      type: 'dropdown',
+      options: ['개', '켤레'],
     },
     {
       accessor: 'unitPrice',
