@@ -5,9 +5,10 @@ import './MyPage.css';
 import ProfileEditModal from '../../components/modal/ProfileEditModal';
 import sendPatchMyInfoRequest from '../../requests/PatchMyInfoRequest';
 import sendGetMyInfoRequest from '../../requests/GetMyInfoRequest';
+import PasswordEditModal from '../../components/modal/PasswordEditModal';
 import { useAuth } from '../../auth/AuthContext';
 
-const EmployeeInfoTable = ({ columns, employeeData, setIsEditModalOpen }) => {
+const EmployeeInfoTable = ({ columns, employeeData, setIsEditModalOpen, setIsPasswordEditModalOpen }) => {
     /* const keys = Object.keys(employeeData);
     const values = Object.values(employeeData); */
 
@@ -42,15 +43,19 @@ const EmployeeInfoTable = ({ columns, employeeData, setIsEditModalOpen }) => {
                 </tbody>
             </table>
             <button className='chart-modify-button' onClick={() => setIsEditModalOpen(true)}>수정</button>
+            <button className='chart-modify-button' onClick={() => setIsPasswordEditModalOpen(true)}>비밀번호 변경</button>
         </div>
     );
 };
 
 const MyPage = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isPasswordEditModalOpen, setIsPasswordEditModalOpen] = useState(false);
     const [nameInput, setNameInput] = useState('');
     const [telInput, setTelInput] = useState('');
     const [addressInput, setAddressInput] = useState('');
+    const [passwordInput, setPasswordInput] = useState('');
+    const [passwordCheckInput, setPasswordCheckInput] = useState('');
     const [myData, setMydata] = useState({ data: {} });
     const [isLoading, setIsLoading] = useState(true);
     const { state } = useAuth();
@@ -96,7 +101,12 @@ const MyPage = () => {
                             <img className='profile-image' src='picture/employee_profile.png'></img>
                             <button className='profile-upload-button' onClick={() => setIsEditModalOpen(true)}>사진 업로드</button>
                         </div>
-                        <EmployeeInfoTable columns={columns} employeeData={employeeInfo} setIsEditModalOpen={setIsEditModalOpen}></EmployeeInfoTable>
+                        <EmployeeInfoTable 
+                            columns={columns} 
+                            employeeData={employeeInfo} 
+                            setIsEditModalOpen={setIsEditModalOpen}
+                            setIsPasswordEditModalOpen={setIsPasswordEditModalOpen}
+                            ></EmployeeInfoTable>
                     </div>
                 </div>
             </div>
@@ -108,7 +118,7 @@ const MyPage = () => {
                         { input: telInput, setInput: setTelInput, placeholder: '전화번호', accessor: 'tel' },
                         { input: addressInput, setInput: setAddressInput, placeholder: '주소', accessor: 'address' },
                     ]}
-                onModify={(requestBy) => sendPatchMyInfoRequest(state, myData.data.memberId, requestBy, () => {
+                onModify={(requestBody) => sendPatchMyInfoRequest(state, myData.data.memberId, requestBody, () => {
                     setIsEditModalOpen(false);
                     sendGetMyInfoRequest(state, setMydata, setIsLoading, 
                         (data) => setEmployeeInfo([
@@ -121,6 +131,15 @@ const MyPage = () => {
                         ]));
                 })}
                 ></ProfileEditModal> : <div />}
+                {isPasswordEditModalOpen ?
+                <PasswordEditModal
+                    setOpened={setIsPasswordEditModalOpen}
+                    state = {state}
+                    memberId = {myData.data.memberId}
+                    onModify={(requestBody) => sendPatchMyInfoRequest(state, myData.data.memberId, requestBody, () => {
+                    setIsPasswordEditModalOpen(false);
+                })}
+                ></PasswordEditModal> : <div />}
         </div>
     );
 }
