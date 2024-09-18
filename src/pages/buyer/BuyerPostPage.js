@@ -56,7 +56,8 @@ const BuyerPostPage = () => {
     {
       accessor: 'businessType',
       Header: '사업 분류',
-      type: 'text',
+      type: 'dropdown',
+      options: ['개인', '기업'],
     },
   ]
   const resetData = (value) => {
