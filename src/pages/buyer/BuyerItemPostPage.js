@@ -141,6 +141,46 @@ const BuyerItemPostPage = () => {
                                         }
                                         console.log('checked: ', checked);
                                         console.log('edited: ', edited);
+
+                                        let areDatesValid = true;
+
+                                        Object.keys(edited).forEach((key) => {
+                                            const row = edited[key]; 
+                                            const index = parseInt(key, 10); 
+                                            const startDateChanged = 'startDate' in row;
+                                            const endDateChanged = 'endDate' in row;
+
+                                            console.log('startDateChanged: ', startDateChanged);
+                                            console.log('endDateChanged: ', endDateChanged);
+                                        
+                                            if (startDateChanged && endDateChanged) {
+                                                if (new Date(row.startDate) > new Date(row.endDate)) {
+                                                    Swal.fire({
+                                                        text: `${index}번째 행에서 오류 발생: 종료일이 시작일보다 앞설 수 없습니다.`
+                                                    });
+                                                    areDatesValid = false;
+                                                    return;
+                                                }
+                                            }
+                                            console.log('rowStartDate: ', row.startDate);
+                                            console.log('rowEndDate: ', row.endDate);
+                                            console.log('dbStartDate: ', dbData.data[index].startDate);
+                                            console.log('dbEndDate: ', dbData.data[index].endDate);
+                                            if (
+                                                (startDateChanged && new Date(row.startDate) > new Date(dbData.data[index].endDate)) ||
+                                                (endDateChanged && new Date(dbData.data[index].startDate) > new Date(row.endDate))
+                                            ) {
+                                                console.log('dbEndDate: ', dbData.data[index].endDate);
+                                                Swal.fire({
+                                                    text: `${index + 1}번째 행에서 오류 발생: 종료일이 시작일보다 앞설 수 없습니다.`
+                                                });
+                                                areDatesValid = false;
+                                                return;
+                                            }
+                                        });
+                                        if(!areDatesValid){
+                                            return;
+                                        }
                                         /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
                                         const checkedAndEdited = Object.keys(edited)
                                             .filter(key => checked.includes(Number(key)))
