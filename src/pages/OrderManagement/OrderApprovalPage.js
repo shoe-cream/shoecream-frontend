@@ -47,6 +47,7 @@ const OrderApprovalPage = () => {
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
+    const [rejectedOrderType, setRejectedOrderType] = useState('REJECTED');
 
 
     useEffect(() => {
@@ -70,7 +71,7 @@ const OrderApprovalPage = () => {
                 obj["orderCd"] = data[i].orderCd;
                 obj["status"] = data[i].status;
                 obj["createdAt"] = data[i].createdAt.split('T')[0];
-                obj["requestDate"] = data[i].requestDate;
+                obj["requestDate"] = data[i].requestDate.split('T')[0];
                 obj["buyerNm"] = data[i].buyerNm;
                 obj["buyerCd"] = data[i].buyerCd;
                 obj["itemId"] = data[i].orderItems[j].orderItemId;
@@ -140,10 +141,7 @@ const OrderApprovalPage = () => {
                 newStatus = 'APPROVED';
                 break;
             case 'APPROVED':
-                newStatus = 'SHIPPED';
-                break;
-            case 'SHIPPED':
-                newStatus = 'PRODUCT_PASS';
+                newStatus = 'APPROVED';
                 break;
             case 'REJECTED':
                 newStatus = 'CANCELLED';
@@ -178,14 +176,14 @@ const OrderApprovalPage = () => {
         });
     };
 
-    const handleProductFail= () => {
+    const handleProductFail = () => {
         if (checkedItems.length === 0) {
             alert("승인할 항목을 선택해주세요.");
             return;
         }
 
         let newStatus = 'PRODUCT_FAIL';
-        
+
 
         // checkedItems에 해당하는 항목 필터링
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
@@ -367,13 +365,9 @@ const OrderApprovalPage = () => {
         switch (index) {
             case 0: currentStatus = null; break;
             case 1: currentStatus = 'REQUEST_TEMP'; break;
-            case 2: currentStatus = 'PURCHASE_REQUEST'; break;
-            case 3: currentStatus = 'APPROVED'; break;
-            case 4: currentStatus = 'SHIPPED'; break;
-            case 5: currentStatus = 'PRODUCT_PASS'; break;
-            case 6: currentStatus = 'CANCELLED'; break;
-            case 7: currentStatus = 'REJECTED'; break;
-            case 8: currentStatus = 'PRODUCT_FAIL'; break;
+            case 2: currentStatus = 'APPROVED'; break;
+            case 3: currentStatus = 'PRODUCT_PASS'; break;
+            case 4: currentStatus = 'REJECTED'; break;
             default: currentStatus = null;
         }
         setStatus(currentStatus);
@@ -405,11 +399,17 @@ const OrderApprovalPage = () => {
         setPage(1);
     }, []);
 
+    const handleRejectedOrderTypeChange = (e) => {
+        setRejectedOrderType(e.target.value);
+        updateSearchParams('status', e.target.value);
+    };
+
     useEffect(() => {
         if (Object.keys(searchParams).length > 0) {
             fetchOrders();
         }
-    }, [searchParams, page]);
+    }, [searchParams, page, rejectedOrderType]);
+
 
     // 견적서 발행 함수
     const handleIssueQuotation = () => {
@@ -422,20 +422,32 @@ const OrderApprovalPage = () => {
         }
     };
 
-    const columns = useMemo(() => [
-        { Header: "담당자", accessor: "employeeId" },
-        { Header: "주문코드", accessor: "orderCd" },
-        { Header: "주문상태", accessor: "status" },
-        { Header: "등록일", accessor: "createdAt" },
-        { Header: "납기일", accessor: "requestDate", type: "date" },
-        { Header: "고객사 명", accessor: "buyerNm" },
-        { Header: "고객 코드", accessor: "buyerCd" },
-        { Header: "제품 코드", accessor: "itemCd" },
-        { Header: "수량", accessor: "qty", type: "number" },
-        { Header: "제품 단가", accessor: "unitPrice", type: "number" },
-        { Header: "시작일", accessor: "startDate" },
-        { Header: "만기일", accessor: "endDate" },
-    ], []);
+    const columns = useMemo(() => {
+        const commonColumns = [
+            { Header: "담당자", accessor: "employeeId" },
+            { Header: "주문코드", accessor: "orderCd" },
+            { Header: "주문상태", accessor: "status" },
+            { Header: "등록일", accessor: "createdAt" },
+            { Header: "고객사 명", accessor: "buyerNm" },
+            { Header: "고객 코드", accessor: "buyerCd" },
+            { Header: "제품 코드", accessor: "itemCd" },
+            { Header: "시작일", accessor: "startDate" },
+            { Header: "만기일", accessor: "endDate" },
+        ];
+
+        // 조건부로 컬럼 추가
+        if (status === 'REQUEST_TEMP' || status === null) {
+            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate", type: "date" });
+            commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
+            commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
+        } else {
+            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate" });
+            commonColumns.splice(7, 0, { Header: "수량", accessor: "qty" });
+            commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice" });
+        }
+
+        return commonColumns;
+    }, [status]);
 
     const historyColumns = [
         { accessor: 'orderCd', Header: '주문코드', },
@@ -473,20 +485,14 @@ const OrderApprovalPage = () => {
                             <div className='tab-list-container'>
                                 <TabList className="centered-tabs">
                                     <Tab>전체주문조회</Tab>
-                                    <Tab>견적요청</Tab>
-                                    {member?.data?.roles?.includes('ROLE_ADMIN') && (
-                                        <Tab>발주요청</Tab>
-                                    )}
+                                    <Tab>주문대기</Tab>
                                     <Tab>승인된 주문</Tab>
-                                    <Tab>출하 상태</Tab>
                                     <Tab>합격 주문</Tab>
-                                    <Tab>취소된 주문</Tab>
                                     <Tab>반려된 주문</Tab>
-                                    <Tab>불합격 주문</Tab>
                                 </TabList>
                             </div>
                             <div className='tab-content'>
-                                {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((tabIndex) => (
+                                {[0, 1, 2, 3, 4].map((tabIndex) => (
                                     <TabPanel key={tabIndex}>
                                         <div className="search-container">
                                             <OrderDatepickerSelect
@@ -514,9 +520,24 @@ const OrderApprovalPage = () => {
                                                     onChange={handleEndDateChange}
                                                 />
                                             </div>
+                                            <div className='rejectOption'>
+                                            {tabIndex === 4 && (
+                                                    <>
+                                                        <select
+                                                            className="form-select"
+                                                            value={rejectedOrderType}
+                                                            onChange={handleRejectedOrderTypeChange}
+                                                        >
+                                                            <option value="REJECTED">반려 주문</option>
+                                                            <option value="CANCELLED">취소된 주문</option>
+                                                            <option value="PRODUCT_FAIL">불합격 주문</option>
+                                                        </select>
+                                                    </>
+                                                )}
+                                            </div>
                                             <div className="action-buttons-container"></div>
                                             <div className="right-aligned-buttons">
-                                                {tabIndex <= 2 || tabIndex === 7 && (
+                                                {tabIndex <= 1 && (
                                                     <button className='btn btn-secondary' onClick={handlePatchOrder}>
                                                         <Edit className="btn-icon" size={14} /> 수정
                                                     </button>
@@ -526,44 +547,40 @@ const OrderApprovalPage = () => {
                                                         <FileText className="btn-icon" size={14} /> 견적서 발행
                                                     </button>
                                                 )}
-                                                {tabIndex === 1 && (
-                                                    <button className='btn btn-secondary' onClick={handleApprove}>
-                                                        <Check className='"btn-icon' size={14} /> 발주 요청
-                                                    </button>
-                                                )}
-                                                {tabIndex === 2 && member?.data?.roles?.includes('ROLE_ADMIN') && (
+
+                                                {tabIndex === 1 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminApprove}>
                                                         <Check className='"btn-icon' size={14} /> 주문 승인
                                                     </button>
                                                 )}
-                                                {tabIndex === 2 && member?.data?.roles?.includes('ROLE_ADMIN') && (
+                                                {tabIndex === 1 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminReject}>
                                                         <Check className='"btn-icon' size={14} /> 주문 반려
                                                     </button>
                                                 )}
-                                                {tabIndex === 3 && (
-                                                    <button className='btn btn-secondary' onClick={handleApprove}>
-                                                        <Check className='"btn-icon' size={14} /> 주문 출하
-                                                    </button>
-                                                )}
-                                                {tabIndex === 4 && (
+                                                {tabIndex === 2 && (
                                                     <button className='btn btn-secondary' onClick={handleApprove}>
                                                         <Check className='"btn-icon' size={14} /> 주문 합격
                                                     </button>
                                                 )}
-                                                {tabIndex === 4  && (
+                                                {tabIndex === 2 && (
                                                     <button className='btn btn-secondary' onClick={handleProductFail}>
                                                         <Check className='"btn-icon' size={14} /> 주문 불합격
                                                     </button>
                                                 )}
-                                                {tabIndex === 7  && (
+                                                {tabIndex === 4 && rejectedOrderType === 'REJECTED' && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleApprove}>
-                                                        <Check className='"btn-icon' size={14} /> 주문 취소
+                                                        <Check className="btn-icon" size={14} /> 주문 취소
                                                     </button>
                                                 )}
-                                                {tabIndex === 7 && member?.data?.roles?.includes('ROLE_ADMIN') && (
+                                                {tabIndex === 4 && rejectedOrderType === 'REJECTED' && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminPurchase}>
-                                                        <Check className='"btn-icon' size={14} /> 주문 발주 재요청
+                                                        <Check className="btn-icon" size={14} /> 주문 재요청
+                                                    </button>
+                                                )}
+                                                {tabIndex === 4 && (
+                                                    <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                        <Edit className="btn-icon" size={14} /> 수정
                                                     </button>
                                                 )}
                                                 <button className='btn btn-secondary' onClick={handleExportToExcel}>
