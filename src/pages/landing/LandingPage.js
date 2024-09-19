@@ -9,6 +9,7 @@ import SalesCircleChart from '../../components/chart/CircleSalesChart';
 import MonthChart from '../../components/chart/MonthSalesChart';
 import { useAuth } from '../../auth/AuthContext';
 import sendGetReportsRequest from '../../requests/GetReports';
+import './LandingPage.css';
 
 const flatData = (data) => {
     let totalAmount = 0;
@@ -113,7 +114,7 @@ const LandingPage = () => {
                             style={{
                                 marginLeft: '10px',
                                 padding: '5px 10px',
-                                backgroundColor: '#f0f0f0',
+                            
                                 border: '1px solid #ccc',
                                 borderRadius: '4px',
                                 cursor: 'pointer'
