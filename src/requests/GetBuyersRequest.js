@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const sendGetBuyersRequest = async (state ,page, setPage, size, sortBy, setData, setIsLoading) => {
+const sendGetBuyersRequest = async ({state ,page, setPage, size, sortBy, setData, setIsLoading}) => {
     /* console.log("state: ", state); */
     console.log('sortBy in request: ', sortBy);
     try {

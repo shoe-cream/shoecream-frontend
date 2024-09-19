@@ -20,6 +20,7 @@ const Header = () => {
         <div className="header-container">
             <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate((state.isAuthenticated ? "/dashboard" : '/'))}></img>
             <SearchWindow
+                placeholder='이동할 메뉴 검색'
                 suggestions={[
                     { key: '제조사', onSearch: () => navigate('/manufactureres') },
                     { key: '고객사', onSearch: () => navigate('/buyers') },

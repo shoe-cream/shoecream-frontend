@@ -16,6 +16,8 @@ import sendPostBuyersRequest from "../../requests/PostBuyersRequest";
 import Swal from "sweetalert2";
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import './BuyerPostPage.css';
+import SearchWindow from "../../components/search/SearchWindow";
+import sendGetAllBuyersRequest from "../../requests/GetAllBuyersRequest";
 
 const BuyerPostPage = () => {
   const { state } = useAuth();
@@ -23,11 +25,14 @@ const BuyerPostPage = () => {
   const [data, setData] = useState({ data: [] });
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
 
   const [checked, setChecked] = useState([]);
   const [isPostMode, setIsPostMode] = useState(false);
   const [edited, setEdited] = useState([]);
   const [sortBy, setSortBy] = useState('buyerId');
+
+  const [allData, setAllData] = useState({ data: [] });
 
   const columnData = [
     {
@@ -67,7 +72,8 @@ const BuyerPostPage = () => {
     setDbData(value);
   }
   useEffect(() => {
-    sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+    sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading});
+    sendGetAllBuyersRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
   return (
@@ -88,6 +94,17 @@ const BuyerPostPage = () => {
                   <option value='address'>주소</option>
                   <option value='businessType'>사업 분류</option>
                 </select>
+                <SearchWindow
+                  placeholder='고객사 이름으로 검색'
+                  suggestions={
+                    allData.data.map(data => ({
+                      key: data.buyerNm, 
+                      onSearch: () => sendGetBuyersRequest(
+                        {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: data.buyerNm, setData: resetData, setIsLoading: setIsLoading}
+                      )
+                    }))
+                  }
+                />
                 <div />
                 <div className='manufacturer-button-container'>
                   <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
@@ -127,7 +144,7 @@ const BuyerPostPage = () => {
                     });
                     console.log('requestBody: ', requestBody);
                     sendPatchMultiBuyerRequest(state, requestBody, () => {
-                      sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+                      sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading});
                       setChecked([]);
                     });
                   }}><Edit size={16} /> 수정</button>
@@ -147,7 +164,7 @@ const BuyerPostPage = () => {
                     }}><Trash2 size={16} /> 삭제</button>
                 </div>
               </div>
-              {isLoading ? <div /> : <EditableTableWithCheckbox
+              {(isLoading || isLoading2) ? <div /> : <EditableTableWithCheckbox
                 columns={columnData}
                 ogData={dbData}
                 data={data}
@@ -159,7 +176,7 @@ const BuyerPostPage = () => {
               >
               </EditableTableWithCheckbox>}
             </div>
-            {isLoading ? <div /> : <PageContainer
+            {(isLoading || isLoading2) ? <div /> : <PageContainer
               currentPage={page}
               setPage={setPage}
               pageInfo={data.pageInfo}

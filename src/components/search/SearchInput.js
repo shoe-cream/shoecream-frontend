@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { Search } from 'lucide-react';
+import { useState, useCallback } from "react";
 
-const SearchWindow = ({ placeholder, suggestions }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: externalValue }) => {
+    const [searchTerm, setSearchTerm] = useState(externalValue || '');
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestion, setActiveSuggestion] = useState(-1);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     // 검색창 입력 처리 및 자동완성 필터링
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         const value = e.target.value;
         setSearchTerm(value);
 
@@ -18,7 +17,10 @@ const SearchWindow = ({ placeholder, suggestions }) => {
         setFilteredSuggestions(filtered);
         setActiveSuggestion(-1);
         setShowSuggestions(true);
-    };
+
+        // 부모 컴포넌트의 onChange 호출
+        onChange(e);
+    }, [suggestions, onChange]);
 
     // 방향키 및 엔터 처리
     const handleKeyDown = (e) => {
@@ -28,6 +30,7 @@ const SearchWindow = ({ placeholder, suggestions }) => {
                 const newIndex = activeSuggestion + 1;
                 setActiveSuggestion(newIndex);
                 setSearchTerm(filteredSuggestions[newIndex].key);
+                onChange({ target: { value: filteredSuggestions[newIndex].key } });
             }
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
@@ -35,6 +38,7 @@ const SearchWindow = ({ placeholder, suggestions }) => {
                 const newIndex = activeSuggestion - 1;
                 setActiveSuggestion(newIndex);
                 setSearchTerm(filteredSuggestions[newIndex].key);
+                onChange({ target: { value: filteredSuggestions[newIndex].key } });
             }
         } else if (e.key === "Enter") {
             e.preventDefault();
@@ -45,7 +49,7 @@ const SearchWindow = ({ placeholder, suggestions }) => {
                 if (matchedSuggestion) {
                     handleSearchSubmit(matchedSuggestion);
                 } else {
-                    alert('검색 결과가 없습니다.');
+                    console.log('검색 결과가 없습니다.');
                 }
             }
         }
@@ -64,10 +68,19 @@ const SearchWindow = ({ placeholder, suggestions }) => {
         setSearchTerm(suggestion.key);
         setShowSuggestions(false);
         handleSearchSubmit(suggestion);
+        onChange({ target: { value: suggestion.key } });
     };
 
+    // onBlur 핸들러
+    const handleBlur = useCallback(() => {
+        setTimeout(() => {
+            setShowSuggestions(false);
+        }, 200);
+      
+    }, []);
+
     return (
-        <form onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(suggestions.find(s => s.key.toLowerCase() === searchTerm.toLowerCase())); }} className="header-search-form">
+        <div className="header-search-form">
             <input
                 type="text"
                 placeholder={placeholder}
@@ -77,9 +90,6 @@ const SearchWindow = ({ placeholder, suggestions }) => {
                 className="header-search-input"
                 autoComplete="off"
             />
-            <button type="submit" className="header-search-button">
-                <Search size={15} />
-            </button>
 
             {showSuggestions && searchTerm && filteredSuggestions.length > 0 && (
                 <ul className="header-suggestions">
@@ -94,8 +104,8 @@ const SearchWindow = ({ placeholder, suggestions }) => {
                     ))}
                 </ul>
             )}
-        </form>
+        </div>
     );
 }
 
-export default SearchWindow;
+export default SearchInput;
