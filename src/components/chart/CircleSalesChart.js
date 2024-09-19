@@ -1,38 +1,52 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-// 원형 그래프의 색상 배열
 const COLORS = ['#82ca9d', '#8884d8', '#ff7300', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-// 차트 컴포넌트
 const SalesCircleChart = ({ data }) => {
-  // 데이터가 없을 경우 처리
- 
 
-  // Legend에 표시될 내용을 itemNm으로 포맷
-  const renderLegendText = (value, entry) => {
-    const item = data.find(item => item.itemCd === entry.itemCd);
-    console.log("itemNm" , data[0].itemNm);
-    return item ? item.itemNm : value; // itemNm이 없으면 기본값 사용
+  if (!data || data.length === 0) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '400px',
+        border: '1px dashed #ccc',
+        borderRadius: '8px',
+        color: '#666',
+        fontSize: '18px',
+        fontWeight: 'bold'
+      }}>
+        데이터가 없습니다. 다른 날짜 범위를 선택해 주세요.
+      </div>
+    );
+  }
+
+  const renderLegendText = (value, entry, index) => {
+    return data[index].itemNm;
   };
 
-  const flatData = () => {
-    let itemName = [];
-    for(let i = 0; i < data.length; i++){
-        itemName[i] = data[i].itemNm;
+  const customTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="custom-tooltip" style={{ backgroundColor: '#fff', padding: '5px', border: '1px solid #ccc' }}>
+          <p>{`${data.itemCd} : ${data.totalOrdered}`}</p>
+        </div>
+      );
     }
-    return itemName ? itemName : [];
-  }
+    return null;
+  };
 
   return (
     <ResponsiveContainer width="100%" height={400}>
       <PieChart>
         <Pie
           data={data}
-          cx="50%" // 중앙 X 위치
-          cy="50%" // 중앙 Y 위치
-          outerRadius={150} // 원형 그래프의 외부 반지름
-          label={({ itemCd, itemNm }) => `${itemCd} - ${itemNm}`} // 각 조각 안에 이름과 값 표시
+          cx="50%"
+          cy="50%"
+          outerRadius={150}
           fill="#8884d8"
           dataKey="totalOrdered"
         >
@@ -40,8 +54,8 @@ const SalesCircleChart = ({ data }) => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip />
-        <Legend formatter={flatData} />
+        <Tooltip content={customTooltip} />
+        <Legend formatter={renderLegendText} />
       </PieChart>
     </ResponsiveContainer>
   );

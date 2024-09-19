@@ -9,6 +9,7 @@ import PageContainer from '../../components/page_container/PageContainer';
 import sendPostOrder from '../../requests/PostOrder';
 import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const OrderPostPage = () => {
     const [orderData, setOrderData] = useState([]);
@@ -73,12 +74,12 @@ const OrderPostPage = () => {
                     setOrderData(prevData => prevData.filter((_, index) => !selectedOrders.includes(index)));
                     setSelectedOrders([]); // 선택 초기화
                 } else {
-                    alert("등록할 수 있는 주문이 없습니다. 모든 선택된 주문에 납기일이 없습니다.");
+                    Swal.fire({text : '납기일을 입력해주세요'})
                 }
             })
             .catch(error => {
                 console.error("주문 등록 중 오류 발생:", error);
-                alert(`주문 등록 중 오류가 발생했습니다: ${error.message}`);
+                Swal.fire({text: `주문 등록 중 오류가 발생했습니다: ${error.message}`});
             });
     };
 
