@@ -18,7 +18,10 @@ const sendGetMyInfoRequest = async(state, setData, setIsLoading, executeAfter) =
         if(response.status === 200){
             console.log('내 정보 GET요청 성공: ', response.data);
             setData(response.data);
-            setIsLoading(false);
+            if(setIsLoading!==undefined){
+                setIsLoading(false);
+            }
+            
             if(executeAfter !== undefined){
                 executeAfter(response.data.data);
             }
