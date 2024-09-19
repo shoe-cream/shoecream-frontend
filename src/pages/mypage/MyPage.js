@@ -88,16 +88,22 @@ const MyPage = () => {
 
     useEffect(() => {
         sendGetMyInfoRequest(state, setMydata, setIsLoading, 
-            (data) => setEmployeeInfo([
-                data.employeeId || '데이터 없음', 
-                data.name || '데이터 없음',
-                data.roles[0] || '데이터 없음',
-                data.tel || '데이터 없음',
-                '데이터 없음',
-                data.address || '데이터 없음',
-            ]));
-    }, [state]);
+            (data) => {
+                const employeeRole = data.roles && data.roles.length > 0 ? getRole(data.roles[0]) : '데이터 없음';
+                console.log('변환된 직책:', employeeRole);  // 콘솔에서 확인
+                setEmployeeInfo([
+                    data.employeeId || '데이터 없음',
+                    data.name || '데이터 없음',
+                    employeeRole,  // 변환된 직책 사용
+                    data.tel || '데이터 없음',
+                    '데이터 없음',
+                    data.address || '데이터 없음',
+                ]);
+            }
+        );
+    }, []); 
 
+    
     const columns = [
         "사원번호",
         "성명",
