@@ -42,7 +42,7 @@ const ManufacturerPostPage = () => {
         {
             accessor: 'mfNm',
             Header: '제조사명',
-            type: 'text',
+            
         },
         {
             accessor: 'mfCd',

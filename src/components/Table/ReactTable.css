@@ -57,9 +57,13 @@
   .body-d {
     font-size: 12px !important;
   }
+  .body-r{
+    cursor: pointer;
+  }
   
   .body-r-edited {
     background-color: #fceae1;
+    cursor: pointer;
   }
   
   .body-r:hover {
