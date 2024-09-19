@@ -31,13 +31,15 @@
   
   .manufacturer-button-container {
     display: flex;
-    gap: 10px;
   }
   
   .manufacturer-button {
+    font-size: 12px !important;
+    display: flex;
+    justify-content: center;
     background-color: #2b538b !important;
     color: white;
-    padding: 8px 16px;
+    padding: 10px!important;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -88,7 +90,7 @@
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  /* white-space: nowrap; */ 
 }
   
 .item-post-page th {
@@ -99,12 +101,6 @@
 .item-post-page td:first-child {
   width: 4% !important;
   text-align: center;
-} */
-
-/* 상품명 컬럼 */
-/* .item-post-page th:nth-child(2),
-.item-post-page td:nth-child(2) {
-  width: 15% !important;
 } */
 
 /* 상품 코드 컬럼 */

@@ -4,7 +4,7 @@
   }
   
   .app-background {
-    animation: fadeIn 0.5s ease-in-out;
+    /* animation: fadeIn 0.5s ease-in-out; */
   }
 
 .manufacturer-input-container{
@@ -29,7 +29,7 @@
     border-radius: 5px;
 }
 .manufacturer-input-text{
-    font-size: 12px;
+    font-size: 13px !important;
     margin-left: 10px;
 }
 .manufacturer-input-button{
@@ -68,7 +68,7 @@
     width: 60%;
     height: 18px;
     border: none;
-    font-size: 12px;
+    font-size: 13px;
 }
 .manufacturer-content-input:focus{
     outline: 1px solid #777777;

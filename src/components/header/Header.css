@@ -42,11 +42,7 @@
 .header-profile-icon:hover,
 .header-logout-icon:hover {
     /* 호버 효과가 필요하다면 여기에 추가 */
-    color: #2b538b;
-}
-
-.header-logout-icon {
-    
+    color: #1f3750;
 }
 
 .header-login-button{
@@ -63,7 +59,7 @@
     cursor: pointer;
 }
 .header-login-button:hover{
-    background-color: #0D9276;
+    background-color: #1f3750;
 }
 
 .header-search-form {
@@ -72,8 +68,8 @@
     justify-content: flex-start; /* 왼쪽 정렬 */
     flex: none; /* 부모 요소가 검색창을 비율에 따라 확장하지 않게 설정 */
     margin: 0 10px; /* 양쪽 여백을 적게 설정 */
-    flex: none; 
-    margin-right: auto; 
+    flex: none; /* 부모 요소가 검색창을 확장하지 않도록 설정 */
+    margin-right: auto; /* 오른쪽으로 여백을 자동으로 밀어넣음, 왼쪽에 붙음 */
     position: relative; 
    width: 300px;
 }
@@ -118,7 +114,7 @@
 .header-search-button {
     font-size: 12px !important;
     width: 18%;
-    padding: 8px 16px;
+    padding: 9px;
     background-color: #2b538b;
     color: white;
     border: none;
@@ -128,5 +124,5 @@
 }
 
 .header-search-button:hover {
-    background-color: #0D9276;
+    background-color: #1f3750;
 }

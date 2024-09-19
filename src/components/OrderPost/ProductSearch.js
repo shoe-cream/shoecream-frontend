@@ -173,7 +173,7 @@ const ProductSearch = ({ onAddOrder }) => {
             </div>
 
             <div className='button-container'>
-                <button onClick={handleOpenModal} className="add-items-button"><Plus size={13} /> 추가</button>
+                <button onClick={handleOpenModal} className="add-items-button"><Plus size={13} /> 아이템 추가</button>
             </div>
             {isModalOpen && (
                 <OrderPostModal

@@ -1,7 +1,15 @@
 .body-r {
     font-weight: bold !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     font-family: 'Montserrat', sans-serif !important;
+}
+
+.cell-input {
+    font-size: 12px !important;
+}
+
+.body-d {
+    font-size: 12px !important;
 }
 
 

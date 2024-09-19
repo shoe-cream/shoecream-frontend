@@ -1,23 +1,26 @@
 import sendPatchMyInfoRequest from "../../requests/PatchMyInfoRequest";
 
 const ProfileEditModal = ({ setOpened, inputs, onModify }) => {
-
     return (
-        <div className="modal-background">
-            <div className='modal-container-narrow'>
-                <h2 className="modal-label">프로필 수정</h2>
-                <div className="profile-modify-input-container">
-                    {inputs.map((input) => (
-                        <input
-                            className={input.input === '' ? 'profile-modify-input-empty' : 'profile-modify-input'}
-                            placeholder={input.placeholder}
-                            onBlur={(e) => input.setInput(e.target.value)}
-                            type="search"
-                        ></input>
+        <div className="modal-overlay">
+            <div className='modal-content'>
+                <h2 className="modal-title">프로필 수정</h2>
+                <form className="profile-form">
+                    {inputs.map((input, index) => (
+                        <div key={index} className="form-group">
+                            <label htmlFor={`input-${index}`}>{input.placeholder}</label>
+                            <input
+                                id={`input-${index}`}
+                                className={`form-input ${input.input ? 'form-input-filled' : ''}`}
+                                placeholder={`${input.placeholder} 입력`}
+                                onBlur={(e) => input.setInput(e.target.value)}
+                                type="text"
+                            />
+                        </div>
                     ))}
-                </div>
-                <div className='post-modal-button-container'>
-                    <button className="post-modal-button" onClick={() => {
+                </form>
+                <div className='modal-actions'>
+                    <button className="modal-button modal-button-primary" onClick={() => {
                         const requestBody = inputs.reduce((acc, item) => {
                             if (item.input !== '') {
                                 acc[item.accessor] = item.input;
@@ -26,10 +29,8 @@ const ProfileEditModal = ({ setOpened, inputs, onModify }) => {
                         }, {});
                         console.log(requestBody);
                         onModify(requestBody);
-                    }
-
-                    }>확인</button>
-                    <button className="post-modal-button" onClick={() => {
+                    }}>수정</button>
+                    <button className="modal-button" onClick={() => {
                         inputs.forEach(input => {
                             input.setInput('');
                         });
@@ -40,4 +41,5 @@ const ProfileEditModal = ({ setOpened, inputs, onModify }) => {
         </div>
     );
 }
+
 export default ProfileEditModal;

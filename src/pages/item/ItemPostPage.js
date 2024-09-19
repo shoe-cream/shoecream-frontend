@@ -43,8 +43,8 @@ const ItemPostPage = () => {
   const columnData = [
     {
       accessor: 'itemNm',
-      Header: '상품명',
-      type: 'text',
+      Header: '제품명',
+    
     },
     {
       accessor: 'itemCd',

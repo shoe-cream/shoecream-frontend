@@ -8,7 +8,7 @@ import sendGetMyInfoRequest from '../../requests/GetMyInfoRequest';
 import PasswordEditModal from '../../components/modal/PasswordEditModal';
 import { useAuth } from '../../auth/AuthContext';
 
-const EmployeeInfoTable = ({ columns, employeeData, setIsEditModalOpen, setIsPasswordEditModalOpen }) => {
+const EmployeeInfoCard = ({ columns, employeeData, setIsEditModalOpen, setIsPasswordEditModalOpen }) => {
     /* const keys = Object.keys(employeeData);
     const values = Object.values(employeeData); */
 
@@ -36,14 +36,17 @@ const EmployeeInfoTable = ({ columns, employeeData, setIsEditModalOpen, setIsPas
     }
 
     return (
-        <div className="mypage-chart">
-            <table className="w-full border-collapse">
-                <tbody>
-                    {rows}
-                </tbody>
-            </table>
-            <button className='chart-modify-button' onClick={() => setIsEditModalOpen(true)}>수정</button>
-            <button className='chart-modify-button' onClick={() => setIsPasswordEditModalOpen(true)}>비밀번호 변경</button>
+        <div className="employee-info-card">
+            {columns.map((column, index) => (
+                <div key={index} className="info-item">
+                    <div className="info-label">{column}</div>
+                    <div className="info-value">{employeeData[index]}</div>
+                </div>
+            ))}
+            <div className="button-container">
+                <button className='edit-button' onClick={() => setIsEditModalOpen(true)}>수정</button>
+                <button className='edit-button' onClick={() => setIsPasswordEditModalOpen(true)}>비밀번호 변경</button>
+            </div>
         </div>
     );
 };
@@ -92,25 +95,22 @@ const MyPage = () => {
     ];
     return (
         <div>
-            <Header></Header>
+            <Header />
             <div className='app-container'>
-                <Sidebar></Sidebar>
+                <Sidebar />
                 <div className='app-content-container'>
                     <div className='mypage-container'>
-                        <div className='profile-image-container'>
-                            <img className='profile-image' src='picture/employee_profile.png'></img>
-                            <button className='profile-upload-button' onClick={() => setIsEditModalOpen(true)}>사진 업로드</button>
-                        </div>
-                        <EmployeeInfoTable 
+                        <h1 className="page-title">마이 페이지</h1>
+                        <EmployeeInfoCard 
                             columns={columns} 
                             employeeData={employeeInfo} 
                             setIsEditModalOpen={setIsEditModalOpen}
                             setIsPasswordEditModalOpen={setIsPasswordEditModalOpen}
-                            ></EmployeeInfoTable>
+                        />
                     </div>
                 </div>
             </div>
-            {isEditModalOpen ?
+            {isEditModalOpen && (
                 <ProfileEditModal
                     setOpened={setIsEditModalOpen}
                     inputs={[
@@ -118,29 +118,32 @@ const MyPage = () => {
                         { input: telInput, setInput: setTelInput, placeholder: '전화번호', accessor: 'tel' },
                         { input: addressInput, setInput: setAddressInput, placeholder: '주소', accessor: 'address' },
                     ]}
-                onModify={(requestBody) => sendPatchMyInfoRequest(state, myData.data.memberId, requestBody, () => {
-                    setIsEditModalOpen(false);
-                    sendGetMyInfoRequest(state, setMydata, setIsLoading, 
-                        (data) => setEmployeeInfo([
-                            data.employeeId || '데이터 없음', 
-                            data.name || '데이터 없음',
-                            data.roles[0] || '데이터 없음',
-                            data.tel || '데이터 없음',
-                            '데이터 없음',
-                            data.address || '데이터 없음',
-                        ]));
-                })}
-                ></ProfileEditModal> : <div />}
-                {isPasswordEditModalOpen ?
+                    onModify={(requestBody) => sendPatchMyInfoRequest(state, myData.data.memberId, requestBody, () => {
+                        setIsEditModalOpen(false);
+                        sendGetMyInfoRequest(state, setMydata, setIsLoading, 
+                            (data) => setEmployeeInfo([
+                                data.employeeId || '데이터 없음', 
+                                data.name || '데이터 없음',
+                                data.roles[0] || '데이터 없음',
+                                data.tel || '데이터 없음',
+                                '데이터 없음',
+                                data.address || '데이터 없음',
+                            ]));
+                    })}
+                />
+            )}
+            {isPasswordEditModalOpen && (
                 <PasswordEditModal
                     setOpened={setIsPasswordEditModalOpen}
-                    state = {state}
-                    memberId = {myData.data.memberId}
+                    state={state}
+                    memberId={myData.data.memberId}
                     onModify={(requestBody) => sendPatchMyInfoRequest(state, myData.data.memberId, requestBody, () => {
-                    setIsPasswordEditModalOpen(false);
-                })}
-                ></PasswordEditModal> : <div />}
+                        setIsPasswordEditModalOpen(false);
+                    })}
+                />
+            )}
         </div>
     );
 }
+
 export default MyPage;
