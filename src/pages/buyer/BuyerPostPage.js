@@ -15,6 +15,7 @@ import { type } from "@testing-library/user-event/dist/type";
 import sendPostBuyersRequest from "../../requests/PostBuyersRequest";
 import Swal from "sweetalert2";
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import './BuyerPostPage.css';
 
 const BuyerPostPage = () => {
   const { state } = useAuth();

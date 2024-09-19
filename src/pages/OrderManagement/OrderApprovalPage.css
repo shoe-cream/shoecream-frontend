@@ -115,7 +115,7 @@ input[type="date"] {
 }
 
 input[type="date"]:focus {
-    border-color: #40A2E3;
+    border-color: #375d92;
     outline: none;
 }
 
@@ -146,6 +146,18 @@ select.search-list {
 }
 .input w-40 {
     width: 15px !important;
+}
+
+.body-d {
+    font-size: 12px !important;
+}
+
+.body-r {
+    font-size: 12px !important;
+}
+
+.table {
+    font-size: 12px !important;
 }
 
 

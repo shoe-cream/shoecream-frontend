@@ -58,7 +58,7 @@ const EditableTable = ({ columns, data }) => {
 
                 {/* Add a blank row at the bottom with a + button */}
                 <tr className="body-r">
-                    <td colSpan={columns.length} className="body-d" style={{ textAlign: 'center' }}>
+                    <td colSpan={columns.length} className="body-d" style={{ textAlign: 'left' }}>
                         <button onClick={addEmptyRow} className="add-row-button">+ 추가</button>
                     </td>
                 </tr>

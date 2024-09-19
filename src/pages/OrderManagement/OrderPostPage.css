@@ -4,7 +4,7 @@
   }
   
   .app-content-container {
-    animation: fadeIn 0.5s ease-in-out;
+    /* animation: fadeIn 0.5s ease-in-out; */
   }
 
 /* input 필드 스타일 통합 */
@@ -49,7 +49,7 @@
 }
 
 .load-btn:hover {
-    background-color: #0D9276; /* 짙은 녹색으로 호버 시 변경 */
+    background-color: #1f3750 !important; /* 짙은 녹색으로 호버 시 변경 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 추가 */
 }
 
@@ -94,17 +94,22 @@
 }
 
 .add-items-button {
-    margin-right: 3px; /* 버튼 간의 오른쪽 간격 */
+    display: flex;
+    gap: 3px;
+    font-size: 12px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    color: white !important;
     background-color: #2b538b;
 }
 
 .add-items-button:hover {
     transition: background-color 0.3s ease, box-shadow 0.3s ease !important; /* 전환 효과 추가 */
+    color: #1f3750 !important;
 }
 
 .search-button {
     background-color: #e7e7e7;
-
 }
 
 .modal-submit-btn {
@@ -119,9 +124,6 @@
     margin-right: 10PX !important;
 }
 
-.modal-footer {
-
-}
 @media (max-width: 768px) {
     .input-container {
       flex-direction: column !important;
