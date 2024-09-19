@@ -10,14 +10,15 @@ const sendGetReportsRequest = async (state, startDate, endDate, setReports, setI
                 'Authorization': state.token
             },
             params :{
+                topNumber : 5,
                 startDate : startDate,
                 endDate : endDate
             }
         });
 
         if (response.status === 200) {
-            console.log("sadasdasd",response.data);
-            setReports(response.data);
+            console.log("asdasdasdasd",response.data)
+;            setReports(response.data);
             setIsLoading(false);
         } else {
             console.log('Failed to fetch orders data:', response.status);

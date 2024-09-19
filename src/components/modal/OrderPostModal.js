@@ -5,15 +5,14 @@ import EditableTableWithCheckbox from '../../components/Table/EditableTableWithC
 import getBuyerJoinItemsRequest from '../../requests/GetBuyerJoinItems';
 import getItemRequest from '../../requests/GetItemRequest';
 import Swal from 'sweetalert2';
-import EditableTableWithCheckboxYoung from '../Table/EditableTableWithCheckboxYoung';
-import { type } from '@testing-library/user-event/dist/type';
 
 const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     const [buyerItems, setBuyerItems] = useState({ data: [] });
     const [isLoading, setIsLoading] = useState(true);
     const [checked, setChecked] = useState([]);
-    const [edited, setEdited] = useState([]);
+    const [edited, setEdited] = useState([]); // 이 상태는 수정된 데이터를 저장합니다.
     const [itemsDetails, setItemsDetails] = useState({});
+    const [originalData, setOriginalData] = useState([]); // 원본 데이터를 저장합니다.
     const [itemsWithDetails, setItemsWithDetails] = useState({ data: [] });
     const [page, setPage] = useState(1);
 
@@ -54,26 +53,57 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
 
     useEffect(() => {
         if (buyerItems.data.length > 0 && Object.keys(itemsDetails).length > 0) {
-            const combinedItems = buyerItems.data.map(item => ({
-                itemCd: item.itemCd,
-                itemNm: item.itemNm,
-                color: itemsDetails[item.itemCd]?.data.color || '',
-                size: itemsDetails[item.itemCd]?.data.size || '',
-                unitPrice: item.unitPrice,
-                unit: item.unit,
-                quantity: 0,
-                prepareOrder: itemsDetails[item.itemCd]?.data.prepareOrder,
-                totalStock: itemsDetails[item.itemCd]?.data.totalStock || '',
-                startDate: item.startDate,
-                endDate: item.endDate
-            }));
-            console.log("itemDetails", combinedItems)
-            setItemsWithDetails({ data: combinedItems });
+            const combinedItems = buyerItems.data.map(item => {
+                const originalItem = {
+                    itemCd: item.itemCd,
+                    itemNm: item.itemNm,
+                    color: itemsDetails[item.itemCd]?.data.color || '',
+                    size: itemsDetails[item.itemCd]?.data.size || '',
+                    unitPrice: item.unitPrice,
+                    unit: item.unit,
+                    quantity: 0,
+                    prepareOrder: itemsDetails[item.itemCd]?.data.prepareOrder,
+                    totalStock: itemsDetails[item.itemCd]?.data.totalStock || '',
+                    startDate: item.startDate,
+                    endDate: item.endDate,
+                    margin: 0 // 초기 마진을 0으로 설정
+                };
+                return originalItem;
+            });
+            if (originalData.length === 0) { // 원본 데이터가 비어 있을 때만 설정
+                setOriginalData(combinedItems); // 원본 데이터를 설정합니다.
+            }
+            setItemsWithDetails({ data: combinedItems }); // 데이터 테이블에 표시할 데이터를 설정합니다.
         }
     }, [buyerItems, itemsDetails]);
+    
+    useEffect(() => {
+        if (itemsWithDetails.data.length > 0 && originalData.length > 0) {
+            const updatedItems = itemsWithDetails.data.map(item => {
+                const originalItem = originalData.find(orig => orig.itemCd === item.itemCd);
+                if (originalItem) {
+                    const margin = originalItem.unitPrice > 0
+                        ? ((item.unitPrice - originalItem.unitPrice) / originalItem.unitPrice) * 100 // 마진율 계산
+                        : 0;
+                    const roundedMargin = Math.round(margin * 100) / 100;
+                    return {
+                        ...item,
+                        margin: roundedMargin // 마진계산
+                    };
+                }
+                return item;
+            });
+    
+            // 데이터가 실제로 변경되었을 때만 상태를 업데이트합니다.
+            if (JSON.stringify(updatedItems) !== JSON.stringify(itemsWithDetails.data)) {
+                setItemsWithDetails({ data: updatedItems });
+            }
+        }
+    }, [itemsWithDetails.data, originalData]);
+    
 
     const columnData = [
-        { Header: "제품코드", accessor: "itemCd", },
+        { Header: "제품코드", accessor: "itemCd" },
         { Header: "제품명", accessor: "itemNm" },
         { Header: "색상", accessor: "color" },
         { Header: "사이즈", accessor: "size" },
@@ -83,7 +113,8 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
         { Header: "발주 대기", accessor: "prepareOrder" },
         { Header: "재고량", accessor: "totalStock" },
         { Header: "시작일", accessor: "startDate", type: "date" },
-        { Header: "종료일", accessor: "endDate", type: "date" }
+        { Header: "종료일", accessor: "endDate", type: "date" },
+        { Header: "마진율 (%)", accessor: "margin" , }
     ];
 
     const handleSubmit = () => {
@@ -116,9 +147,8 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
         setOpened(false);
     };
 
-
     if (isLoading) {
-        return <div></div>;
+        return <div>Loading...</div>;
     }
 
     return (
@@ -126,7 +156,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
             <div className='modal-container'>
                 <EditableTableWithCheckbox
                     columns={columnData}
-                    ogData={itemsWithDetails}
+                    ogData={{ data: originalData }} // 원본 데이터를 설정합니다.
                     data={itemsWithDetails}
                     setData={setItemsWithDetails}
                     checked={checked}
