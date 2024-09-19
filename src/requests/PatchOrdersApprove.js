@@ -14,7 +14,7 @@ const sendPatchApproveRequest = async(state, requestBody, executeAfter) => {
             }
         );
         if(response.status === 200 || response.status === 201){
-            Swal.fire({text: '수정 완료', icon: 'success'});
+            Swal.fire({text: '승인 완료', icon: 'success'});
             console.log('성공', response);
             if(executeAfter !== undefined){
                 executeAfter();
