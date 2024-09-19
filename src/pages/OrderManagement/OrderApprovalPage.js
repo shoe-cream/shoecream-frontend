@@ -21,6 +21,7 @@ import * as XLSX from 'xlsx';
 import TableModal from '../../components/modal/TableModal';
 import sendGetSaleHistoryRequest from '../../requests/GetSaleHistoryRequest';
 import MessageModal from '../../components/modal/MessageModal';
+import Swal from 'sweetalert2';
 
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
@@ -176,6 +177,11 @@ const OrderApprovalPage = () => {
           // checkedItems에 해당하는 항목 필터링
           const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
     
+          if (ordersPatch.length === 0) {
+            Swal.fire({text: '수정된 항목이 없습니다'})
+            return;
+        }
+
           // 중복된 orderId를 제거한 배열 생성
           const uniqueItems = ordersPatch.reduce((acc, item) => {
               if (!acc.some(existingItem => existingItem.orderId === item.orderId)) {
