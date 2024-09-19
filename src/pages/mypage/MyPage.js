@@ -90,9 +90,22 @@ const MyPage = () => {
         "직책",
         "휴대전화",
         "전화번호",
-        "비고",
         "주소",
     ];
+
+    const getRole = (role) => {
+        if(role){
+            switch(role){
+                case 'ROLE_ADMIN':
+                    return '팀장';
+                case 'ROLE_USER':
+                    return '영업사원'
+                default:
+                    return '알 수 없음';
+            }
+        }
+        return '데이터 없음';
+    }
     return (
         <div>
             <Header />
@@ -124,7 +137,7 @@ const MyPage = () => {
                             (data) => setEmployeeInfo([
                                 data.employeeId || '데이터 없음', 
                                 data.name || '데이터 없음',
-                                data.roles[0] || '데이터 없음',
+                                getRole(data.roles[0]) || '데이터 없음',
                                 data.tel || '데이터 없음',
                                 '데이터 없음',
                                 data.address || '데이터 없음',

@@ -37,8 +37,8 @@ const LandingPage = () => {
     const [monthlyData, setMonthlyData] = useState([]);
 
     useEffect(() => {
-        sendGetReportsRequest(state, startDate, endDate, setReports, setIsLoading);
-        console.log(reports)
+        // BarChart와 PieChart를 위한 데이터 요청 (topNumber = 5)
+        sendGetReportsRequest(state, startDate, endDate, setReports, setIsLoading, 5);
     }, [state, startDate, endDate]);
 
     const handleStartDateChange = (e) => {

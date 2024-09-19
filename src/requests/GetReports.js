@@ -2,18 +2,24 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 
-const sendGetReportsRequest = async (state, startDate, endDate, setReports, setIsLoading) => {
+const sendGetReportsRequest = async (state, startDate, endDate, setReports, setIsLoading, topNumber = undefined) => {
     try {
+        const params = {
+            startDate: startDate,
+            endDate: endDate
+        };
+
+        // topNumber가 정의되어 있을 때만 params에 추가
+        if (topNumber !== undefined) {
+            params.topNumber = topNumber;
+        }
+
         const response = await axios.get(`http://localhost:8080/orders/reports`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token
             },
-            params :{
-                topNumber : 5,
-                startDate : startDate,
-                endDate : endDate
-            }
+            params: params
         });
 
         if (response.status === 200) {
