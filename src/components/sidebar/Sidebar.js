@@ -57,7 +57,7 @@ const Sidebar = () => {
                     title={'영업'} 
                     icon={renderIcon('영업')}
                     buttons={[
-                        {name: '주문', urlTo: '/order'},
+                        {name: '주문 등록', urlTo: '/order'},
                         {name: '주문 관리', urlTo: '/order-approval'}    
                     ]} 
                     expandedDropdown={expandedDropdown} 

@@ -125,3 +125,14 @@
     max-width: 60px !important;
     text-align: left !important;
   }
+
+  /* 수량과 제품단가 입력 필드 스타일 */
+    input[type="number"].cell-input {
+    width: 100% !important;
+    /* padding-right: 5px; */
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    background-color: #fff !important;
+    box-sizing: border-box !important;
+  }
+  
