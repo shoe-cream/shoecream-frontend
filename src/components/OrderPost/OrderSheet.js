@@ -82,6 +82,8 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
       }
     }, [initialValue, id]);
 
+    const minDate = id === 'requestDate' ? getCurrentDate() : undefined;
+
     return (
       <input
         className='cell-input'
@@ -89,6 +91,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        min={minDate}
       />
     );
   });
