@@ -15,7 +15,8 @@ const OrderDetail = () => {
     const [isSending, setIsSending] = useState(false); 
     const location = useLocation(); // navigate로부터 넘겨받은 state 접근
     const token = location.state?.token;
-
+    const [isLoading, setIsLoading] = useState(true);
+    
     // API 요청으로 주문 데이터 받아오기
     useEffect(() => {
         console.log('Token:', token); 
