@@ -5,14 +5,11 @@
 
 .sidebar {
     width: 198px;
-    height: 80vh;
-    min-height: 210vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-
 }
-
 
 .dropdown-title {
     display: flex;
@@ -27,10 +24,12 @@
 }
 
 .dropdown-title svg {
+    font-size: 15px;
     margin-right: 10px;
 }
 
 .dropdown-content {
+    font-size: 13px;
     padding-left: 20px;
 }
 
