@@ -57,7 +57,6 @@
     font-size: 13px;
     /* 제목창 */
     width: 100px !important; 
-    font-weight: bold;
     background-color: #2b538b; /* 원하는 배경색 */
     color: #FFFFFF; /* 글자 색상 */
     padding: 8px !important; /* 셀 내부 패딩 */

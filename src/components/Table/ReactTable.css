@@ -95,20 +95,7 @@
   td {
     text-overflow: ellipsis;
   }
-  
-  /* 특정 컬럼의 너비 조정 */
-  /* th:nth-child(2), td:nth-child(2) { width: 100px; }
-  th:nth-child(3), td:nth-child(3) { width: 150px; }
-  th:nth-child(4), td:nth-child(4) { width: 120px; }
-  th:nth-child(5), td:nth-child(5) { width: 130px; }
-  th:nth-child(6), td:nth-child(6) { width: 20%; }
-  th:nth-child(8), td:nth-child(8) { width: 90px; }
-  th:nth-child(9), td:nth-child(9) { width: 90px; }
-  th:nth-child(10), td:nth-child(10) { width: 90px !important; }
-  /* th:nth-child(11), td:nth-child(11) { width: 90px; } */ */
 
-
-  
   /* 필요한 경우 특정 컬럼의 줄바꿈 허용 */
   td:nth-child(3), td:nth-child(4) {
     white-space: normal;
@@ -132,7 +119,7 @@
   /* 수량과 제품단가 입력 필드 스타일 */
     input[type="number"].cell-input {
     font-family: 'Montserrat', sans-serif !important;    
-    font-weight: bold;
+
     font-size: 12px;
     width: 100% !important;
     /* padding-right: 5px; */
@@ -144,7 +131,6 @@
 
     input[type="text"].cell-input {
     font-family: 'Montserrat', sans-serif !important;
-    font-weight: bold !important;
     font-size: 12px !important;
     width: 100% !important;
     /* padding-right: 5px; */
