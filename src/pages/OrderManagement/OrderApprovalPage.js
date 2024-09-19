@@ -43,7 +43,7 @@ const OrderApprovalPage = () => {
     const [selectedOrders, setSelectedOrders] = useState([]);
     const navigate = useNavigate();
 
-    const [historyData, setHistoryData] = useState({ data: [{orderCd: 'Loading'}] });
+    const [historyData, setHistoryData] = useState({ data: [{ orderCd: 'Loading' }] });
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
@@ -77,8 +77,8 @@ const OrderApprovalPage = () => {
                 obj["itemCd"] = data[i].orderItems[j].itemCd;
                 obj["qty"] = data[i].orderItems[j].qty;
                 obj["unitPrice"] = data[i].orderItems[j].unitPrice;
-                obj["startDate"] = data[i].orderItems[j].startDate;
-                obj["endDate"] = data[i].orderItems[j].endDate;
+                obj["startDate"] = data[i].orderItems[j].startDate.split('T')[0];
+                obj["endDate"] = data[i].orderItems[j].endDate.split('T')[0];
                 result.push(obj);
             }
         }
@@ -120,17 +120,17 @@ const OrderApprovalPage = () => {
     }, [fetchOrders, status]);
 
 
-    const handleSearch = (params) => {
-        setSearchParams(params);
-        setPage(1);
-    };
+    // const handleSearch = (params) => {
+    //     setSearchParams(params);
+    //     setPage(1);
+    // };
 
     const handleApprove = () => {
         if (checkedItems.length === 0) {
             alert("승인할 항목을 선택해주세요.");
             return;
         }
-    
+
         let newStatus;
         switch (status) {
             case 'REQUEST_TEMP':
@@ -139,6 +139,12 @@ const OrderApprovalPage = () => {
             case 'PURCHASE_REQUEST':
                 newStatus = 'APPROVED';
                 break;
+            case 'APPROVED':
+                newStatus = 'SHIPPED';
+                break;
+            case 'SHIPPED':
+                newStatus = 'PRODUCT_PASS';
+                break;
             case 'REJECTED':
                 newStatus = 'CANCELLED';
                 break;
@@ -146,10 +152,10 @@ const OrderApprovalPage = () => {
                 alert("현재 상태에서는 승인 작업을 수행할 수 없습니다.");
                 return;
         }
-    
+
         // checkedItems에 해당하는 항목 필터링
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
-    
+
         // 중복된 orderId를 제거한 배열 생성
         const uniqueItems = ordersPatch.reduce((acc, item) => {
             if (!acc.some(existingItem => existingItem.orderId === item.orderId)) {
@@ -157,13 +163,47 @@ const OrderApprovalPage = () => {
             }
             return acc;
         }, []);
-    
+
         const itemsToSend = uniqueItems.map(item => ({
             orderId: item.orderId,
             requestDate: item.requestDate,
             orderStatus: newStatus
         }));
-    
+
+        sendPatchStatusRequest(state, itemsToSend, () => {
+            // 요청 성공 후 데이터 다시 가져오기
+            fetchOrders();
+            // 수정 상태 초기화
+            setCheckedItems([]);
+        });
+    };
+
+    const handleProductFail= () => {
+        if (checkedItems.length === 0) {
+            alert("승인할 항목을 선택해주세요.");
+            return;
+        }
+
+        let newStatus = 'PRODUCT_FAIL';
+        
+
+        // checkedItems에 해당하는 항목 필터링
+        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+
+        // 중복된 orderId를 제거한 배열 생성
+        const uniqueItems = ordersPatch.reduce((acc, item) => {
+            if (!acc.some(existingItem => existingItem.orderId === item.orderId)) {
+                acc.push(item);
+            }
+            return acc;
+        }, []);
+
+        const itemsToSend = uniqueItems.map(item => ({
+            orderId: item.orderId,
+            requestDate: item.requestDate,
+            orderStatus: newStatus
+        }));
+
         sendPatchStatusRequest(state, itemsToSend, () => {
             // 요청 성공 후 데이터 다시 가져오기
             fetchOrders();
@@ -174,34 +214,34 @@ const OrderApprovalPage = () => {
 
 
     const handleAdminPurchase = () => {
-          // checkedItems에 해당하는 항목 필터링
-          const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
-    
-          if (ordersPatch.length === 0) {
-            Swal.fire({text: '수정된 항목이 없습니다'})
+        // checkedItems에 해당하는 항목 필터링
+        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
+
+        if (ordersPatch.length === 0) {
+            Swal.fire({ text: '수정된 항목이 없습니다' })
             return;
         }
 
-          // 중복된 orderId를 제거한 배열 생성
-          const uniqueItems = ordersPatch.reduce((acc, item) => {
-              if (!acc.some(existingItem => existingItem.orderId === item.orderId)) {
-                  acc.push(item);
-              }
-              return acc;
-          }, []);
-      
-          const itemsToSend = uniqueItems.map(item => ({
-              orderId: item.orderId,
-              requestDate: item.requestDate,
-              orderStatus: 'PURCHASE_REQUEST'
-          }));
-      
-          sendPatchStatusRequest(state, itemsToSend, () => {
-              // 요청 성공 후 데이터 다시 가져오기
-              fetchOrders();
-              // 수정 상태 초기화
-              setCheckedItems([]);
-          });
+        // 중복된 orderId를 제거한 배열 생성
+        const uniqueItems = ordersPatch.reduce((acc, item) => {
+            if (!acc.some(existingItem => existingItem.orderId === item.orderId)) {
+                acc.push(item);
+            }
+            return acc;
+        }, []);
+
+        const itemsToSend = uniqueItems.map(item => ({
+            orderId: item.orderId,
+            requestDate: item.requestDate,
+            orderStatus: 'PURCHASE_REQUEST'
+        }));
+
+        sendPatchStatusRequest(state, itemsToSend, () => {
+            // 요청 성공 후 데이터 다시 가져오기
+            fetchOrders();
+            // 수정 상태 초기화
+            setCheckedItems([]);
+        });
     }
 
     const handleAdminApprove = () => {
@@ -223,7 +263,7 @@ const OrderApprovalPage = () => {
             console.log("수정된 항목이 없습니다.");
             return;
         }
-        
+
         setModalAction('reject');
         setIsMessageModalOpen(true);
     }
@@ -329,8 +369,11 @@ const OrderApprovalPage = () => {
             case 1: currentStatus = 'REQUEST_TEMP'; break;
             case 2: currentStatus = 'PURCHASE_REQUEST'; break;
             case 3: currentStatus = 'APPROVED'; break;
-            case 4: currentStatus = 'CANCELLED'; break;
-            case 5: currentStatus = 'REJECTED'; break;
+            case 4: currentStatus = 'SHIPPED'; break;
+            case 5: currentStatus = 'PRODUCT_PASS'; break;
+            case 6: currentStatus = 'CANCELLED'; break;
+            case 7: currentStatus = 'REJECTED'; break;
+            case 8: currentStatus = 'PRODUCT_FAIL'; break;
             default: currentStatus = null;
         }
         setStatus(currentStatus);
@@ -339,11 +382,34 @@ const OrderApprovalPage = () => {
 
     const handleStartDateChange = (e) => {
         setStartDate(e.target.value);
+        updateSearchParams('searchStartDate', e.target.value);
     };
 
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
+        updateSearchParams('searchEndDate', e.target.value);
     };
+
+    const updateSearchParams = useCallback((key, value) => {
+        setSearchParams(prevParams => ({
+            ...prevParams,
+            [key]: value
+        }));
+    }, []);
+
+    const handleSearch = useCallback((params) => {
+        setSearchParams(prevParams => ({
+            ...prevParams,
+            ...params,
+        }));
+        setPage(1);
+    }, []);
+
+    useEffect(() => {
+        if (Object.keys(searchParams).length > 0) {
+            fetchOrders();
+        }
+    }, [searchParams, page]);
 
     // 견적서 발행 함수
     const handleIssueQuotation = () => {
@@ -367,9 +433,10 @@ const OrderApprovalPage = () => {
         { Header: "제품 코드", accessor: "itemCd" },
         { Header: "수량", accessor: "qty", type: "number" },
         { Header: "제품 단가", accessor: "unitPrice", type: "number" },
-        { Header: "시작일", accessor: "startDate", type: "date" },
-        { Header: "만기일", accessor: "endDate", type: "date" },
+        { Header: "시작일", accessor: "startDate" },
+        { Header: "만기일", accessor: "endDate" },
     ], []);
+
     const historyColumns = [
         { accessor: 'orderCd', Header: '주문코드', },
         { accessor: 'orderStatus', Header: '주문 상태', },
@@ -411,12 +478,15 @@ const OrderApprovalPage = () => {
                                         <Tab>발주요청</Tab>
                                     )}
                                     <Tab>승인된 주문</Tab>
+                                    <Tab>출하 상태</Tab>
+                                    <Tab>합격 주문</Tab>
                                     <Tab>취소된 주문</Tab>
                                     <Tab>반려된 주문</Tab>
+                                    <Tab>불합격 주문</Tab>
                                 </TabList>
                             </div>
                             <div className='tab-content'>
-                                {[0, 1, 2, 3, 4, 5].map((tabIndex) => (
+                                {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((tabIndex) => (
                                     <TabPanel key={tabIndex}>
                                         <div className="search-container">
                                             <OrderDatepickerSelect
@@ -446,9 +516,11 @@ const OrderApprovalPage = () => {
                                             </div>
                                             <div className="action-buttons-container"></div>
                                             <div className="right-aligned-buttons">
-                                                <button className='btn btn-secondary' onClick={handlePatchOrder}>
-                                                    <Edit className="btn-icon" size={14} /> 수정
-                                                </button>
+                                                {tabIndex <= 2 || tabIndex === 7 && (
+                                                    <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                                                        <Edit className="btn-icon" size={14} /> 수정
+                                                    </button>
+                                                )}
                                                 {tabIndex === 1 && (
                                                     <button className='btn btn-secondary' onClick={handleIssueQuotation}>
                                                         <FileText className="btn-icon" size={14} /> 견적서 발행
@@ -469,12 +541,27 @@ const OrderApprovalPage = () => {
                                                         <Check className='"btn-icon' size={14} /> 주문 반려
                                                     </button>
                                                 )}
-                                                {tabIndex === 5 && member?.data?.roles?.includes('ROLE_ADMIN') && (
+                                                {tabIndex === 3 && (
+                                                    <button className='btn btn-secondary' onClick={handleApprove}>
+                                                        <Check className='"btn-icon' size={14} /> 주문 출하
+                                                    </button>
+                                                )}
+                                                {tabIndex === 4 && (
+                                                    <button className='btn btn-secondary' onClick={handleApprove}>
+                                                        <Check className='"btn-icon' size={14} /> 주문 합격
+                                                    </button>
+                                                )}
+                                                {tabIndex === 4  && (
+                                                    <button className='btn btn-secondary' onClick={handleProductFail}>
+                                                        <Check className='"btn-icon' size={14} /> 주문 불합격
+                                                    </button>
+                                                )}
+                                                {tabIndex === 7  && (
                                                     <button className='btn btn-secondary' onClick={handleApprove}>
                                                         <Check className='"btn-icon' size={14} /> 주문 취소
                                                     </button>
                                                 )}
-                                                {tabIndex === 5 && member?.data?.roles?.includes('ROLE_ADMIN') && (
+                                                {tabIndex === 7 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminPurchase}>
                                                         <Check className='"btn-icon' size={14} /> 주문 발주 재요청
                                                     </button>
@@ -536,6 +623,7 @@ const OrderApprovalPage = () => {
                         onClose={() => setIsMessageModalOpen(false)}
                         onSubmit={handleMessageSubmit}
                         title={modalAction === 'approve' ? '승인 메시지' : '반려 메시지'}
+                        type={modalAction === 'approve' ? 'approve' : 'reject'}
                     />
                 </div>
             </div>
