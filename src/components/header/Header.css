@@ -74,10 +74,11 @@
    width: 300px;
 }
 .header-suggestions {
+    font-size: 14px;
     position: absolute;
     top: 100%; 
     left: 0;
-    width: 100%;
+    width: 65%;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -102,14 +103,14 @@
     padding: 6px 10px; /* 패딩을 줄여서 크기 조정 */
     border: 1px solid #ccc; /* 기본 테두리 설정 */
     border-radius: 4px; /* 모서리 둥글게 처리 */
-    width: 100%; 
+    width: 60%; 
     font-size: 13px; 
     transition: width 0.3s ease; 
 }
 
-.header-search-input:focus {
+/* .header-search-input:focus {
     width: 150px; 
-}
+} */
 
 .header-search-button {
     font-size: 12px !important;
