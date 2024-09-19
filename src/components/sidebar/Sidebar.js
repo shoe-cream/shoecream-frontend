@@ -30,7 +30,7 @@ const Sidebar = () => {
                 {/* <div className="sidebar-logo">
                 <img src='/logo/logo-shoeCream.png' alt='Logo' className='login-logo' />                    
                 </div> */}
-                <Dropdown 
+                {/* <Dropdown 
                     title={'즐겨찾기'} 
                     icon={renderIcon('즐겨찾기')}
                     buttons={[
@@ -40,7 +40,7 @@ const Sidebar = () => {
                     ]} 
                     expandedDropdown={expandedDropdown} 
                     setExpandedDropdown={setExpandedDropdown} 
-                />
+                /> */}
                 
                 <Dropdown 
                     title={'마스터'} 
@@ -67,8 +67,8 @@ const Sidebar = () => {
                 {/* 리포트 카테고리 */}
                 <div className='리포트 카테고리'>
                     <Dropdown title={'리포트'} buttons={[
+                        {name: '매출 요약', urlTo: '/dashboard'}, 
                         {name: '판매 기록', urlTo: '/sales-history'},  
-                        /* {name: '재고 조회', urlTo: '/orders/inventories'}  */ 
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
                 </div>          
             </div>
