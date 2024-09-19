@@ -44,7 +44,11 @@ const OrderDetail = () => {
         return <div>로딩 중...</div>;
     }
 
-    const totalAmount = orderData.orderItems.reduce((total, item) => total + item.quantity * item.unitPrice, 0);
+    const totalAmount = orderData.orderItems.reduce((total, item) => {
+        const quantity = item.qty || 0; 
+        const unitPrice = item.unitPrice || 0; 
+        return total + quantity * unitPrice;
+    }, 0); 
     const tax = totalAmount * 0.1;
 
     const handleDownloadPDF = () => {
@@ -63,13 +67,13 @@ const OrderDetail = () => {
     const handleSendEmail = () => {
         setIsSending(true); 
         const element = document.getElementById('quotation-content');
-
+    
         html2pdf().from(element).toPdf().output('blob').then((pdf) => {
             const formData = new FormData();
             formData.append("email", email);
             formData.append("content", "Here is your attached file.");
             formData.append("file", pdf, "quotation.pdf");
-
+    
             fetch('http://localhost:8080/email/send', {
                 method: 'POST',
                 body: formData,
@@ -86,10 +90,25 @@ const OrderDetail = () => {
                 alert("메일 전송 중 오류가 발생했습니다.");
             })
             .finally(() => {
-                setIsSending(false); 
+                setIsSending(false);  
                 handleCloseModal();  
             });
         });
+    };
+
+   
+    const handlePrint = () => {
+        const printContent = document.getElementById('quotation-content').innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        
+        document.body.innerHTML = printContent;
+
+        
+        window.print();
+
+
+        document.body.innerHTML = originalContent;
     };
 
     return (
@@ -117,12 +136,12 @@ const OrderDetail = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orderData.orderItems.map(item => (
-                                    <tr key={item.orderItemCd}>
+                                {orderData.orderItems.map((item, index) => (
+                                    <tr key={item.orderItemCd || index}> 
                                         <td>{item.itemCd}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.unitPrice.toFixed(2)}</td>
-                                        <td>{(item.quantity * item.unitPrice).toFixed(2)}</td>
+                                        <td>{item.qty || 0}</td>
+                                        <td>{item.unitPrice ? item.unitPrice.toFixed(2) : '0.00'}</td>
+                                        <td>{(item.qty * item.unitPrice || 0).toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -136,12 +155,13 @@ const OrderDetail = () => {
                     </div>
                     <div className='button-container'>
                         <button onClick={handleDownloadPDF}>PDF 다운로드</button>
+                        <button onClick={handlePrint}>인쇄</button> 
                         <button onClick={handleOpenModal}>메일로 보내기</button>
                     </div>
                 </div>
             </div>
 
-            {/* 이메일 모달 */}
+        
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
