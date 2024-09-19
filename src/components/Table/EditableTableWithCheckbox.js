@@ -96,7 +96,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     if(column.type === undefined || column.type === 'cell'){
       return <span>{initialValue}</span>;
     }
-
+    const getCurrentDate = () => {
+      const now = new Date();
+      return now.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+    };
+    const minDate = getCurrentDate();
     return (
       <input
         ref={inputRef}
@@ -106,6 +110,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         onChange={onChange}
         onBlur={onBlur}
         style={id === 'qty' || id === '수량' ? { textAlign: 'right', paddingRight: '5px' } : {}}
+        min= {minDate}
       />
     );
   });
