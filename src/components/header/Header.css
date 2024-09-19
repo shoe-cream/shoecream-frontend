@@ -22,7 +22,8 @@
     display: flex;
     width: 140px !important;
     align-items: center;
-    margin-right: 8px;
+    /* margin-right: 10px; */
+    margin-left: 13px !important;
 
 }
 .header-welcome-text{
@@ -34,7 +35,7 @@
 .header-logout-icon {
     cursor: pointer;
     max-width: 30px;
-    width: 25px;
+    width: 30px;
     /* 필요하다면 여기에 색상 설정 추가 */
 }
 
