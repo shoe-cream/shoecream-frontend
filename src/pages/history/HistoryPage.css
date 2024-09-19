@@ -1,16 +1,17 @@
-.condition-container{
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: 50px;
-    display: flex;
-}
+
 .condition-search-box{
     display: flex;
     margin-left: 50px;
-    background-color: #769adc;
+    background-color: #2b538b;
     height: 22px;
     align-items: center;
     border-radius: 5px;
+}
+
+.date-range-picker-container {
+    height: 22px;
+    display: flex !important;
+    background-color: #2b538b !important;
 }
 .condition-search-label{
     font-size: 12px;
@@ -27,3 +28,66 @@
 .condition-search-button img{
     filter: invert(1) saturate(0) brightness(1000%);
 }
+
+.sales-history-header {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .condition-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-top: 20px;
+  }
+  
+  .date-range-picker-container {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0px 0px;
+  }
+  
+  .date-range-picker-label {
+    font-size: 14px;
+    margin-right: 10px;
+    color: #495057;
+  }
+  
+  .search-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    width: 200px;
+  }
+  
+  .search-button {
+    background-color: #2b538b;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .search-button:hover {
+    background-color: #1c3d6d;
+  }
+  
+  .app-label {
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 15px;
+  }
