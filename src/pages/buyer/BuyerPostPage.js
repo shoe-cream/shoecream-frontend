@@ -38,6 +38,32 @@ const BuyerPostPage = () => {
     {
       accessor: 'buyerNm',
       Header: '고객사 명',
+    },
+    {
+      accessor: 'email',
+      Header: '이메일',
+      type: 'text',
+    },
+    {
+      accessor: 'tel',
+      Header: '전화번호',
+      type: 'text',
+    },
+    {
+      accessor: 'address',
+      Header: '주소',
+      type: 'text',
+    },
+    {
+      accessor: 'businessType',
+      Header: '사업 분류',
+    },
+  ]
+
+  const columnPostData = [
+    {
+      accessor: 'buyerNm',
+      Header: '고객사 명',
     
     },
     {
@@ -62,6 +88,7 @@ const BuyerPostPage = () => {
       options: ['개인', '기업'],
     },
   ]
+  
   const resetData = (value) => {
     console.log('reset data: ', value);
     setData(value);
@@ -189,7 +216,7 @@ const BuyerPostPage = () => {
             {isPostMode ? <PostModal
               state={state}
               setOpened={setIsPostMode}
-              columnData={columnData}
+              columnData={columnPostData}
               postRequest={(checkedData, setOpened, setParentData) => {
                 sendPostBuyersRequest(state, checkedData, () => {
                   setChecked([]);
