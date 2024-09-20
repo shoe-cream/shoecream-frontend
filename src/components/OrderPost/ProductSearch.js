@@ -6,6 +6,7 @@ import getBuyerWithItemsRequest from '../../requests/GetBuyerItems';
 import getItemRequest from '../../requests/GetItemRequest';
 import OrderPostModal from '../modal/OrderPostModal';
 import Swal from 'sweetalert2';
+import '../OrderPost/ProductSearch.css' ;
 
 const ProductSearch = ({ onAddOrder }) => {
     const [searchParams, setSearchParams] = useState({
@@ -130,7 +131,7 @@ const SearchBox = ({ label, id, value, onChange, onSearch }) => (
                 onChange={onChange}
             />
             <button className="search-button" onClick={onSearch}>
-                <Search size={16} color="#ffffff" />
+                <Search size={14} color="#ffffff"/>
             </button>
         </div>
     </div>

@@ -1,14 +1,15 @@
-import { useState, useCallback } from "react";
-import './SearchInput.css';
+import { useState } from "react";
+import { Search } from 'lucide-react';
+import './SearchWindow2.css';
 
-const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: externalValue }) => {
-    const [searchTerm, setSearchTerm] = useState(externalValue || '');
+const SearchWindow = ({ placeholder, suggestions }) => {
+    const [searchTerm, setSearchTerm] = useState('');
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestion, setActiveSuggestion] = useState(-1);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     // 검색창 입력 처리 및 자동완성 필터링
-    const handleSearchChange = useCallback((e) => {
+    const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
 
@@ -18,10 +19,7 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
         setFilteredSuggestions(filtered);
         setActiveSuggestion(-1);
         setShowSuggestions(true);
-
-        // 부모 컴포넌트의 onChange 호출
-        onChange(e);
-    }, [suggestions, onChange]);
+    };
 
     // 방향키 및 엔터 처리
     const handleKeyDown = (e) => {
@@ -31,7 +29,6 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
                 const newIndex = activeSuggestion + 1;
                 setActiveSuggestion(newIndex);
                 setSearchTerm(filteredSuggestions[newIndex].key);
-                onChange({ target: { value: filteredSuggestions[newIndex].key } });
             }
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
@@ -39,7 +36,6 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
                 const newIndex = activeSuggestion - 1;
                 setActiveSuggestion(newIndex);
                 setSearchTerm(filteredSuggestions[newIndex].key);
-                onChange({ target: { value: filteredSuggestions[newIndex].key } });
             }
         } else if (e.key === "Enter") {
             e.preventDefault();
@@ -50,7 +46,7 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
                 if (matchedSuggestion) {
                     handleSearchSubmit(matchedSuggestion);
                 } else {
-                    console.log('검색 결과가 없습니다.');
+                    alert('검색 결과가 없습니다.');
                 }
             }
         }
@@ -58,7 +54,7 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
 
     // 검색 실행
     const handleSearchSubmit = (suggestion) => {
-        setShowSuggestions(false);
+        setShowSuggestions(false); // 추천 리스트만 닫음
         if (suggestion && suggestion.onSearch) {
             suggestion.onSearch();
         }
@@ -67,33 +63,26 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
     // 추천 항목 클릭 시 검색 실행
     const handleSuggestionClick = (suggestion) => {
         setSearchTerm(suggestion.key);
-        setShowSuggestions(false);
-        handleSearchSubmit(suggestion);
-        onChange({ target: { value: suggestion.key } });
+        setShowSuggestions(false); // 추천 리스트만 닫음
     };
 
-    // onBlur 핸들러
-    const handleBlur = useCallback(() => {
-        setTimeout(() => {
-            setShowSuggestions(false);
-        }, 200);
-      
-    }, []);
-
     return (
-        <div className="header-search-form">
+        <form onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(suggestions.find(s => s.key.toLowerCase() === searchTerm.toLowerCase())); }} className="header-search-form">
             <input
                 type="text"
                 placeholder={placeholder}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 onKeyDown={handleKeyDown}
-                className="header-search-input"
+                className="header-search-input2"
                 autoComplete="off"
             />
+            <button type="submit" className="header-search-button2">
+                <Search size={15} />
+            </button>
 
             {showSuggestions && searchTerm && filteredSuggestions.length > 0 && (
-                <ul className="header-suggestions">
+                <ul className="header-suggestions2">
                     {filteredSuggestions.map((suggestion, index) => (
                         <li
                             key={index}
@@ -105,8 +94,8 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
                     ))}
                 </ul>
             )}
-        </div>
+        </form>
     );
-}
+};
 
-export default SearchInput;
+export default SearchWindow;

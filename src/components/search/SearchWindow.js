@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search } from 'lucide-react';
+import './SearchWindow.css';
 
 const SearchWindow = ({ placeholder, suggestions }) => {
     const [searchTerm, setSearchTerm] = useState('');

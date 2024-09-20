@@ -4,7 +4,7 @@
   
   table {
     width: 100%;
-    margin: 20px auto 50px;
+    margin: px auto px;
     border-collapse: collapse;
     background-color: white;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
@@ -71,7 +71,8 @@
     border: none;
     background-color: transparent;
     word-wrap: break-word;
-    white-space: normal;
+    white-space: nowrap;
+    max-width: 150px
   }
   
   th:first-child,
