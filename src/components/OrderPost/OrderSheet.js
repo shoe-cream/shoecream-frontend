@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import '../Table/ReactTable.css';
+import OrderItemsModal from '../modal/OrderItemModal';
 
 const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   const [tableData, setTableData] = useState(data.data);
+  const [selectedItems, setSelectedItems] = useState([]); // 선택된 아이템 저장
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
 
   useEffect(() => {
     setTableData(data.data);
@@ -57,22 +60,22 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
     />
   );
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id } }) => {
+  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id }, row }) => {
     const [value, setValue] = React.useState(() => {
       if (id === 'requestDate' && !initialValue) {
         return getCurrentDate();
       }
       return initialValue;
     });
-
+  
     const onChange = (e) => {
       setValue(e.target.value);
     };
-
+  
     const onBlur = () => {
       updateData(index, id, value);
     };
-
+  
     const updateData = (index, id, value) => {
       const newData = [...data.data];
       newData[index] = {
@@ -81,15 +84,21 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
       };
       setData({ ...data, data: newData });
     };
-
+  
     React.useEffect(() => {
       if (id === 'requestDate' && !initialValue) {
         updateData(index, id, getCurrentDate());
       }
     }, []);
-
+  
+    // 현재 행의 orderItems에서 가장 빠른 endDate를 구함
+    const minEndDate = row.original.orderItems.reduce((earliest, item) => {
+      return item.endDate < earliest ? item.endDate : earliest;
+    }, row.original.orderItems[0]?.endDate || getCurrentDate());
+  
+    // 현재 날짜 기준으로 최소값 설정
     const minDate = id === 'requestDate' ? getCurrentDate() : undefined;
-
+  
     return (
       <input
         className='cell-input'
@@ -98,31 +107,34 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
         onChange={onChange}
         onBlur={onBlur}
         min={minDate}
+        max={minEndDate}  // 가장 빠른 endDate로 최대값 설정
       />
     );
   });
 
   const ItemsCell = ({ items }) => (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div>
       {items.map((item, index) => (
-        <div key={index} style={{ width: '33%', boxSizing: 'border-box', padding: '2px' }}>
+        <div key={index} style={{ fontSize: '15px' }}>
           {item.itemNm} ({item.qty} {item.unit}) {item.endDate}
         </div>
       ))}
     </div>
   );
-
+ 
   const ItemsCell2 = ({ items }) => (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {items.map((item, index) => (
-        <div key={index} style={{ width: '33%', boxSizing: 'border-box', padding: '2px' }}>
-          {item. contractPeriod}
-        </div>
-      ))}
+    <div>
+      <button
+        onClick={() => {
+          setSelectedItems(items); // 클릭한 아이템을 저장
+          setIsModalOpen(true); // 모달 열기
+        }}
+      >
+        아이템 보기
+      </button>
     </div>
   );
 
- 
   const columns = React.useMemo(() => [
     {
       id: 'selection',
@@ -162,7 +174,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
     {
       Header: '주문 아이템',
       accessor: 'orderItems',
-      Cell: ({ value }) => <ItemsCell items={value} />
+      Cell: ({ value }) => <ItemsCell2 items={value} />
     }
   ], [tableData, checked, setChecked]);
 
@@ -195,29 +207,38 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
   };
 
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr className={getRowClassName(row)} {...row.getRowProps()}>
-              {row.cells.map(cell => (
-                <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
+    <>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th className='header-h' {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr className='body-r' {...row.getRowProps()}>
+                {row.cells.map(cell => (
+                  <td className='body-d' {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {/* 모달 컴포넌트 */}
+      <OrderItemsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        items={selectedItems}
+      />
+    </>
   );
 };
 
