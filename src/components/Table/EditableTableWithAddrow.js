@@ -164,8 +164,8 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
           placeholder={placeholder || '검색어를 입력하세요'}
           suggestions={suggestions}
           onChange={onChange}
-          searchInput={searchInputs[masterDataIndex]}
-          setSearchInput={(value) => {
+          searchInputs={searchInputs[masterDataIndex]}
+          setSearchInputs={(value) => {
             const newInputs = searchInputs.map((input, index) => index === masterDataIndex ? value : input);
             setSearchInputs(newInputs)}}
         />
