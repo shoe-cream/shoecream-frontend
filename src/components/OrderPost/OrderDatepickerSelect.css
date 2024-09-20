@@ -1,9 +1,8 @@
 .order-search-list {
     display: flex;
-    height: 35px;
+    height: 34px;
 }
 
 .search-list {
-    font-weight: bold;
     font-size: 13px;
 }

@@ -12,7 +12,7 @@ import EditableTableWithCheckbox from '../../components/Table/EditableTableWithC
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import sendPatchMultiItemRequest from '../../requests/PatchOrders';
 import sendPatchStatusRequest from '../../requests/PatchOrdersStatus';
-import { FileDown, Printer, FileText, Edit, Check } from 'lucide-react';
+import { FileDown, Printer, FileText, Edit, Check, XCircle, RotateCcw } from 'lucide-react';
 import sendGetMyInfoRequest from '../../requests/GetMyInfoRequest';
 import sendPatchApproveRequest from '../../requests/PatchOrdersApprove';
 import sendPatchRejectRequest from '../../requests/PatchOrdersReject';
@@ -501,8 +501,24 @@ const OrderApprovalPage = () => {
                             </div>
                             <div className='tab-content'>
                                 {[0, 1, 2, 3, 4].map((tabIndex) => (
-                                    <TabPanel key={tabIndex}>
-                                        <div className="search-container">
+                                    <TabPanel key={tabIndex}>                                        
+                                        <div className="search-container"> 
+                                        <div className='rejectOption' style={{ margin: 0, padding: 0 }}>
+                                            {tabIndex === 4 && (
+                                                <>
+                                                    <select
+                                                        className="form-select"
+                                                        value={rejectedOrderType}
+                                                        onChange={handleRejectedOrderTypeChange}
+                                                        style={{ marginLeft: 0 }} // 필요하다면 왼쪽 마진도 제거
+                                                    >
+                                                        <option value="REJECTED">반려 주문</option>
+                                                        <option value="CANCELLED">취소된 주문</option>
+                                                        <option value="PRODUCT_FAIL">불합격 주문</option>
+                                                    </select>
+                                                </>
+                                                )}
+                                            </div>                                   
                                             <OrderDatepickerSelect
                                                 handleSearch={handleSearch}
                                                 startDate={startDate}
@@ -510,6 +526,19 @@ const OrderApprovalPage = () => {
                                                 setStartDate={setStartDate}
                                                 setEndDate={setEndDate}
                                             />
+                                             <div className="button-group">
+                                                {tabIndex === 1 && (
+                                                    <button className='btn btn-third' onClick={handleIssueQuotation}>
+                                                        <FileText className="btn-icon" size={14} /> 견적서 발행
+                                                    </button>
+                                                )}
+                                                <button className='btn btn-third' onClick={handlePrint}>
+                                                    <Printer className="btn-icon" size={14} /> 인쇄
+                                                </button>
+                                                <button className='btn btn-third' onClick={handleExportToExcel}>
+                                                    <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
+                                                </button>
+                                            </div>
                                         </div>
                                         <div className="date-range-container">
                                             <div className="date-range-inputs">
@@ -528,7 +557,7 @@ const OrderApprovalPage = () => {
                                                     onChange={handleEndDateChange}
                                                 />
                                             </div>
-                                            <div className='rejectOption'>
+                                            {/* <div className='rejectOption'>
                                             {tabIndex === 4 && (
                                                     <>
                                                         <select
@@ -542,7 +571,7 @@ const OrderApprovalPage = () => {
                                                         </select>
                                                     </>
                                                 )}
-                                            </div>
+                                            </div> */}
                                             <div className="action-buttons-container"></div>
                                             <div className="right-aligned-buttons">
                                                 {tabIndex <= 1 && (
@@ -550,11 +579,7 @@ const OrderApprovalPage = () => {
                                                         <Edit className="btn-icon" size={14} /> 수정
                                                     </button>
                                                 )}
-                                                {tabIndex === 1 && (
-                                                    <button className='btn btn-secondary' onClick={handleIssueQuotation}>
-                                                        <FileText className="btn-icon" size={14} /> 견적서 발행
-                                                    </button>
-                                                )}
+                                    
 
                                                 {tabIndex === 1 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminApprove}>
@@ -563,7 +588,7 @@ const OrderApprovalPage = () => {
                                                 )}
                                                 {tabIndex === 1 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminReject}>
-                                                        <Check className='"btn-icon' size={14} /> 주문 반려
+                                                        <RotateCcw className='"btn-icon' size={14} /> 주문 반려
                                                     </button>
                                                 )}
                                                 {tabIndex === 2 && (
@@ -573,7 +598,7 @@ const OrderApprovalPage = () => {
                                                 )}
                                                 {tabIndex === 2 && (
                                                     <button className='btn btn-secondary' onClick={handleProductFail}>
-                                                        <Check className='"btn-icon' size={14} /> 주문 불합격
+                                                        <XCircle className='"btn-icon' size={14} /> 주문 불합격
                                                     </button>
                                                 )}
                                                 {tabIndex === 4 && rejectedOrderType === 'REJECTED' && member?.data?.roles?.includes('ROLE_ADMIN') && (
@@ -590,13 +615,7 @@ const OrderApprovalPage = () => {
                                                     <button className='btn btn-secondary' onClick={handlePatchOrder}>
                                                         <Edit className="btn-icon" size={14} /> 수정
                                                     </button>
-                                                )}
-                                                <button className='btn btn-secondary' onClick={handleExportToExcel}>
-                                                    <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
-                                                </button>
-                                                <button className='btn btn-secondary' onClick={handlePrint}>
-                                                    <Printer className="btn-icon" size={14} /> 인쇄
-                                                </button>
+                                                )}                                                                                                
                                             </div>
                                         </div>
 
