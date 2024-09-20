@@ -46,11 +46,11 @@ const sendPatchStatusRequest = async (state, requestBody, executeAfter) => {
             }
         } else {
             console.log('주문 상태 변경 실패: ', response.status);
-            Swal.fire({text: `요청 실패(${response.status})`, icon: 'error'});
+            Swal.fire({text: `주문 요청이 불가합니다. 선택을 다시 해주세요`, icon: 'error'});
         }
     } catch (error) {
         console.error('주문 상태 변경 실패(에러 발생): ', error);
-        Swal.fire({text: `요청 실패(${error.response?.status || 'Unknown'})`, icon: 'error'});
+        Swal.fire({text: `주문 요청이 불가합니다. 선택을 다시 해주세요`, icon: 'error'});
     }
 }
 

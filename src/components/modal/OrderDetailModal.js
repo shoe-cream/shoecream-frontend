@@ -117,7 +117,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
         ];
 
         // 조건부로 컬럼 추가
-        if (status === 'REQUEST_TEMP') {
+        if (status === 'REQUEST_TEMP' || status === 'REJECTED') {
             commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
             commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
         } else {
@@ -144,7 +144,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
                 // onCheckboxChange={handleCheckboxChange}
                 // onRowClick={handleRowClick}
                 />
-                { status === 'REQUEST_TEMP' ? 
+                { status === 'REQUEST_TEMP' || status === 'REJECTED'? 
                 <button onClick={handlePatchOrder}>수정</button>
                 : <div></div>
                 }

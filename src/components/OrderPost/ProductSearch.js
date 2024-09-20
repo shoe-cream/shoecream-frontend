@@ -13,6 +13,7 @@ const ProductSearch = ({ onAddOrder }) => {
         buyerCd: '',
         buyerNm: '',
         tel: '',
+        orderDate : ''
     });
     const [buyers, setBuyers] = useState({ data: {} });
     const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +69,7 @@ const ProductSearch = ({ onAddOrder }) => {
             buyerCd: searchParams.buyerCd,
             buyerNm: buyers.data.buyerNm,
             tel: buyers.data.tel,
-            registrationDate: new Date().toISOString().split('T')[0],
+            registrationDate: searchParams.orderDate, // 변경된 부분
             items: items.map(item => ({
                 itemCd: item.itemCd,
                 itemNm: item.itemNm,
@@ -99,6 +100,12 @@ const ProductSearch = ({ onAddOrder }) => {
                 />
                 <ReadOnlyInput label="고객사" id="buyerNm" value={buyers.data.buyerNm} />
                 <ReadOnlyInput label="고객사 연락처" id="tel" value={buyers.data.tel} />
+                <DateInput
+                    label="주문 날짜"
+                    id="orderDate"
+                    value={searchParams.orderDate}
+                    onChange={handleChange}
+                />
             </div>
 
             <div className='button-container'>
@@ -113,6 +120,7 @@ const ProductSearch = ({ onAddOrder }) => {
                     setOpened={setIsModalOpen}
                     buyerCd={searchParams.buyerCd}
                     onItemsSelected={handleItemsSelected}
+                    orderDate = {searchParams.orderDate}
                 />
             )}
         </div>
@@ -141,6 +149,20 @@ const ReadOnlyInput = ({ label, id, value }) => (
     <div className="search-box">
         <span className="search-label">{label}</span>
         <input type='text' id={id} className='orderPostInput' value={value} readOnly />
+    </div>
+);
+
+const DateInput = ({ label, id, value, onChange }) => (
+    <div className="search-box">
+        <span className="search-label">{label}</span>
+        <input
+            type='date'
+            id={id}
+            className='orderPostInput'
+            value={value}
+            onChange={onChange}
+            defaultValue={new Date()}
+        />
     </div>
 );
 

@@ -164,7 +164,13 @@ const OrderApprovalPage = () => {
 
     const handleApprove = () => {
         if (checkedItems.length === 0) {
-            alert("승인할 항목을 선택해주세요.");
+            Swal.fire({
+                title: '알림',
+                text: '수정할 항목이 없습니다.',
+                icon: 'info',
+                confirmButtonText: '확인'
+            });
+            return;
             return;
         }
         
@@ -180,7 +186,7 @@ const OrderApprovalPage = () => {
                 newStatus = 'CANCELLED';
                 break;
             default:
-                alert("현재 상태에서는 승인 작업을 수행할 수 없습니다.");
+                Swal.fire({text: `현재 상태에서는 승인 작업을 수행할 수 없습니다.`});
                 return;
         }
 
@@ -211,7 +217,13 @@ const OrderApprovalPage = () => {
 
     const handleProductFail = () => {
         if (checkedItems.length === 0) {
-            alert("승인할 항목을 선택해주세요.");
+            Swal.fire({
+                title: '알림',
+                text: '수정할 항목이 없습니다.',
+                icon: 'info',
+                confirmButtonText: '확인'
+            });
+            return;
             return;
         }
 
@@ -249,7 +261,13 @@ const OrderApprovalPage = () => {
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
 
         if (ordersPatch.length === 0) {
-            Swal.fire({ text: '수정된 항목이 없습니다' })
+            Swal.fire({
+                title: '알림',
+                text: '수정할 항목이 없습니다.',
+                icon: 'info',
+                confirmButtonText: '확인'
+            });
+            return;
             return;
         }
 
@@ -279,12 +297,19 @@ const OrderApprovalPage = () => {
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
 
         if (ordersPatch.length === 0) {
-            console.log("수정된 항목이 없습니다.");
+            Swal.fire({
+                title: '알림',
+                text: '수정할 항목이 없습니다.',
+                icon: 'info',
+                confirmButtonText: '확인'
+            });
+            return;
             return;
         }
+
         Swal.fire({
             title: '납기일을 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
-            text: '다시 되돌릴 수 없습니다..',
+            text: '다시 되돌릴 수 없습니다.',
             icon: 'warning',
             
             showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
@@ -313,7 +338,13 @@ const OrderApprovalPage = () => {
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
 
         if (ordersPatch.length === 0) {
-            console.log("수정된 항목이 없습니다.");
+            Swal.fire({
+                title: '알림',
+                text: '수정할 항목이 없습니다.',
+                icon: 'info',
+                confirmButtonText: '확인'
+            });
+            return;
             return;
         }
 
@@ -387,7 +418,13 @@ const OrderApprovalPage = () => {
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
 
         if (ordersPatch.length === 0) {
-            console.log("수정된 항목이 없습니다.");
+            Swal.fire({
+                title: '알림',
+                text: '수정할 항목이 없습니다.',
+                icon: 'info',
+                confirmButtonText: '확인'
+            });
+            return;
             return;
         }
 
@@ -506,7 +543,7 @@ const OrderApprovalPage = () => {
         ];
 
         // // 조건부로 컬럼 추가
-        if (status === 'REQUEST_TEMP') {
+        if (status === 'REQUEST_TEMP' || status === 'REJECTED') {
             commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate", type: "date" });
         //     // commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
         //     // commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
@@ -610,6 +647,7 @@ const OrderApprovalPage = () => {
                                                     className="input w-40"
                                                     value={startDate}
                                                     onChange={handleStartDateChange}
+                                                    max={endDate}
                                                 />
                                                 <span>~</span>
                                                 <input
@@ -617,6 +655,7 @@ const OrderApprovalPage = () => {
                                                     className="input w-40"
                                                     value={endDate}
                                                     onChange={handleEndDateChange}
+                                                    min={startDate}
                                                 />
                                             </div>
                                             {/* <div className='rejectOption'>
