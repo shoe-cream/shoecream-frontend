@@ -51,6 +51,7 @@ const PostModal = ({ setOpened, columnData, postRequest, sortBy, setParentData, 
                         }
                         for (let i = 0; i < checked.length; i++) {
                             const indivisualData = data[checked.sort()[i]];
+                            console.log('indivisualData: ', indivisualData);
                             const validatedData = isDataValid(indivisualData);
                             if (validatedData !== undefined) {
                                 checkedData.push(validatedData);
