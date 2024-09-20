@@ -10,6 +10,9 @@ const SearchWindow = ({ placeholder, suggestions }) => {
 
     // 검색창 입력 처리 및 자동완성 필터링
     const handleSearchChange = (e) => {
+
+        console.log('suggestions: ', suggestions);
+        
         const value = e.target.value;
         setSearchTerm(value);
 
