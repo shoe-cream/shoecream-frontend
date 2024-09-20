@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import '../Table/ReactTable.css';
-import OrderItemsModal from '../modal/OrderItemModal';
+import OrderItemsModal from '../modal/OrderItemsModal';
 
 const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdited }) => {
   const [tableData, setTableData] = useState(data.data);

@@ -22,6 +22,7 @@ import TableModal from '../../components/modal/TableModal';
 import sendGetSaleHistoryRequest from '../../requests/GetSaleHistoryRequest';
 import MessageModal from '../../components/modal/MessageModal';
 import Swal from 'sweetalert2';
+import OrderDetailModal from '../../components/modal/OrderDetailModal';
 
 
 const OrderApprovalPage = () => {
@@ -50,6 +51,9 @@ const OrderApprovalPage = () => {
     const [modalAction, setModalAction] = useState(null);
     const [rejectedOrderType, setRejectedOrderType] = useState('REJECTED');
 
+    const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [detailOrder, setDetailOrder] = useState({});
+
 
     useEffect(() => {
         sendGetMyInfoRequest(state, setMember, setIsLoading);
@@ -58,39 +62,69 @@ const OrderApprovalPage = () => {
         }, 100);
     }, []);
 
-    const transOrderData = ({ data }) => {
+    // const transOrderData = ({ data }) => {
+    //     if (!Array.isArray(data)) {
+    //         return []; // data가 배열이 아니면 빈 배열 반환
+    //     }
+    //     let result = [];
+    //     for (let i = 0; i < data.length; i++) {
+    //         for (let j = 0; j < data[i].orderItems.length; j++) {
+    //             let obj = {};
+    //             obj["employeeId"] = data[i].employeeId;
+    //             obj["orderId"] = data[i].orderId;
+    //             obj["orderCd"] = data[i].orderCd;
+    //             obj["status"] = data[i].status;
+    //             obj["createdAt"] = data[i].createdAt;
+    //             obj["requestDate"] = data[i].requestDate;
+    //             // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
+    //             obj["createdAtV2"] = data[i].createdAt.split('T')[0];
+    //             obj["requestDateV2"] = data[i].requestDate.split('T')[0];
+    //             obj["buyerNm"] = data[i].buyerNm;
+    //             obj["buyerCd"] = data[i].buyerCd;
+    //             obj["itemId"] = data[i].orderItems[j].orderItemId;
+    //             obj["itemCd"] = data[i].orderItems[j].itemCd;
+    //             obj["itemNm"] = data[i].orderItems[j].itemNm;
+    //             obj["qty"] = data[i].orderItems[j].qty;
+    //             obj["unitPrice"] = data[i].orderItems[j].unitPrice;
+    //             obj["startDate"] = data[i].orderItems[j].startDate;
+    //             obj["endDate"] = data[i].orderItems[j].endDate;
+    //             // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
+    //             obj["startDateV2"] = data[i].orderItems[j].startDate.split('T')[0];
+    //             obj["endDateV2"] = data[i].orderItems[j].endDate.split('T')[0];
+    //             result.push(obj);
+    //         }
+    //     }
+    //     console.log("result", result)
+    //     return result;
+    // };
+
+    const transOrderDataV2 = ({ data }) => {
         if (!Array.isArray(data)) {
             return []; // data가 배열이 아니면 빈 배열 반환
         }
         let result = [];
         for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < data[i].orderItems.length; j++) {
-                let obj = {};
-                obj["employeeId"] = data[i].employeeId;
-                obj["orderId"] = data[i].orderId;
-                obj["orderCd"] = data[i].orderCd;
-                obj["status"] = data[i].status;
-                obj["createdAt"] = data[i].createdAt;
-                obj["requestDate"] = data[i].requestDate;
-                // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
-                obj["createdAtV2"] = data[i].createdAt.split('T')[0];
-                obj["requestDateV2"] = data[i].requestDate.split('T')[0];
-                obj["buyerNm"] = data[i].buyerNm;
-                obj["buyerCd"] = data[i].buyerCd;
-                obj["itemId"] = data[i].orderItems[j].orderItemId;
-                obj["itemCd"] = data[i].orderItems[j].itemCd;
-                obj["qty"] = data[i].orderItems[j].qty;
-                obj["unitPrice"] = data[i].orderItems[j].unitPrice;
-                obj["startDate"] = data[i].orderItems[j].startDate;
-                obj["endDate"] = data[i].orderItems[j].endDate;
-                // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
-                obj["startDateV2"] =data[i].orderItems[j].startDate.split('T')[0];
-                obj["endDate2"] = data[i].orderItems[j].endDate.split('T')[0];
-                result.push(obj);
-            }
+
+            let obj = {};
+            obj["employeeId"] = data[i].employeeId;
+            obj["orderId"] = data[i].orderId;
+            obj["orderCd"] = data[i].orderCd;
+            obj["status"] = data[i].status;
+            obj["createdAt"] = data[i].createdAt;
+            obj["requestDate"] = data[i].requestDate;
+            // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
+            obj["createdAtV2"] = data[i].createdAt.split('T')[0];
+            obj["requestDateV2"] = data[i].requestDate.split('T')[0];
+            obj["buyerNm"] = data[i].buyerNm;
+            obj["buyerCd"] = data[i].buyerCd;
+            obj["orderItems"] = data[i].orderItems;
+            result.push(obj);
+
         }
+        console.log("result", result)
         return result;
     };
+
     const handleCheckboxChange = (order) => {
         setSelectedOrders(prevSelectedOrders => {
             const exists = prevSelectedOrders.find(o => o.orderCd === order.orderCd);
@@ -111,7 +145,7 @@ const OrderApprovalPage = () => {
             10,
             (data) => {
                 setOrders(data);
-                const transformed = transOrderData(data);
+                const transformed = transOrderDataV2(data);
                 setOriginalData({ data: transformed });
                 setModifiedData({ data: transformed });
                 setIsLoading(false);
@@ -126,17 +160,14 @@ const OrderApprovalPage = () => {
     }, [fetchOrders, status]);
 
 
-    // const handleSearch = (params) => {
-    //     setSearchParams(params);
-    //     setPage(1);
-    // };
+
 
     const handleApprove = () => {
         if (checkedItems.length === 0) {
             alert("승인할 항목을 선택해주세요.");
             return;
         }
-
+        
         let newStatus;
         switch (status) {
             case 'REQUEST_TEMP':
@@ -251,9 +282,31 @@ const OrderApprovalPage = () => {
             console.log("수정된 항목이 없습니다.");
             return;
         }
-
-        setModalAction('approve');
-        setIsMessageModalOpen(true);
+        Swal.fire({
+            title: '납기일을 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
+            text: '다시 되돌릴 수 없습니다..',
+            icon: 'warning',
+            
+            showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+            confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+            cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+            confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+            cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+            
+            reverseButtons: true, // 버튼 순서 거꾸로
+            
+         }).then(result => {
+            // 만약 Promise리턴을 받으면,
+            if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+                setModalAction('approve');
+                setIsMessageModalOpen(true);
+            }else {
+                return;
+            }
+         });
+    
+        // setModalAction('approve');
+        // setIsMessageModalOpen(true);
     }
 
     const handleAdminReject = () => {
@@ -424,34 +477,43 @@ const OrderApprovalPage = () => {
         }
     };
 
+    const handleDetailClick = (row) => {
+        setDetailOrder(row);  // 선택된 주문 데이터 설정
+        setIsDetailModalOpen(true);  // 모달 열기 상태 설정
+    };
+    useEffect(() => {
+        console.log("Updated detailOrder:", detailOrder);
+    }, [detailOrder, setDetailOrder]);
+
     const columns = useMemo(() => {
         const commonColumns = [
             { Header: "담당자", accessor: "employeeId" },
             { Header: "주문코드", accessor: "orderCd" },
             { Header: "주문상태", accessor: "status" },
-            { Header: "등록일", accessor: "createdAtV2"},
+            { Header: "등록일", accessor: "createdAtV2" },
             { Header: "고객사 명", accessor: "buyerNm" },
             { Header: "고객 코드", accessor: "buyerCd" },
-            { Header: "제품 코드", accessor: "itemCd" },
-            {
-                Header: '시작일',
-                accessor: 'startDateV2'
-              },
-              {
-                Header: '만기일',
-                accessor: 'endDateV2'
-              }
+            // { Header: "제품 코드", accessor: "itemCd" },
+            // {
+            //     Header: '제품 단가 시작일',
+            //     accessor: 'startDateV2'
+            //   },
+            //   {
+            //     Header: '제품 단가 만료일',
+            //     accessor: 'endDateV2'
+            //   }
+            { Header: "상세 보기", accessor: "details", type: 'button', onClick: (row) => handleDetailClick(row) },
         ];
 
-        // 조건부로 컬럼 추가
-        if (status === 'REQUEST_TEMP' || status === null) {
-            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate", type: "date"});
-            commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
-            commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
+        // // 조건부로 컬럼 추가
+        if (status === 'REQUEST_TEMP') {
+            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate", type: "date" });
+        //     // commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
+        //     // commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
         } else {
-            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDateV2"});
-            commonColumns.splice(7, 0, { Header: "수량", accessor: "qty" });
-            commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice" });
+            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDateV2" });
+        //     // commonColumns.splice(7, 0, { Header: "수량", accessor: "qty" });
+        //     // commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice" });
         }
 
         return commonColumns;
@@ -501,24 +563,24 @@ const OrderApprovalPage = () => {
                             </div>
                             <div className='tab-content'>
                                 {[0, 1, 2, 3, 4].map((tabIndex) => (
-                                    <TabPanel key={tabIndex}>                                        
-                                        <div className="search-container"> 
-                                        <div className='rejectOption' style={{ margin: 0, padding: 0 }}>
-                                            {tabIndex === 4 && (
-                                                <>
-                                                    <select
-                                                        className="form-select"
-                                                        value={rejectedOrderType}
-                                                        onChange={handleRejectedOrderTypeChange}
-                                                        style={{ marginLeft: 0 }} // 필요하다면 왼쪽 마진도 제거
-                                                    >
-                                                        <option value="REJECTED">반려 주문</option>
-                                                        <option value="CANCELLED">취소된 주문</option>
-                                                        <option value="PRODUCT_FAIL">불합격 주문</option>
-                                                    </select>
-                                                </>
+                                    <TabPanel key={tabIndex}>
+                                        <div className="search-container">
+                                            <div className='rejectOption' style={{ margin: 0, padding: 0 }}>
+                                                {tabIndex === 4 && (
+                                                    <>
+                                                        <select
+                                                            className="form-select"
+                                                            value={rejectedOrderType}
+                                                            onChange={handleRejectedOrderTypeChange}
+                                                            style={{ marginLeft: 0 }} // 필요하다면 왼쪽 마진도 제거
+                                                        >
+                                                            <option value="REJECTED">반려 주문</option>
+                                                            <option value="CANCELLED">취소된 주문</option>
+                                                            <option value="PRODUCT_FAIL">불합격 주문</option>
+                                                        </select>
+                                                    </>
                                                 )}
-                                            </div>                                   
+                                            </div>
                                             <OrderDatepickerSelect
                                                 handleSearch={handleSearch}
                                                 startDate={startDate}
@@ -526,7 +588,7 @@ const OrderApprovalPage = () => {
                                                 setStartDate={setStartDate}
                                                 setEndDate={setEndDate}
                                             />
-                                             <div className="button-group">
+                                            <div className="button-group">
                                                 {tabIndex === 1 && (
                                                     <button className='btn btn-third' onClick={handleIssueQuotation}>
                                                         <FileText className="btn-icon" size={14} /> 견적서 발행
@@ -574,12 +636,12 @@ const OrderApprovalPage = () => {
                                             </div> */}
                                             <div className="action-buttons-container"></div>
                                             <div className="right-aligned-buttons">
-                                                {tabIndex <= 1 && (
+                                                {/* {tabIndex <= 1 && (
                                                     <button className='btn btn-secondary' onClick={handlePatchOrder}>
                                                         <Edit className="btn-icon" size={14} /> 수정
                                                     </button>
-                                                )}
-                                    
+                                                )} */}
+
 
                                                 {tabIndex === 1 && member?.data?.roles?.includes('ROLE_ADMIN') && (
                                                     <button className='btn btn-secondary' onClick={handleAdminApprove}>
@@ -615,7 +677,7 @@ const OrderApprovalPage = () => {
                                                     <button className='btn btn-secondary' onClick={handlePatchOrder}>
                                                         <Edit className="btn-icon" size={14} /> 수정
                                                     </button>
-                                                )}                                                                                                
+                                                )}
                                             </div>
                                         </div>
 
@@ -634,7 +696,7 @@ const OrderApprovalPage = () => {
                                                         edited={edited}
                                                         setEdited={setEdited}
                                                         onCheckboxChange={handleCheckboxChange}
-                                                        onRowClick={handleRowClick}
+                                                        // onRowClick={handleRowClick}
                                                     />
                                                 ) : (
                                                     <div>검색 결과가 없습니다.</div>
@@ -669,6 +731,14 @@ const OrderApprovalPage = () => {
                         title={modalAction === 'approve' ? '승인 메시지' : '반려 메시지'}
                         type={modalAction === 'approve' ? 'approve' : 'reject'}
                     />
+                    {isDetailModalOpen ?
+                        <OrderDetailModal
+                            isOpen={isDetailModalOpen}
+                            onClose={() => setIsDetailModalOpen(false)}
+                            order={detailOrder}
+                            status = {status}
+                        /> : <div />
+                    }
                 </div>
             </div>
         </div>
