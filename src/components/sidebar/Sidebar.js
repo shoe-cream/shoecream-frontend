@@ -46,8 +46,8 @@ const Sidebar = () => {
                     title={'마스터'} 
                     icon={renderIcon('마스터')}
                     buttons={[
-                        {name: '고객사', urlTo: '/buyers'},   
                         {name: '제품', urlTo:'/items'},  
+                        {name: '고객사', urlTo: '/buyers'},   
                         {name: '제조사', urlTo: '/manufacturers'}, 
                         {name: '고객사 단가', urlTo: '/buyer-items'}, 
                         {name: '제조사 단가', urlTo: '/manufacturer-items'}  
