@@ -70,10 +70,6 @@ const ManufacturerPostPage = () => {
             type: 'text',
         },
         {
-            accessor: 'mfCd',
-            Header: '제조사 코드',
-        },
-        {
             accessor: 'region',
             Header: '지역',
         },
