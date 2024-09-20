@@ -65,7 +65,6 @@ const ItemPostPage = () => {
     {
       accessor: 'unit',
       Header: '단위',
-      type: 'text',
     },
     {
       accessor: 'unitPrice',
