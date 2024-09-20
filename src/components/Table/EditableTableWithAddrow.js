@@ -260,10 +260,6 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
           <tr className="body-r">
             <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }}>
               <button onClick={addEmptyRow} className="add-row-button">+ 추가</button>
-              <button onClick={() => {
-                console.log('searchInputs in EditableWithAddrow: ', searchInputs);
-                console.log('data in EditableWithAddrow: ', data);
-                }}>데이터 확인</button>
             </td>
           </tr>
         </tbody>

@@ -72,12 +72,13 @@ const BuyerItemPostPage = () => {
             accessor: 'buyerNm',
             Header: '고객사 명',
             type: 'search-input',
-            placeholder: '고객사 검색'
+            placeholder: '고객사명으로 검색',
         },
         {
             accessor: 'itemNm',
             Header: '제품 명',
-            type: 'dropdown',
+            type: 'search-input',
+            placeholder: '제품명으로 검색',
         },
         {
             accessor: 'unitPrice',
