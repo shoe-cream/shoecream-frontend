@@ -56,7 +56,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     />
   ));
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, ...column } }) => {
+  const EditableCell = React.memo(({ value: initialValue, row ,row: { index }, column: { id, ...column } }) => {
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -102,12 +102,18 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     };
     const minDate = getCurrentDate();
 
-    if(column.type === 'button'){
+    if (column.type === 'button') {
       return (
         <button
           className='cell-button'
-          onClick={column.onClick}
-        >{column.buttonTitle}</button>
+          onClick={() => {
+            if (column.onClick) {
+              column.onClick(row.original); // row.original을 전달
+            }
+          }}
+        >
+          {column.buttonTitle}
+        </button>
       );
     }
     return (
