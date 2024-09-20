@@ -23,6 +23,7 @@ import sendGetSaleHistoryRequest from '../../requests/GetSaleHistoryRequest';
 import MessageModal from '../../components/modal/MessageModal';
 import Swal from 'sweetalert2';
 
+
 const OrderApprovalPage = () => {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +63,6 @@ const OrderApprovalPage = () => {
             return []; // data가 배열이 아니면 빈 배열 반환
         }
         let result = [];
-        console.log("datadata", data);
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < data[i].orderItems.length; j++) {
                 let obj = {};
@@ -70,20 +70,25 @@ const OrderApprovalPage = () => {
                 obj["orderId"] = data[i].orderId;
                 obj["orderCd"] = data[i].orderCd;
                 obj["status"] = data[i].status;
-                obj["createdAt"] = data[i].createdAt.split('T')[0];
-                obj["requestDate"] = data[i].requestDate.split('T')[0];
+                obj["createdAt"] = data[i].createdAt;
+                obj["requestDate"] = data[i].requestDate;
+                // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
+                obj["createdAtV2"] = data[i].createdAt.split('T')[0];
+                obj["requestDateV2"] = data[i].requestDate.split('T')[0];
                 obj["buyerNm"] = data[i].buyerNm;
                 obj["buyerCd"] = data[i].buyerCd;
                 obj["itemId"] = data[i].orderItems[j].orderItemId;
                 obj["itemCd"] = data[i].orderItems[j].itemCd;
                 obj["qty"] = data[i].orderItems[j].qty;
                 obj["unitPrice"] = data[i].orderItems[j].unitPrice;
-                obj["startDate"] = data[i].orderItems[j].startDate.split('T')[0];
-                obj["endDate"] = data[i].orderItems[j].endDate.split('T')[0];
+                obj["startDate"] = data[i].orderItems[j].startDate;
+                obj["endDate"] = data[i].orderItems[j].endDate;
+                // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
+                obj["startDateV2"] =data[i].orderItems[j].startDate.split('T')[0];
+                obj["endDate2"] = data[i].orderItems[j].endDate.split('T')[0];
                 result.push(obj);
             }
         }
-        console.log("Result::::", result);
         return result;
     };
     const handleCheckboxChange = (order) => {
@@ -135,13 +140,10 @@ const OrderApprovalPage = () => {
         let newStatus;
         switch (status) {
             case 'REQUEST_TEMP':
-                newStatus = 'PURCHASE_REQUEST';
-                break;
-            case 'PURCHASE_REQUEST':
                 newStatus = 'APPROVED';
                 break;
             case 'APPROVED':
-                newStatus = 'APPROVED';
+                newStatus = 'PRODUCT_PASS';
                 break;
             case 'REJECTED':
                 newStatus = 'CANCELLED';
@@ -427,21 +429,27 @@ const OrderApprovalPage = () => {
             { Header: "담당자", accessor: "employeeId" },
             { Header: "주문코드", accessor: "orderCd" },
             { Header: "주문상태", accessor: "status" },
-            { Header: "등록일", accessor: "createdAt" },
+            { Header: "등록일", accessor: "createdAtV2"},
             { Header: "고객사 명", accessor: "buyerNm" },
             { Header: "고객 코드", accessor: "buyerCd" },
             { Header: "제품 코드", accessor: "itemCd" },
-            { Header: "시작일", accessor: "startDate" },
-            { Header: "만기일", accessor: "endDate" },
+            {
+                Header: '시작일',
+                accessor: 'startDateV2'
+              },
+              {
+                Header: '만기일',
+                accessor: 'endDateV2'
+              }
         ];
 
         // 조건부로 컬럼 추가
         if (status === 'REQUEST_TEMP' || status === null) {
-            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate", type: "date" });
+            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate", type: "date"});
             commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
             commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
         } else {
-            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate" });
+            commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDateV2"});
             commonColumns.splice(7, 0, { Header: "수량", accessor: "qty" });
             commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice" });
         }

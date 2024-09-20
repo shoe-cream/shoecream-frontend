@@ -64,8 +64,8 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
                     quantity: 0,
                     prepareOrder: itemsDetails[item.itemCd]?.data.prepareOrder,
                     totalStock: itemsDetails[item.itemCd]?.data.totalStock || '',
-                    startDate: item.startDate,
-                    endDate: item.endDate,
+                    startDate: item.startDate.split('T')[0],
+                    endDate: item.endDate.split('T')[0],
                     margin: 0 // 초기 마진을 0으로 설정
                 };
                 return originalItem;
@@ -112,9 +112,9 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
         { Header: "단위", accessor: "unit" },
         { Header: "발주 대기", accessor: "prepareOrder" },
         { Header: "재고량", accessor: "totalStock" },
-        { Header: "시작일", accessor: "startDate", type: "date" },
-        { Header: "종료일", accessor: "endDate", type: "date" },
-        { Header: "마진율 (%)", accessor: "margin" , }
+        { Header: "시작일", accessor: "startDate" },
+        { Header: "종료일", accessor: "endDate"},
+        { Header: "마진율 (%)", accessor: "margin"}
     ];
 
     const handleSubmit = () => {
