@@ -12,7 +12,9 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
   );
 
   const [openedSearchModal, setOpenedSearchModal] = useState(0);
-  const [searchInputs, setSearchInputs] = useState(Array(requestArr.length).fill(''));
+  const [searchInputs, setSearchInputs] = useState(
+    requestArr && Array.isArray(requestArr) ? Array(requestArr.length).fill('') : []
+  );
 
   useEffect(() => {
     if (requestArr !== undefined) {
