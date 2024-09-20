@@ -9,15 +9,6 @@ const OrderActions = ({ onRegisterOrder}) => {
             <button onClick={onRegisterOrder} className="load-btn">
                 <i className="fas fa-file-alt"></i> 주문 등록
             </button>
-            <button className="load-btn">
-                <i className="fas fa-file-invoice"></i> 견적서 발행
-            </button>
-            <button className="load-btn">
-                <i className="fas fa-file-excel"></i> 엑셀 다운
-            </button>
-            <button className="load-btn">
-                <i className="fas fa-print"></i> 인쇄
-            </button>
         </div>
     );
 };

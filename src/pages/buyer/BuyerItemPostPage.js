@@ -27,18 +27,6 @@ const BuyerItemPostPage = () => {
     const [sortBy, setSortBy] = useState('buyerItemId');
     const [isPostMode, setIsPostMode] = useState(false);
 
-
-    const columnWidths = {
-        'buyerNm': '150px',
-        'itemCd': '100px',
-        'itemNm': '100px',
-        'unitPrice': '100px',
-        'unit': '80px',
-        'startDate': '120px',
-        'endDate': '120px'
-    };
-
-
     const columnData = [
         {
             accessor: 'buyerNm',
@@ -80,7 +68,8 @@ const BuyerItemPostPage = () => {
         {
             accessor: 'buyerNm',
             Header: '고객사 명',
-            type: 'dropdown',
+            type: 'search-input',
+            placeholder: '고객사 이름으로 검색'
         },
         {
             accessor: 'itemNm',

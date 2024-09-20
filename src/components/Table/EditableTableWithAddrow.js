@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTable } from 'react-table';
 import './ReactTable.css';
+import SearchInput from '../search/SearchInput';
+import SearchWindow from '../search/SearchWindow';
 
 const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, requestArr }) => {
   // 빈 객체를 n개 가진 배열로 초기화
@@ -88,7 +90,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     />
   );
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex, options }, masterDataArr }) => {
+  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex, options, placeholder }, masterDataArr }) => {
     const [value, setValue] = React.useState(initialValue);
     const [dropdownOptions, setDropdownOptions] = useState([]);
   
@@ -106,6 +108,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
         ...newData[index],
         [id]: value
       };
+      console.log('onBlur data: ', newData);
       setTableData(newData);
       setData(newData);
     };
@@ -115,7 +118,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     }, [initialValue]);
   
     React.useEffect(() => {
-      if (type === 'dropdown') {
+      if (type === 'dropdown' || 'search-input') {
         if (options) {
           // 고정 옵션 사용
           setDropdownOptions(options);
@@ -138,6 +141,25 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
             </option>
           ))}
         </select>
+      );
+    }
+    if (type === 'search-input') {
+      const suggestions = dropdownOptions.map(option => ({
+        key: typeof option === 'object' ? option[id] : option,
+        onSearch: () => {
+          if (typeof option === 'object' && option.path) {
+            // navigate(option.path);
+          }
+        }
+      }));
+  
+      return (
+        <SearchInput
+          placeholder={placeholder || '검색어를 입력하세요'}
+          suggestions={suggestions}
+          onChange = {onChange}
+          onBlur = {onBlur}
+        />
       );
     }
   

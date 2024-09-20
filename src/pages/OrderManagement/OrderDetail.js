@@ -111,7 +111,7 @@ const EmailButton = styled(Button)`
   background-color: #2b538b;
   color: white;
 `;
-
+  
 const OrderDetail = () => {
     const { orderCd } = useParams();  
     const [orderData, setOrderData] = useState(null); 
@@ -120,7 +120,8 @@ const OrderDetail = () => {
     const [isSending, setIsSending] = useState(false); 
     const location = useLocation(); // navigate로부터 넘겨받은 state 접근
     const token = location.state?.token;
-
+    const [isLoading, setIsLoading] = useState(true);
+    
     // API 요청으로 주문 데이터 받아오기
     useEffect(() => {
         console.log('Token:', token); 
@@ -205,16 +206,48 @@ const OrderDetail = () => {
    
     const handlePrint = () => {
         const printContent = document.getElementById('quotation-content').innerHTML;
-        const originalContent = document.body.innerHTML;
-
-        
-        document.body.innerHTML = printContent;
-
-        
-        window.print();
-
-
-        document.body.innerHTML = originalContent;
+    
+        // 새로운 창을 열어 프린트 내용 렌더링
+        const printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>견적서</title>
+                    <style>
+                        /* 프린트할 때 필요한 스타일을 여기 추가할 수 있습니다 */
+                        body {
+                            font-family: Arial, sans-serif;
+                        }
+                        .quotation-info, .order-table, .quotation-total {
+                            margin: 20px 0;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        th, td {
+                            border: 1px solid black;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        .quotation-total {
+                            text-align: right;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                </body>
+            </html>
+        `);
+    
+        printWindow.document.close(); // 문서가 완성되면 닫기
+        printWindow.focus(); // 프린트 창에 포커스
+    
+        printWindow.print(); // 프린트 실행
+        printWindow.onafterprint = function() {
+            printWindow.close(); // 프린트 완료 후 창 닫기
+        };
     };
 
     return (
