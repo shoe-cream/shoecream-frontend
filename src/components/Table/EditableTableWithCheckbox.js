@@ -110,7 +110,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         onChange={onChange}
         onBlur={onBlur}
         style={id === 'qty' || id === '수량' ? { textAlign: 'right', paddingRight: '5px' } : {}}
-        min= {minDate}
+        min={column.type === 'date' ? minDate : column.type === 'number' ? '0' : undefined}
       />
     );
   });

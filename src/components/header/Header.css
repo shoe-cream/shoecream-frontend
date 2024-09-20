@@ -3,7 +3,7 @@
     height: 45px;
     margin: 0 auto;
     background-color: white;
-    margin-bottom: 10px; /* 컴포넌트 밑 여백 */ 
+    
     margin-top: 7px;
     display: flex; /* 자식들의 가로 방향으로 정렬됨 */
     /* flex-direction: column; 애는 세로로 바뀜 */

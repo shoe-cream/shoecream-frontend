@@ -1,12 +1,117 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';  
+import { useParams, useLocation } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
-import Header from '../../components/header/Header'; 
+import styled from 'styled-components';
 import Sidebar from '../../components/sidebar/Sidebar';
-import '../../App.css';  
-import './OrderDetail.css'; 
-import { useLocation } from 'react-router-dom';
+import Header from "../../components/header/Header";
 
+const AppContainer = styled.div`
+  display: flex;
+`;
+
+const ContentContainer = styled.div`
+  flex: 1;
+  padding: 20px;
+  font-size: 14px;  // 기본 글자 크기를 줄임
+`;
+
+const QuotationCard = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;  // 최대 너비를 제한하여 더 compact하게 만듦
+  margin: 0 auto;
+`;
+
+const QuotationHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const Title = styled.h1`
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+const Logo = styled.img`
+  height: 40px;
+`;
+
+const InfoSection = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const InfoColumn = styled.div`
+  flex: 1;
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+`;
+
+const TableHeader = styled.th`
+  background-color: #f3f4f6;
+  padding: 8px;  // 패딩을 줄임
+  text-align: left;
+  font-weight: bold;
+  font-size:18px;
+  white-space: nowrap;  // 줄넘김 방지
+`;
+
+const TableCell = styled.td`
+  padding: 8px;  // 패딩을 원래대로 유지
+  font-size: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;  // 줄넘김 방지
+`;
+
+const SummaryTable = styled(Table)`
+  width: 50%;  // 요약 테이블의 너비를 줄임
+  margin-left: auto;  // 오른쪽 정렬
+`;
+
+const TotalSection = styled.div`
+  text-align: right;
+  margin-top: 20px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const Button = styled.button`
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+`;
+
+const PdfButton = styled(Button)`
+  background-color: #2b538b;
+  color: white;
+`;
+
+const PrintButton = styled(Button)`
+  background-color: #2b538b;
+  color: white;
+`;
+
+const EmailButton = styled(Button)`
+  background-color: #2b538b;
+  color: white;
+`;
+  
 const OrderDetail = () => {
     const { orderCd } = useParams();  
     const [orderData, setOrderData] = useState(null); 
@@ -51,6 +156,7 @@ const OrderDetail = () => {
         return total + quantity * unitPrice;
     }, 0); 
     const tax = totalAmount * 0.1;
+    const totalWithTax = totalAmount + tax;
 
     const handleDownloadPDF = () => {
         const element = document.getElementById('quotation-content');
@@ -145,78 +251,85 @@ const OrderDetail = () => {
     };
 
     return (
-        <div>
+        <div>            
             <Header />
-            <div className='app-container'>
-                <Sidebar />
-                <div className='app-content-container'>
-                    <div className='quotation-content' id='quotation-content'>
-                        <h1>견적서</h1>
-                        <div className='quotation-info'>
-                            <p><strong>Invoice No.</strong> {orderData.orderCd}</p>
-                            <p><strong>견적일</strong> {orderData.createdAt}</p>
-                            <p><strong>견적서 만료일</strong> {orderData.requestDate}</p>
-                        </div>
-
+            <AppContainer>                
+                <Sidebar />            
+                <ContentContainer>            
+                    <QuotationCard id="quotation-content">
+                        <QuotationHeader>
+                            <Title>견적서</Title>
+                            <Logo src="logo/text-logo.png" alt="Logo" />
+                        </QuotationHeader>
+                        <InfoSection>
+                            <InfoColumn>
+                                <p><strong>Invoice No:</strong> {orderData.orderCd}</p>
+                                <p><strong>견적일:</strong> {orderData.createdAt}</p>
+                                <p><strong>견적서 만료일:</strong> {orderData.requestDate}</p>
+                            </InfoColumn>
+                            <InfoColumn>
+                                <p><strong>수신자:</strong> ________________</p>
+                                <p><strong>담당자:</strong> ________________</p>
+                                <p><strong>내선전화:</strong> ________________</p>
+                            </InfoColumn>
+                        </InfoSection>
+    
                         <h2>주문 상세 내역</h2>
-                        <table className='order-table'>
+                        <Table>
                             <thead>
                                 <tr>
-                                    <th>제품 코드</th>
-                                    <th>수량</th>
-                                    <th>단가</th>
-                                    <th>총액</th>
+                                    <TableHeader>제품 코드</TableHeader>
+                                    <TableHeader>수량</TableHeader>
+                                    <TableHeader>단가</TableHeader>
+                                    <TableHeader>총액</TableHeader>
                                 </tr>
                             </thead>
                             <tbody>
                                 {orderData.orderItems.map((item, index) => (
-                                    <tr key={item.orderItemCd || index}> 
-                                        <td>{item.itemCd}</td>
-                                        <td>{item.qty || 0}</td>
-                                        <td>{item.unitPrice ? item.unitPrice.toFixed(2) : '0.00'}</td>
-                                        <td>{(item.qty * item.unitPrice || 0).toFixed(2)}</td>
+                                    <tr key={item.orderItemCd || index}>
+                                        <TableCell>{item.itemCd}</TableCell>
+                                        <TableCell>{item.qty || 0}</TableCell>
+                                        <TableCell>${item.unitPrice ? item.unitPrice.toFixed(2) : '0.00'}</TableCell>
+                                        <TableCell>${(item.qty * item.unitPrice || 0).toFixed(2)}</TableCell>
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
-
-                        <div className='quotation-total'>
-                            <p><strong>소계</strong>: ${totalAmount.toFixed(2)}</p>
-                            <p><strong>세금</strong>: ${tax.toFixed(2)}</p>
-                            <p><strong>총합계</strong>: ${(totalAmount + tax).toFixed(2)}</p>
-                        </div>
-                    </div>
-                    <div className='button-container'>
-                        <button onClick={handleDownloadPDF}>PDF 다운로드</button>
-                        <button onClick={handlePrint}>인쇄</button> 
-                        <button onClick={handleOpenModal}>메일로 보내기</button>
-                    </div>
-                </div>
-            </div>
-
-        
-            {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2>이메일 보내기</h2>
-                        <label>
-                            이메일 주소:
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="이메일을 입력하세요"
-                            />
-                        </label>
-                        <div className="modal-buttons">
-                            <button onClick={handleSendEmail} disabled={isSending}>
-                                {isSending ? "전송 중..." : "전송"}
-                            </button>
-                            <button onClick={handleCloseModal}>취소</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                        </Table>
+    
+                        <TotalSection>
+                            <SummaryTable>
+                                <tbody>
+                                    <tr>
+                                        <TableCell><strong>수량</strong></TableCell>
+                                        <TableCell>{orderData.orderItems.reduce((total, item) => total + (item.qty || 0), 0)}</TableCell>
+                                    </tr>
+                                    <tr>
+                                        <TableCell><strong>소계</strong></TableCell>
+                                        <TableCell>${totalAmount.toFixed(2)}</TableCell>
+                                    </tr>
+                                    <tr>
+                                        <TableCell><strong>공급가액</strong></TableCell>
+                                        <TableCell>${totalAmount.toFixed(2)}</TableCell>
+                                    </tr>
+                                    <tr>
+                                        <TableCell><strong>부가세 (10%)</strong></TableCell>
+                                        <TableCell>${tax.toFixed(2)}</TableCell>
+                                    </tr>
+                                    <tr>
+                                        <TableCell><strong>총합계</strong></TableCell>
+                                        <TableCell><strong>${totalWithTax.toFixed(2)}</strong></TableCell>
+                                    </tr>
+                                </tbody>
+                            </SummaryTable>
+                        </TotalSection>
+                    </QuotationCard>
+                    <ButtonContainer>
+                        <PdfButton onClick={handleDownloadPDF}>PDF 다운로드</PdfButton>
+                        <PrintButton onClick={handlePrint}>인쇄</PrintButton>
+                        <EmailButton onClick={handleSendEmail}>메일로 보내기</EmailButton>
+                    </ButtonContainer>
+                </ContentContainer>
+            </AppContainer>
         </div>
     );
 };

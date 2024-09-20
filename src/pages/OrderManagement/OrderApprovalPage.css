@@ -31,7 +31,6 @@
     margin-top: 5px;
     margin-bottom: 20px;
     font-size: 15px;
-    font-weight: bold;
 }
 
 .tab-list-container {
@@ -50,6 +49,14 @@
     flex: 1;
     text-align: center;
 }
+
+.product-name {
+    display: inline-block; /* 또는 block */
+    width: 200px; /* 원하는 너비 */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
 
 .date-range-container {
     /* 자식 요소들을 한 줄로 나열하거나 세로로 정렬 */

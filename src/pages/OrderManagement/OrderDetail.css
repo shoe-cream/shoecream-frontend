@@ -10,23 +10,13 @@
     align-items: center; /* 수직 중앙 정렬 */
 }
 
-.quotation-content {
-    padding: 20px;
-    background-color: #fff;
-    width: 50%; /* 폭을 적절히 줄여서 중앙에 위치 */
-    margin: 0 auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
+
 
 h1, h2 {
     margin-bottom: 20px;
 }
 
-.quotation-info, .quotation-total {
-    margin-bottom: 20px;
-}
+
 
 .order-table {
     width: 100%;
