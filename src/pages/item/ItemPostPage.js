@@ -65,7 +65,6 @@ const ItemPostPage = () => {
     {
       accessor: 'unit',
       Header: '단위',
-      type: 'text',
     },
     {
       accessor: 'unitPrice',
@@ -87,16 +86,8 @@ const ItemPostPage = () => {
   ]
   const postColumnData = [
     {
-      accessor: 'buyerNm',
-      Header: '고객사명',
-    },
-    {
       accessor: 'itemNm',
       Header: '제품명',
-    },
-    {
-      accessor: 'itemCd',
-      Header: '제품 코드',
     },
     {
       accessor: 'category',

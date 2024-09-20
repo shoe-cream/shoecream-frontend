@@ -70,10 +70,6 @@ const ManufacturerPostPage = () => {
             type: 'text',
         },
         {
-            accessor: 'mfCd',
-            Header: '제조사 코드',
-        },
-        {
             accessor: 'region',
             Header: '지역',
         },
@@ -86,7 +82,7 @@ const ManufacturerPostPage = () => {
                 <Sidebar></Sidebar>
                 <div className='app-content-container'>
                     <div className='app-background'>
-                        <h2 className="app-label">제품 관리</h2>
+                        <h2 className="app-label">제조사 관리</h2>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
                                 <select className='custom-select-class'  

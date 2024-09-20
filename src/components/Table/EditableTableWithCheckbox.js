@@ -56,7 +56,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     />
   ));
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, ...column } }) => {
+  const EditableCell = React.memo(({ value: initialValue, row ,row: { index }, column: { id, ...column } }) => {
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -101,6 +101,21 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
       return now.toISOString().split('T')[0]; // YYYY-MM-DD 형식
     };
     const minDate = getCurrentDate();
+
+    if (column.type === 'button') {
+      return (
+        <button
+          className='cell-button'
+          onClick={() => {
+            if (column.onClick) {
+              column.onClick(row.original); // row.original을 전달
+            }
+          }}
+        >
+          {column.buttonTitle}
+        </button>
+      );
+    }
     return (
       <input
         ref={inputRef}
@@ -111,6 +126,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         onBlur={onBlur}
         style={id === 'qty' || id === '수량' ? { textAlign: 'right', paddingRight: '5px' } : {}}
         min={column.type === 'date' ? minDate : column.type === 'number' ? '0' : undefined}
+        onKeyDown={(e) => {
+          if (e.key === '-' || e.key === 'e') {
+            e.preventDefault();
+          }
+        }}
       />
     );
   });

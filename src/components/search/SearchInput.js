@@ -1,16 +1,24 @@
-import { useState, useCallback } from "react";
-import './SearchInput.css';
+import { useState, useCallback, useEffect } from "react";
 
-const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: externalValue }) => {
-    const [searchTerm, setSearchTerm] = useState(externalValue || '');
+const SearchInput = ({ placeholder, suggestions, onBlur, value, onChange, searchInputs, setSearchInputs }) => {
+    const [searchTerm, setSearchTerm] = useState(searchInputs);
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestion, setActiveSuggestion] = useState(-1);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    // 검색창 입력 처리 및 자동완성 필터링
+    // searchInput prop이 변경될 때 로컬 상태 업데이트
+    useEffect(() => {
+        console.log('searchInputs in SearchInput: ', searchInputs);
+        setSearchTerm(searchInputs);
+    }, [searchInputs]);
+
+    // 인풋에 값을 타이핑할 때
     const handleSearchChange = useCallback((e) => {
         const value = e.target.value;
+
+        console.log('newValue: ', value);
         setSearchTerm(value);
+        setSearchInputs(value); // 즉시 부모 컴포넌트 상태 업데이트
 
         const filtered = suggestions.filter(suggestion =>
             suggestion.key.toLowerCase().includes(value.toLowerCase())
@@ -19,11 +27,34 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
         setActiveSuggestion(-1);
         setShowSuggestions(true);
 
-        // 부모 컴포넌트의 onChange 호출
         onChange(e);
-    }, [suggestions, onChange]);
+    }, [suggestions, onChange, setSearchInputs]);
 
-    // 방향키 및 엔터 처리
+    // 제안 사항을 클릭할 때
+    const handleSuggestionClick = useCallback((suggestion) => {
+        console.log('newVaasdasdlue: ', suggestion.key);
+        
+        setSearchTerm(suggestion.key);  // 검색창에 고객사명 반영
+        setSearchInputs(suggestion.key); // 부모 컴포넌트 상태 업데이트
+        // setShowSuggestions(false);  // 추천 리스트 숨기기
+        
+        // 바로 검색창에 값 반영
+        onChange({ target: { value: suggestion.key } });
+    
+        // 필요할 경우 검색 처리 실행 (제안 사항 클릭 시 검색을 실행하고 싶으면 사용)
+        // handleSearchSubmit(suggestion);
+    
+        // onBlur({ target: { value: suggestion.key } });
+    }, [onChange, onBlur, setSearchInputs]);
+
+    
+    // 검색 실행
+    const handleSearchSubmit = (suggestion) => {
+        setShowSuggestions(false);
+        if (suggestion && suggestion.onSearch) {
+            suggestion.onSearch();
+        }
+    };
     const handleKeyDown = (e) => {
         if (e.key === "ArrowDown") {
             e.preventDefault();
@@ -56,36 +87,13 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
         }
     };
 
-    // 검색 실행
-    const handleSearchSubmit = (suggestion) => {
-        setShowSuggestions(false);
-        if (suggestion && suggestion.onSearch) {
-            suggestion.onSearch();
-        }
-    };
-
-    // 추천 항목 클릭 시 검색 실행
-    const handleSuggestionClick = (suggestion) => {
-        setSearchTerm(suggestion.key);
-        setShowSuggestions(false);
-        handleSearchSubmit(suggestion);
-        onChange({ target: { value: suggestion.key } });
-    };
-
-    // onBlur 핸들러
-    const handleBlur = useCallback(() => {
-        setTimeout(() => {
-            setShowSuggestions(false);
-        }, 200);
-      
-    }, []);
-
     return (
         <div className="header-search-form">
             <input
                 type="text"
                 placeholder={placeholder}
-                value={searchTerm}
+                value={value}
+                onBlur={onBlur}
                 onChange={handleSearchChange}
                 onKeyDown={handleKeyDown}
                 className="header-search-input"
@@ -98,7 +106,7 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
                         <li
                             key={index}
                             className={index === activeSuggestion ? 'active' : ''}
-                            onClick={() => handleSuggestionClick(suggestion)}
+                            onMouseDown={() => handleSuggestionClick(suggestion)}
                         >
                             {suggestion.key}
                         </li>
@@ -109,4 +117,4 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
     );
 }
 
-export default SearchInput;
+export default SearchInput; 

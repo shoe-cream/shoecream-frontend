@@ -2,9 +2,9 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 
-const getOrderRequest = async (state, orderId, setOrders, setIsLoading) => {
+const sendGetOrderRequest = async (state, orderCd, setOrder, setIsLoading) => {
     try {
-        const response = await axios.get(`http://localhost:8080/orders/${orderId}`, {
+        const response = await axios.get(`http://localhost:8080/orders/${orderCd}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token
@@ -13,7 +13,7 @@ const getOrderRequest = async (state, orderId, setOrders, setIsLoading) => {
 
         if (response.status === 200) {
             console.log(response.data);
-            setOrders(response.data);
+            setOrder(response.data);
             setIsLoading(false);
         } else {
             console.log('Failed to fetch orders data:', response.status);
@@ -25,4 +25,4 @@ const getOrderRequest = async (state, orderId, setOrders, setIsLoading) => {
     }
 };
 
-export default getOrderRequest;
+export default sendGetOrderRequest;

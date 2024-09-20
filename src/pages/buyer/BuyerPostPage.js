@@ -36,18 +36,14 @@ const BuyerPostPage = () => {
 
   const columnData = [
     {
-      accessor: 'buyerCd',
-      Header: '고객사 코드',
+      accessor: 'buyerNm',
+      Header: '고객사 명',
+    
     },
     {
       accessor: 'email',
       Header: '이메일',
       type: 'text',
-    },
-    {
-      accessor: 'buyerNm',
-      Header: '고객사 명',
-    
     },
     {
       accessor: 'tel',
@@ -99,9 +95,13 @@ const BuyerPostPage = () => {
                   suggestions={
                     allData.data.map(data => ({
                       key: data.buyerNm, 
-                      onSearch: () => sendGetBuyersRequest(
-                        {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: data.buyerNm, setData: resetData, setIsLoading: setIsLoading}
-                      )
+                      onSearch: () => {
+                        const buyerNm = data.buyerNm.replace(/\s+/g, '');
+                        console.log('data: ', data);
+                        console.log('buyerNm: ', data.buyerNm);
+                        sendGetBuyersRequest(
+                        {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: buyerNm, setData: resetData, setIsLoading: setIsLoading}
+                      )}
                     }))
                   }
                 />
