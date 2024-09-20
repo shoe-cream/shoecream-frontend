@@ -43,7 +43,7 @@ const ItemPostPage = () => {
 
   useEffect(() => {
     sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading});
-    sendGetAllItemsRequest(state, setAllData, setIsLoading);
+    sendGetAllItemsRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
   const columnData = [

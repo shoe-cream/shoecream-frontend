@@ -12,16 +12,19 @@ import sendGetManufacturersRequest from '../../requests/GetManufacturersRequest'
 import sendPostManufacturersRequest from '../../requests/PostManufacturersRequest';
 import sendPatchManufacturersRequest from '../../requests/PatchManufacturersRequest';
 import sendDeleteManufacturersRequest from '../../requests/DeleteManufacturersRequest';
+import sendGetAllManufacturersRequest from '../../requests/GetAllManufacturersRequest';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 
-
+import SearchWindow from '../../components/search/SearchWindow';
 
 const ManufacturerPostPage = () => {
     const { state } = useAuth();
     const [dbData, setDbData] = useState();
+    const [allData, setAllData] = useState({ data: [] });
     const [data, setData] = useState({ data: [] });
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
+    const { isLoading2, setIsLoading2 } = useState(true);
 
     const [checked, setChecked] = useState([]);
     const [isPostMode, setIsPostMode] = useState(false);
@@ -35,14 +38,15 @@ const ManufacturerPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
+        sendGetManufacturersRequest({state: state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading});
+        sendGetAllManufacturersRequest(state, setAllData, setIsLoading2);
     }, [page, sortBy]);
 
     const columnData = [
         {
             accessor: 'mfNm',
             Header: '제조사명',
-            
+
         },
         {
             accessor: 'mfCd',
@@ -85,17 +89,33 @@ const ManufacturerPostPage = () => {
                         <h2 className="app-label">제조사 관리</h2>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
-                                <select className='custom-select-class'  
+                                <select className='custom-select-class'
                                     onChange={(e) => setSortBy(e.target.value)}>
                                     <option disabled='true'>정렬 기준 선택</option>
                                     <option value={'itemCd'}>제품코드</option>
                                     <option value={'itemNm'}>제품명</option>
                                     <option value={'createdAt'}>등록순</option>
                                     <option value={'unitPrice'}>단가순</option>
-                                </select>   
+                                </select>
+                                <SearchWindow
+                                    placeholder='제품 이름으로 검색'
+                                    suggestions={
+                                        allData.data.map(data => ({
+                                            key: data.mfNm,
+                                            onSearch: () => {
+                                                const mfNm = data.mfNm.replace(/\s+/g, '');
+                                                console.log('data: ', data);
+                                                console.log('mfNm: ', data.mfNm);
+                                                sendGetManufacturersRequest(
+                                                    { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, mfNm: mfNm, setData: resetData, setIsLoading: setIsLoading }
+                                                );
+                                            }
+                                        }))
+                                    }
+                                />
                                 <div />
                                 <div className='manufacturer-button-container'>
-                                <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>
+                                    <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>
                                         <Plus size={16} /> 추가
                                     </button>
                                     <button className='manufacturer-button' onClick={() => {
@@ -134,7 +154,7 @@ const ManufacturerPostPage = () => {
                                         });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchManufacturersRequest(state, requestBody, () => {
-                                            sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
+                                            sendGetManufacturersRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData});
                                             setChecked([]);
                                         });
                                     }}>
@@ -149,14 +169,14 @@ const ManufacturerPostPage = () => {
                                             /* console.log('checked: ', checked); */
                                             const checkedItems = checked.map(item => data.data[item].mfId);
                                             sendDeleteManufacturersRequest(state, checkedItems, setChecked, () => {
-                                                sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
+                                                sendGetManufacturersRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData});
                                                 setChecked([]);
                                             });
                                         }}>
-                                        <Trash2 size={16} /> 삭제                                    
-                                            </button>
-                                    </div>  
+                                        <Trash2 size={16} /> 삭제
+                                    </button>
                                 </div>
+                            </div>
                             <EditableTableWithCheckbox
                                 columns={columnData}
                                 ogData={dbData}
@@ -169,7 +189,7 @@ const ManufacturerPostPage = () => {
                             >
                             </EditableTableWithCheckbox>
                         </div>
-                        {isLoading ? <div /> : <PageContainer
+                        {isLoading || isLoading2 ? <div /> : <PageContainer
                             currentPage={page}
                             setPage={setPage}
                             pageInfo={data.pageInfo}
@@ -187,7 +207,7 @@ const ManufacturerPostPage = () => {
                                 sendPostManufacturersRequest(state, checkedData, () => {
                                     setChecked([]);
                                     setOpened(false);
-                                    sendGetManufacturersRequest(state, page, setPage, 10, sortBy, resetData);
+                                    sendGetManufacturersRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData});
                                 });
                             }}
                             page={page}
