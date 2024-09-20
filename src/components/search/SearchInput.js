@@ -1,15 +1,22 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
-const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: externalValue }) => {
-    const [searchTerm, setSearchTerm] = useState(externalValue || '');
+const SearchInput = ({ placeholder, suggestions, onChange, searchInputs, setSearchInputs }) => {
+    const [searchTerm, setSearchTerm] = useState(searchInputs);
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestion, setActiveSuggestion] = useState(-1);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    // 검색창 입력 처리 및 자동완성 필터링
+    // searchInput prop이 변경될 때 로컬 상태 업데이트
+    useEffect(() => {
+        setSearchTerm(searchInputs);
+    }, [searchInputs]);
+
     const handleSearchChange = useCallback((e) => {
         const value = e.target.value;
+
+        console.log('newValue: ', value);
         setSearchTerm(value);
+        setSearchInputs(value); // 즉시 부모 컴포넌트 상태 업데이트
 
         const filtered = suggestions.filter(suggestion =>
             suggestion.key.toLowerCase().includes(value.toLowerCase())
@@ -18,11 +25,24 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
         setActiveSuggestion(-1);
         setShowSuggestions(true);
 
-        // 부모 컴포넌트의 onChange 호출
         onChange(e);
-    }, [suggestions, onChange]);
+    }, [suggestions, onChange, setSearchInputs]);
 
-    // 방향키 및 엔터 처리
+    const handleSuggestionClick = useCallback((suggestion) => {
+        console.log('newValue: ', suggestion.key);
+        setSearchTerm(suggestion.key);
+        setSearchInputs(suggestion.key); // 즉시 부모 컴포넌트 상태 업데이트
+        setShowSuggestions(false);
+        handleSearchSubmit(suggestion);
+        onChange({ target: { value: suggestion.key } });
+    }, [onChange, setSearchInputs]);
+    // 검색 실행
+    const handleSearchSubmit = (suggestion) => {
+        setShowSuggestions(false);
+        if (suggestion && suggestion.onSearch) {
+            suggestion.onSearch();
+        }
+    };
     const handleKeyDown = (e) => {
         if (e.key === "ArrowDown") {
             e.preventDefault();
@@ -54,30 +74,6 @@ const SearchInput = ({ placeholder, suggestions, onChange, onBlur, value: extern
             }
         }
     };
-
-    // 검색 실행
-    const handleSearchSubmit = (suggestion) => {
-        setShowSuggestions(false);
-        if (suggestion && suggestion.onSearch) {
-            suggestion.onSearch();
-        }
-    };
-
-    // 추천 항목 클릭 시 검색 실행
-    const handleSuggestionClick = (suggestion) => {
-        setSearchTerm(suggestion.key);
-        setShowSuggestions(false);
-        handleSearchSubmit(suggestion);
-        onChange({ target: { value: suggestion.key } });
-    };
-
-    // onBlur 핸들러
-    const handleBlur = useCallback(() => {
-        setTimeout(() => {
-            setShowSuggestions(false);
-        }, 200);
-      
-    }, []);
 
     return (
         <div className="header-search-form">
