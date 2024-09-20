@@ -31,7 +31,10 @@ const BuyerItemPostPage = () => {
         {
             accessor: 'buyerNm',
             Header: '고객사 명',
-            /* type: 'text', */
+        },
+        {
+            accessor: 'buyerCd',
+            Header: '고객사 코드',
         },
         {
             accessor: 'itemCd',
@@ -69,7 +72,7 @@ const BuyerItemPostPage = () => {
             accessor: 'buyerNm',
             Header: '고객사 명',
             type: 'search-input',
-            placeholder: '고객사 이름으로 검색'
+            placeholder: '고객사 검색'
         },
         {
             accessor: 'itemNm',

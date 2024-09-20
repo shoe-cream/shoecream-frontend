@@ -36,18 +36,14 @@ const BuyerPostPage = () => {
 
   const columnData = [
     {
-      accessor: 'buyerCd',
-      Header: '고객사 코드',
+      accessor: 'buyerNm',
+      Header: '고객사 명',
+    
     },
     {
       accessor: 'email',
       Header: '이메일',
       type: 'text',
-    },
-    {
-      accessor: 'buyerNm',
-      Header: '고객사 명',
-    
     },
     {
       accessor: 'tel',

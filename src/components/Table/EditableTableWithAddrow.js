@@ -3,6 +3,7 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 import SearchInput from '../search/SearchInput';
 import SearchWindow from '../search/SearchWindow';
+import SearchModal from '../../components/modal/SearchModal';
 
 const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, requestArr }) => {
   // 빈 객체를 n개 가진 배열로 초기화
@@ -10,9 +11,12 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     requestArr && Array.isArray(requestArr) ? Array(requestArr.length).fill({ key: '', data: [] }) : []
   );
 
+  const [openedSearchModal, setOpenedSearchModal] = useState(0);
+  const [searchInputs, setSearchInputs] = useState(Array(requestArr.length).fill(''));
+
   useEffect(() => {
     if (requestArr !== undefined) {
-      setMasterDataArr(Array.from({ length: requestArr.length }, () => ({}))); 
+      setMasterDataArr(Array.from({ length: requestArr.length }, () => ({})));
       requestArr.forEach((request, index) => {
         request.function((value) => {
           console.log('value: ', value);
@@ -21,7 +25,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
             const newArr = [...prevArr];
             /* value.key =  */
             /* console.log() */
-            newArr[index] = value; 
+            newArr[index] = value;
             console.log('newMasterData: ', newArr);
             return newArr;
           });
@@ -54,14 +58,14 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
   const addEmptyRow = React.useCallback(() => {
     setTableData(prevData => {
       const newData = [...prevData, createEmptyRow()];
-      
+
       // 새 행이 추가된 후 스크롤 조정
       setTimeout(() => {
         if (tableRef.current) {
           const tableHeight = tableRef.current.scrollHeight;
           const currentScroll = tableRef.current.scrollTop;
           const viewportHeight = tableRef.current.clientHeight;
-          
+
           // 새로운 행이 뷰포트 밖에 있는 경우에만 스크롤 조정
           if (tableHeight - currentScroll > viewportHeight) {
             tableRef.current.scrollTop = tableHeight - viewportHeight;
@@ -93,12 +97,12 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex, options, placeholder }, masterDataArr }) => {
     const [value, setValue] = React.useState(initialValue);
     const [dropdownOptions, setDropdownOptions] = useState([]);
-  
+
     const onChange = (e) => {
       const newValue = type === 'number' ? parseInt(e.target.value, 10) : e.target.value;
       setValue(newValue);
     };
-  
+
     const onBlur = () => {
       const newData = [...tableData];
       if (!newData[index]) {
@@ -112,11 +116,11 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
       setTableData(newData);
       setData(newData);
     };
-  
+
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue]);
-  
+
     React.useEffect(() => {
       if (type === 'dropdown' || 'search-input') {
         if (options) {
@@ -128,9 +132,9 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
         }
       }
     }, [masterDataArr, type, id, masterDataIndex, options]);
-  
+
     const inputType = type || 'text';
-  
+
     if (type === 'dropdown') {
       return (
         <select value={value} onChange={onChange} onBlur={onBlur}>
@@ -152,17 +156,28 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
           }
         }
       }));
-  
+
       return (
         <SearchInput
           placeholder={placeholder || '검색어를 입력하세요'}
           suggestions={suggestions}
-          onChange = {onChange}
-          onBlur = {onBlur}
+          onChange={onChange}
+          searchInput={searchInputs[masterDataIndex]}
+          setSearchInput={(value) => {
+            const newInputs = searchInputs.map((input, index) => index === masterDataIndex ? value : input);
+            setSearchInputs(newInputs)}}
         />
       );
     }
-  
+    if (type === 'search-modal') {
+      return (
+        <button
+          className='search-modal-open-button'
+          onClick={() => setOpenedSearchModal(masterDataIndex + 1)}
+        >{placeholder}</button>
+      );
+    }
+
     return (
       <input
         className='cell-input'
@@ -173,7 +188,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
       />
     );
   });
-  
+
 
   // 컬럼에 체크박스 컬럼 추가 및 모든 셀을 input으로 변경
   const allColumns = React.useMemo(() => [
@@ -200,7 +215,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
         <EditableCell
           value={value}
           row={row}
-          column={{...column, masterDataIndex: index}}
+          column={{ ...column, masterDataIndex: index }}
           masterDataArr={masterDataArr}
         />
       ),
@@ -245,6 +260,9 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
           </tr>
         </tbody>
       </table>
+      {requestArr && requestArr.map((request, index) => (
+        openedSearchModal === index + 1 ? <SearchModal setOpenedModal = {setOpenedSearchModal}/> : <div />
+      ))}
     </div>
   );
 };
