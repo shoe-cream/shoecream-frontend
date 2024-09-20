@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import './OrderDetailModal.css';
 import EditableTableWithCheckbox from '../Table/EditableTableWithCheckbox';
 import sendPatchMultiItemRequest from '../../requests/PatchOrders';
 import { useAuth } from '../../auth/AuthContext';
@@ -129,8 +130,8 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="order-item-modal">
-            <div className="order-item-modal-content">
+        <div className="order-detail-modal">
+            <div className="order-detail-modal-content">
                 <EditableTableWithCheckbox
                     columns={columns}
                     ogData={originalData}
