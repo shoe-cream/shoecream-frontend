@@ -87,16 +87,8 @@ const ItemPostPage = () => {
   ]
   const postColumnData = [
     {
-      accessor: 'buyerNm',
-      Header: '고객사명',
-    },
-    {
       accessor: 'itemNm',
       Header: '상품명',
-    },
-    {
-      accessor: 'itemCd',
-      Header: '상품 코드',
     },
     {
       accessor: 'category',
