@@ -95,9 +95,13 @@ const BuyerPostPage = () => {
                   suggestions={
                     allData.data.map(data => ({
                       key: data.buyerNm, 
-                      onSearch: () => sendGetBuyersRequest(
-                        {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: data.buyerNm, setData: resetData, setIsLoading: setIsLoading}
-                      )
+                      onSearch: () => {
+                        const buyerNm = data.buyerNm.replace(/\s+/g, '');
+                        console.log('data: ', data);
+                        console.log('buyerNm: ', data.buyerNm);
+                        sendGetBuyersRequest(
+                        {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: buyerNm, setData: resetData, setIsLoading: setIsLoading}
+                      )}
                     }))
                   }
                 />
