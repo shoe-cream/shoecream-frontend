@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import LandingPage from './pages/landing/LandingPage';
+import Header from './components/header/Header';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';
 import BuyerItemPostPage from './pages/buyer/BuyerItemPostPage';
@@ -23,7 +24,7 @@ import OrderDetail from './pages/OrderManagement/OrderDetail';
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter>        
         <Routes>
           <Route path='/' element={<LoginPage />} />
           <Route path='/dashboard' element={<LandingPage />} />

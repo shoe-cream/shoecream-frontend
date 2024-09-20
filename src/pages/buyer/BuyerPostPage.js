@@ -47,7 +47,7 @@ const BuyerPostPage = () => {
     {
       accessor: 'buyerNm',
       Header: '고객사 명',
-      type: 'text',
+    
     },
     {
       accessor: 'tel',
