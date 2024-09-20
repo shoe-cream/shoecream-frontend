@@ -32,15 +32,11 @@ const OrderPostPage = () => {
             // 항상 새로운 주문으로 추가
             return [...prevData, {
                 ...newOrder,
-                orderItems: newOrder.items
+                orderItems: newOrder.items,
             }];
         });
     };
 
-    const convertToLocalDateTime = (dateStr) => {
-        const date = new Date(dateStr);
-        return date.toISOString().replace('Z', '');
-    };
 
     const handleRegisterOrder = () => {
         const ordersToRegister = orderData.filter((_, index) => selectedOrders.includes(index));
@@ -55,8 +51,8 @@ const OrderPostPage = () => {
                 itemCd: item.itemCd,
                 unitPrice: item.unitPrice,
                 qty: item.qty,
-                startDate: item.startDate,
-                endDate: item.endDate,
+                startDate: new Date(item.startDate),
+                endDate: new Date(item.endDate),
                 unit: item.unit
             }));
     

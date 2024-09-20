@@ -12,7 +12,7 @@ const sendPostOrder = async(state, buyerCd, requestDate, orderItemDtoList) => {
             requestDate: requestDate,
             orderItems: orderItemDtoList
         }];
-
+        console.log("dlkfsdjkfjsdklf",orderPostDtos);
         const response = await axios.post('http://localhost:8080/orders',
             orderPostDtos,
             {

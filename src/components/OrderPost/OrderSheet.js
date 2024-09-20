@@ -58,29 +58,35 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
   );
 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id } }) => {
-    const [value, setValue] = React.useState(initialValue);
+    const [value, setValue] = React.useState(() => {
+      if (id === 'requestDate' && !initialValue) {
+        return getCurrentDate();
+      }
+      return initialValue;
+    });
 
     const onChange = (e) => {
       setValue(e.target.value);
     };
 
     const onBlur = () => {
-      const newData = [...tableData];
+      updateData(index, id, value);
+    };
+
+    const updateData = (index, id, value) => {
+      const newData = [...data.data];
       newData[index] = {
         ...newData[index],
         [id]: value
       };
-      setTableData(newData);
       setData({ ...data, data: newData });
     };
 
     React.useEffect(() => {
-      if (id === 'registrationDate' && !value) {
-        setValue(getCurrentDate());
-      } else {
-        setValue(initialValue);
+      if (id === 'requestDate' && !initialValue) {
+        updateData(index, id, getCurrentDate());
       }
-    }, [initialValue, id]);
+    }, []);
 
     const minDate = id === 'requestDate' ? getCurrentDate() : undefined;
 
@@ -88,7 +94,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
       <input
         className='cell-input'
         type={id === 'requestDate' ? 'date' : 'text'}
-        value={value}
+        value={value || ''}
         onChange={onChange}
         onBlur={onBlur}
         min={minDate}
@@ -97,10 +103,20 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
   });
 
   const ItemsCell = ({ items }) => (
-    <div>
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {items.map((item, index) => (
-        <div key={index}>
-          {item.itemCd} - {item.itemNm} ({item.qty} {item.unit})
+        <div key={index} style={{ width: '33%', boxSizing: 'border-box', padding: '2px' }}>
+          {item.itemNm} ({item.qty} {item.unit}) {item.endDate}
+        </div>
+      ))}
+    </div>
+  );
+
+  const ItemsCell2 = ({ items }) => (
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {items.map((item, index) => (
+        <div key={index} style={{ width: '33%', boxSizing: 'border-box', padding: '2px' }}>
+          {item. contractPeriod}
         </div>
       ))}
     </div>
@@ -127,13 +143,11 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
     },
     {
       Header: '고객사',
-      accessor: 'buyerNm',
-      Cell: EditableCell
+      accessor: 'buyerNm'
     },
     {
       Header: '고객코드',
-      accessor: 'buyerCd',
-      Cell: EditableCell
+      accessor: 'buyerCd'
     },
     {
       Header: '등록일',
@@ -149,11 +163,6 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
       Header: '주문 아이템',
       accessor: 'orderItems',
       Cell: ({ value }) => <ItemsCell items={value} />
-    },
-    {
-      Header: '계약 기간',
-      accessor: 'contractPeriod',
-      Cell: EditableCell
     }
   ], [tableData, checked, setChecked]);
 
