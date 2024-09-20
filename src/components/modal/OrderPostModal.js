@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './Modal.css';
 import './PostModal.css';
 import EditableTableWithCheckbox from '../../components/Table/EditableTableWithCheckbox';
-import getBuyerJoinItemsRequest from '../../requests/GetBuyerJoinItems';
+import getBuyerItemsPeriodRequest from '../../requests/GetBuyerItemsPeriod';
 import getItemRequest from '../../requests/GetItemRequest';
 import Swal from 'sweetalert2';
 
-const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
+const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected, orderDate }) => {
     const [buyerItems, setBuyerItems] = useState({ data: [] });
     const [isLoading, setIsLoading] = useState(true);
     const [checked, setChecked] = useState([]);
@@ -19,7 +19,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected }) => {
     useEffect(() => {
         const fetchBuyerItems = async () => {
             try {
-                await getBuyerJoinItemsRequest(state, buyerCd, setBuyerItems, page, 10, setIsLoading);
+                await getBuyerItemsPeriodRequest(state, buyerCd, orderDate, setBuyerItems, page, 10, setIsLoading);
             } catch (error) {
                 console.error("Failed to fetch buyer items:", error);
                 Swal.fire({ text: '고객 아이템을 가져오는데 실패했습니다.' });
