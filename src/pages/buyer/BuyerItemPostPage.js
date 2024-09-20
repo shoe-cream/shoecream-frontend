@@ -15,15 +15,20 @@ import sendGetAllItemsRequest from '../../requests/GetAllItemsRequest';
 import sendPatchMultiBuyerItemsRequest from '../../requests/PatchMultiBuyerItemsRequest';
 import './BuyerItemPostPage.css';
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import DropdownSearchWindow from '../../components/search/DropdownSearchWindow';
 
 const BuyerItemPostPage = () => {
     const { state } = useAuth();
     const [page, setPage] = useState(1);
     const [dbData, setDbData] = useState();
     const [data, setData] = useState({ data: [] });
+    const [allBuyers, setAllBuyers] = useState({ data: [] });
+    const [allItems, setAllItems] = useState({ data: [] });
     const [checked, setChecked] = useState([]);
     const [edited, setEdited] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoading2, setIsLoading2] = useState(true);
+    const [isLoading3, setIsLoading3] = useState(true);
     const [sortBy, setSortBy] = useState('buyerItemId');
     const [isPostMode, setIsPostMode] = useState(false);
 
@@ -103,7 +108,9 @@ const BuyerItemPostPage = () => {
         setDbData(value);
     }
     useEffect(() => {
-        sendGetMasterBuyerItemsRequest(state, page, 10, resetData, sortBy, setIsLoading);
+        sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy, setIsLoading: setIsLoading});
+        sendGetAllBuyersRequest(state, setAllBuyers, setIsLoading2);
+        sendGetAllItemsRequest(state, setAllItems, setIsLoading3);
     }, [page, sortBy]);
     return (
         <div>
@@ -125,6 +132,16 @@ const BuyerItemPostPage = () => {
                                     <option value='endDate'>적용 종료일순</option>
                                     <option value='modifiedAt'>최신 수정순</option>
                                 </select>
+                                <DropdownSearchWindow types = {[
+                                    {value: 'buyerNm', display: '고객사명', placeholder: '고객사 이름으로 검색', 
+                                        suggestions:allBuyers.data.map(buyer => (
+                                            {key: buyer.buyerNm, onSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, buyerNm: buyer.buyerNm, setData: resetData, sort: sortBy})}
+                                        ))},
+                                    {value: 'itemNm', display: '제품명', placeholder: '제품 이름으로 검색', 
+                                        suggestions:allItems.data.map(item => (
+                                            {key: item.itemNm, onSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, itemNm: item.itemNm, setData: resetData, sort: sortBy})}
+                                        ))},
+                                    ]}/>
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                                     <button className='manufacturer-button' onClick={() => {
@@ -232,7 +249,7 @@ const BuyerItemPostPage = () => {
                             >
                             </EditableTableWithCheckbox>
                         </div>
-                        {isLoading ? <div /> : <PageContainer
+                        {isLoading || isLoading2 || isLoading3? <div /> : <PageContainer
                             currentPage={page}
                             setPage={setPage}
                             pageInfo={data.pageInfo}

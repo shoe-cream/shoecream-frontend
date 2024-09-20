@@ -1,9 +1,9 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const sendGetMasterBuyerItemsRequest = async (state, page, size, setData, sort, setIsLoading ) => {
+const sendGetMasterBuyerItemsRequest = async ({state, page, size, buyerNm, buyerCd, itemNm, itemCd, setData, sort, setIsLoading} ) => {
     try {
-        /* console.log('state:', state.token); */
+        console.log('state:', state.token);
         const response = await axios.get(`http://localhost:8080/buyer-items`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -13,6 +13,10 @@ const sendGetMasterBuyerItemsRequest = async (state, page, size, setData, sort, 
                 page: page,
                 size: size,
                 sort: sort,
+                buyerNm: buyerNm,
+                buyerCd: buyerCd,
+                itemNm: itemNm,
+                itemCd: itemCd,
             }
         });
 
