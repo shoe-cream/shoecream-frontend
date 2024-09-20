@@ -48,7 +48,7 @@ const ItemPostPage = () => {
     },
     {
       accessor: 'itemCd',
-      Header: '상품 코드',
+      Header: '제품 코드',
     },
     {
       accessor: 'category',
@@ -92,11 +92,11 @@ const ItemPostPage = () => {
     },
     {
       accessor: 'itemNm',
-      Header: '상품명',
+      Header: '제품명',
     },
     {
       accessor: 'itemCd',
-      Header: '상품 코드',
+      Header: '제품 코드',
     },
     {
       accessor: 'category',
@@ -137,7 +137,8 @@ const ItemPostPage = () => {
               <h2 className="app-label">제품 관리</h2>
               <div className='manufacturer-list-container'>
                 <div className='manufacturer-tool-container'>
-                  <select onChange={(e) => setSortBy(e.target.value)}>
+                  <select className='custom-select-class' 
+                  onChange={(e) => setSortBy(e.target.value)}>
                     <option disabled='true'>정렬 기준 선택</option>
                     <option value={'itemCd'}>제품코드</option>
                     <option value={'itemNm'}>제품명</option>
