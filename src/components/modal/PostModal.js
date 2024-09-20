@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 const PostModal = ({ setOpened, columnData, postRequest, sortBy, setParentData, requestArr }) => {
     const [data, setData] = useState([]);
     const [checked, setChecked] = useState([]);
+    const [searchInputs, setSearchInputs] = useState(Array(requestArr.length).fill({accessor:'', value: ''}));
 
     const isDataValid = (dataItem) => {
         let result = {};
@@ -40,6 +41,7 @@ const PostModal = ({ setOpened, columnData, postRequest, sortBy, setParentData, 
                     checked={checked}
                     setChecked={setChecked}
                     requestArr={requestArr}
+                    setSearchInputs
                 ></EditableTableWithAddrow>
                 <div className='post-modal-button-container'>
                     <button className="post-modal-button" onClick={() => {

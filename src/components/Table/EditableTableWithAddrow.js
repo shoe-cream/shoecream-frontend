@@ -163,7 +163,9 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
         <SearchInput
           placeholder={placeholder || '검색어를 입력하세요'}
           suggestions={suggestions}
+          value={value}
           onChange={onChange}
+          onBlur={onBlur}
           searchInputs={searchInputs[masterDataIndex]}
           setSearchInputs={(value) => {
             const newInputs = searchInputs.map((input, index) => index === masterDataIndex ? value : input);
@@ -258,6 +260,10 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
           <tr className="body-r">
             <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }}>
               <button onClick={addEmptyRow} className="add-row-button">+ 추가</button>
+              <button onClick={() => {
+                console.log('searchInputs in EditableWithAddrow: ', searchInputs);
+                console.log('data in EditableWithAddrow: ', data);
+                }}>데이터 확인</button>
             </td>
           </tr>
         </tbody>
