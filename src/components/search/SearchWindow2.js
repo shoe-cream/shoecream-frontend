@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Search } from 'lucide-react';
-import './SearchWindow.css';
+import './SearchWindow2.css';
 
 const SearchWindow = ({ placeholder, suggestions }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -74,15 +74,15 @@ const SearchWindow = ({ placeholder, suggestions }) => {
                 value={searchTerm}
                 onChange={handleSearchChange}
                 onKeyDown={handleKeyDown}
-                className="header-search-input"
+                className="header-search-input2"
                 autoComplete="off"
             />
-            <button type="submit" className="header-search-button">
+            <button type="submit" className="header-search-button2">
                 <Search size={15} />
             </button>
 
             {showSuggestions && searchTerm && filteredSuggestions.length > 0 && (
-                <ul className="header-suggestions">
+                <ul className="header-suggestions2">
                     {filteredSuggestions.map((suggestion, index) => (
                         <li
                             key={index}

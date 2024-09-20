@@ -85,13 +85,14 @@ const ManufacturerPostPage = () => {
                         <h2 className="app-label">제조사 관리</h2>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
-                                <select onChange={(e) => setSortBy(e.target.value)}>
+                                <select className='custom-select-class'  
+                                    onChange={(e) => setSortBy(e.target.value)}>
                                     <option disabled='true'>정렬 기준 선택</option>
                                     <option value={'itemCd'}>제품코드</option>
                                     <option value={'itemNm'}>제품명</option>
                                     <option value={'createdAt'}>등록순</option>
                                     <option value={'unitPrice'}>단가순</option>
-                                </select>
+                                </select>   
                                 <div />
                                 <div className='manufacturer-button-container'>
                                 <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>

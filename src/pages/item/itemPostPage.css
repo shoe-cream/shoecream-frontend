@@ -78,8 +78,6 @@
 
   }
 
-
-
 .item-post-page table {
     width: 100%;
     table-layout: fixed;
@@ -95,17 +93,26 @@
   text-align: left;
   /* overflow: hidden; */
   /* text-overflow: ellipsis; */
-  /* white-space: nowrap; */ 
+  /* white-space: nowrap;    */
 }
   
 .item-post-page th {
     background-color: #f2f2f2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
   }
 
 .item-post-page th:first-child,
 .item-post-page td:first-child {
   justify-content: center;
 }
+
+.item-post-page td:nth-child(10) {
+  width: 20px; 
+}
+
+
 
 /* 상품 코드 컬럼 */
 /* .item-post-page th:nth-child(3),

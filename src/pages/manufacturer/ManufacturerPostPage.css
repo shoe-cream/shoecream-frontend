@@ -79,11 +79,23 @@
     /* border: 1px solid black; */
     width: 950px;
 }
-.manufacturer-tool-container{
+.manufacturer-tool-container {
     display: flex;
-    justify-content: space-between;
-    height: 30px;
-}
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .custom-select-class {
+    padding: 8px 12px;
+    width: 10%;
+    border: 1px solid #848282;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+  }
+
 .manufacturer-button-container{
     gap: 8px;
 }

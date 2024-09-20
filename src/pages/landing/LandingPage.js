@@ -10,6 +10,7 @@ import MonthChart from '../../components/chart/MonthSalesChart';
 import { useAuth } from '../../auth/AuthContext';
 import sendGetReportsRequest from '../../requests/GetReports';
 import './LandingPage.css';
+import { Calendar } from 'lucide-react';
 
 const flatData = (data) => {
     let totalAmount = 0;
@@ -88,63 +89,58 @@ const LandingPage = () => {
     };
 
     return (
-        <div>
+        <div className="landing-page">
             <Header />
             <div className='app-container'>
                 <Sidebar />
                 <div className='app-content-container'>
-                    <div className="date-range-inputs">
-                        <span>조회기간:</span>
-                        <input
-                            type="date"
-                            className="input w-40"
-                            value={startDate}
-                            onChange={handleStartDateChange}
-                        />
-                        <span>~</span>
-                        <input
-                            type="date"
-                            className="input w-40"
-                            value={endDate}
-                            onChange={handleEndDateChange}
-                        />
-                         <button 
-                            onClick={handleResetDates}
-                            className="reset-button"
-                            style={{
-                                marginLeft: '10px',
-                                padding: '5px 10px',
-                            
-                                border: '1px solid #ccc',
-                                borderRadius: '4px',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            초기화
-                        </button>
+                    <div className="dashboard-header">
+                        <h1>차트</h1>
+                        <div className="date-range-inputs">
+                            <Calendar size={20} />
+                            <input
+                                type="date"
+                                className="date-input"
+                                value={startDate}
+                                onChange={handleStartDateChange}
+                            />
+                            <span>~</span>
+                            <input
+                                type="date"
+                                className="date-input"
+                                value={endDate}
+                                onChange={handleEndDateChange}
+                            />
+                            <button 
+                                onClick={handleResetDates}
+                                className="reset-button"
+                            >
+                                초기화
+                            </button>
+                        </div>
                     </div>
                     {isLoading ? (
-                        <div></div>
+                        <div className="loading-spinner"></div>
                     ) : (
-                        <Tabs>
+                        <Tabs className="dashboard-tabs">
                             <TabList>
-                                <Tab>제품 코드별 주문 총금액</Tab>
+                                <Tab>제품 주문 총금액</Tab>
                                 <Tab>제품 코드별 주문 수량</Tab>
                                 <Tab>월별 주문 금액</Tab>
                             </TabList>
 
                             <TabPanel>
-                                <div style={{ width: '80%', margin: '20px auto' }}>
-                                    <SalesChart data={barChartData} />
+                                <div className="chart-container">
+                                <SalesChart amountData={barChartData} quantityData={pieChartData} />
                                 </div>
                             </TabPanel>
                             <TabPanel>
-                                <div style={{ width: '80%', margin: '20px auto' }}>
+                                <div className="chart-container">
                                     <SalesCircleChart data={pieChartData} />
                                 </div>
                             </TabPanel>
                             <TabPanel>
-                                <div style={{ width: '80%', margin: '20px auto' }}>
+                                <div className="chart-container">
                                     <MonthChart data={monthlyData} />
                                 </div>
                             </TabPanel>
