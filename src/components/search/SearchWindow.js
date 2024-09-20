@@ -53,7 +53,7 @@ const SearchWindow = ({ placeholder, suggestions }) => {
 
     // 검색 실행
     const handleSearchSubmit = (suggestion) => {
-        setShowSuggestions(false);
+        setShowSuggestions(false); // 추천 리스트만 닫음
         if (suggestion && suggestion.onSearch) {
             suggestion.onSearch();
         }
@@ -62,8 +62,7 @@ const SearchWindow = ({ placeholder, suggestions }) => {
     // 추천 항목 클릭 시 검색 실행
     const handleSuggestionClick = (suggestion) => {
         setSearchTerm(suggestion.key);
-        setShowSuggestions(false);
-        handleSearchSubmit(suggestion);
+        setShowSuggestions(false); // 추천 리스트만 닫음
     };
 
     return (
@@ -96,6 +95,6 @@ const SearchWindow = ({ placeholder, suggestions }) => {
             )}
         </form>
     );
-}
+};
 
 export default SearchWindow;

@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2';
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
@@ -112,6 +113,11 @@ const EmailButton = styled(Button)`
   color: white;
 `;
   
+import '../../App.css';  
+import './OrderDetail.css'; 
+import { useLocation } from 'react-router-dom';
+
+
 const OrderDetail = () => {
     const { orderCd } = useParams();  
     const [orderData, setOrderData] = useState(null); 
@@ -121,6 +127,7 @@ const OrderDetail = () => {
     const location = useLocation(); // navigate로부터 넘겨받은 state 접근
     const token = location.state?.token;
     const [isLoading, setIsLoading] = useState(true);
+    const [employeeData, setEmployeeData] = useState(null);
     
     // API 요청으로 주문 데이터 받아오기
     useEffect(() => {
@@ -140,13 +147,29 @@ const OrderDetail = () => {
         .then(response => response.json())
         .then(data => {
             setOrderData(data.data); 
+
+  // 주문 데이터에서 employeeId로 담당자 정보 조회
+  return fetch(`http://localhost:8080/api/members/${data.data.employeeId}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}` // 토큰을 Authorization 헤더로 전달
+    }
+});
+
+ })
+ .then(response => response.json())
+        .then(data => {
+            setEmployeeData(data.data);  // 담당자 정보 설정
         })
         .catch(error => {
-            console.error('Error fetching order data:', error);
+            console.error('Error fetching order or employee data:', error);
         });
-    }, [orderCd, token]);   
+    }, [orderCd, token]); 
 
-    if (!orderData) {
+
+
+    if (!orderData|| !employeeData) {
         return <div>로딩 중...</div>;
     }
 
@@ -157,6 +180,12 @@ const OrderDetail = () => {
     }, 0); 
     const tax = totalAmount * 0.1;
     const totalWithTax = totalAmount + tax;
+
+    // 납기일자는 각 주문 항목에서 가장 늦은 endDate로 설정
+    const dueDate = orderData.orderItems.reduce((latest, item) => {
+        const itemEndDate = new Date(item.endDate);
+        return itemEndDate > latest ? itemEndDate : latest;
+    }, new Date(orderData.orderItems[0].endDate));
 
     const handleDownloadPDF = () => {
         const element = document.getElementById('quotation-content');
@@ -170,7 +199,7 @@ const OrderDetail = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
-
+    
     const handleSendEmail = () => {
         setIsSending(true); 
         const element = document.getElementById('quotation-content');
@@ -187,14 +216,26 @@ const OrderDetail = () => {
             })
             .then((response) => {
                 if (response.ok) {
-                    alert("메일이 전송되었습니다.");
+                    Swal.fire({
+                        icon: 'success',
+                        title: '메일 전송 성공',
+                        text: '메일이 성공적으로 전송되었습니다.'
+                    });
                 } else {
-                    alert("메일 전송에 실패했습니다.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: '메일 전송 실패',
+                        text: '메일 전송에 실패했습니다. 다시 시도해주세요.'
+                    });
                 }
             })
             .catch((error) => {
                 console.error("메일 전송 오류:", error);
-                alert("메일 전송 중 오류가 발생했습니다.");
+                Swal.fire({
+                    icon: 'error',
+                    title: '메일 전송 오류',
+                    text: '메일 전송 중 오류가 발생했습니다.'
+                });
             })
             .finally(() => {
                 setIsSending(false);  
@@ -202,7 +243,6 @@ const OrderDetail = () => {
             });
         });
     };
-
    
     const handlePrint = () => {
         const printContent = document.getElementById('quotation-content').innerHTML;
@@ -268,9 +308,9 @@ const OrderDetail = () => {
                                 <p><strong>견적서 만료일:</strong> {orderData.requestDate}</p>
                             </InfoColumn>
                             <InfoColumn>
-                                <p><strong>수신자:</strong> ________________</p>
-                                <p><strong>담당자:</strong> ________________</p>
-                                <p><strong>내선전화:</strong> ________________</p>
+                            <p><strong>담당자 이름</strong> {employeeData.name || '정보 없음'}</pf>  
+                            <p><strong>내선 번호</strong> {employeeData.tel || '정보 없음'}</p>  
+                            <p><strong>납기일자</strong> {dueDate.toLocaleDateString() || '정보 없음'}</p>
                             </InfoColumn>
                         </InfoSection>
     
@@ -291,7 +331,6 @@ const OrderDetail = () => {
                                         <TableCell>{item.qty || 0}</TableCell>
                                         <TableCell>${item.unitPrice ? item.unitPrice.toFixed(2) : '0.00'}</TableCell>
                                         <TableCell>${(item.qty * item.unitPrice || 0).toFixed(2)}</TableCell>
-                                    </tr>
                                 ))}
                             </tbody>
                         </Table>
