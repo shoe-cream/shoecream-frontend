@@ -102,7 +102,7 @@ const ItemPostPage = () => {
       accessor: 'color',
       Header: '색상',
       type: 'dropdown',
-      options: ['Black', 'White', 'Gray', 'Red', 'Blue', 'Yellow'],
+      options: ['Black', 'White', 'Gray', 'Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Brown', 'Purple'],
     },
     {
       accessor: 'size',
