@@ -136,4 +136,10 @@
     background-color: #fff !important;
     box-sizing: border-box !important;
   }
+  .add-row-button{
+    margin: 0 auto;
+  }
+  .addrow-dropdown{
+    width: 100%;
+  }
   

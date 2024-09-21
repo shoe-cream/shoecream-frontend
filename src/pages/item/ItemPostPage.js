@@ -42,7 +42,7 @@ const ItemPostPage = () => {
   }
 
   useEffect(() => {
-    sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading});
+    sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
     sendGetAllItemsRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
@@ -151,13 +151,13 @@ const ItemPostPage = () => {
                           console.log('data: ', data);
                           console.log('itemNm: ', data.itemNm);
                           sendGetItemsRequest(
-                            {state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, itemNm:itemNm, setData:resetData, setIsLoading:setIsLoading}
+                            {state:state, page:page, setPage:setPage, size:10, sort:sortBy, itemNm:itemNm, setData:resetData, setIsLoading:setIsLoading}
                           );
                         }                        
                       }))
                     }
                     defaultSearch = {() => sendGetItemsRequest(
-                      {state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading}
+                      {state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading}
                     )}
                   />
                   <div />
@@ -196,7 +196,7 @@ const ItemPostPage = () => {
                       });
                       console.log('requestBody: ', requestBody);
                       sendPatchMultiItemRequest(state, requestBody, () => {
-                        sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading});
+                        sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
                         setChecked([]);
                       });
                     }}><Edit size={16} /> 수정</button>
@@ -209,7 +209,7 @@ const ItemPostPage = () => {
                         /* console.log('checked: ', checked); */
                         const checkedItems = checked.map(item => items.data[item].itemId);
                         sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
-                          sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading});
+                          sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
                           setChecked([]);
                         });
                       }}><Trash2 size={16} /> 삭제</button>
@@ -232,7 +232,7 @@ const ItemPostPage = () => {
                 setPage={setPage}
                 pageInfo={items.pageInfo}
                 getPage={(page) => {
-                  sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading});
+                  sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
                 }}
                 setChecked={(value) => setChecked(value)}
                 setIsLoading={setIsLoading}
@@ -246,7 +246,7 @@ const ItemPostPage = () => {
                 sendPostMultiItemRequest(state, checkedData, () => {
                   setChecked([]);
                   setOpened(false);
-                  sendGetItemsRequest({state: state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:(value) => setParentData(value)});
+                  sendGetItemsRequest({state: state, page:page, setPage:setPage, size:10, sort:sortBy, setData:(value) => setParentData(value)});
                 });
               }}
               page={page}

@@ -108,10 +108,17 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
 
     const onBlur = () => {
       console.log('value in onBlur', value);
-      if(type === 'number' && value < 0){
-        setValue('');
-        Swal.fire({text: '음수는 허용되지 않습니다.'});
-        return;
+      if (type === 'number') {
+        if (value < 0) {
+          setValue('');
+          Swal.fire({ text: '음수는 허용되지 않습니다.' });
+          return;
+        }
+        if (value > 2147483647) {
+          setValue('');
+          Swal.fire({ text: '허용된 범위를 초과했습니다.' });
+          return;
+        }
       }
       const newData = [...tableData];
       if (!newData[index]) {
@@ -146,7 +153,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
 
     if (type === 'dropdown') {
       return (
-        <select value={value} onChange={onChange} onBlur={onBlur}>
+        <select className = 'addrow-dropdown' value={value} onChange={onChange} onBlur={onBlur}>
           <option value="" hidden></option>
           {dropdownOptions.map((option, index) => (
             <option key={index} value={typeof option === 'object' ? option[id] : option}>
@@ -242,7 +249,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
   } = useTable({ columns: allColumns, data: tableData });
 
   return (
-    <div ref={tableRef} style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+    <div ref={tableRef} style={{ minHeight: '35vh', maxHeight: '80vh', overflowY: 'auto' }}>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -265,8 +272,8 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
             );
           })}
           <tr className="body-r">
-            <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }}>
-              <button onClick={addEmptyRow} className="add-row-button">+ 추가</button>
+            <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }} onClick={addEmptyRow}> + 추가
+              {/* <button onClick={addEmptyRow} className="add-row-button">+ 추가</button> */}
             </td>
           </tr>
         </tbody>
