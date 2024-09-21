@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useTable } from 'react-table';
 import './ReactTable.css';
+import Swal from 'sweetalert2';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited, onRowClick ,onCheckboxChange}) => {
 
@@ -81,6 +82,22 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     }, [column.type, id, index, setData]);
 
     const onBlur = useCallback(() => {
+      const currentValue = inputRef.current.value
+      console.log('value in onBlur: ', currentValue);
+      if(column.type === 'number'){
+        const max = column.max || 2147483647;
+        if(currentValue > max){
+          inputRef.current.value = '';
+          Swal.fire({text: `허용된 값(${max})을 초과하였습니다.`});
+          return;
+        }
+        const min = column.min || 0;
+        if(currentValue < min){
+          inputRef.current.value = '';
+          Swal.fire({text: `최소값(${min}) 미만입니다.`});
+          return;
+        }
+      }
       if (column.type !== 'date') {
         setData(prevData => {
           const newData = [...prevData.data];

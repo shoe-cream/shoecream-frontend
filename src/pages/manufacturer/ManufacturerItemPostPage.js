@@ -61,7 +61,6 @@ const ManufacturerItemPostPage = () => {
         {
             accessor: 'unitPrice',
             Header: '단가',
-            type: 'number',
         },
     ]
     const postColumnData = [
