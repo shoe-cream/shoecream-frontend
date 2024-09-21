@@ -15,6 +15,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected, orderDate 
     const [originalData, setOriginalData] = useState([]); // 원본 데이터를 저장합니다.
     const [itemsWithDetails, setItemsWithDetails] = useState({ data: [] });
     const [page, setPage] = useState(1);
+    const [masterItem, setMasterItem] = useState({});
 
     useEffect(() => {
         const fetchBuyerItems = async () => {
@@ -45,7 +46,7 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected, orderDate 
                 Swal.fire({ text: '아이템 세부정보를 가져오는데 실패했습니다.' });
             }
         };
-
+    
         if (!isLoading && buyerItems.data.length > 0) {
             fetchItemDetails();
         }
@@ -60,13 +61,14 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected, orderDate 
                     color: itemsDetails[item.itemCd]?.data.color || '',
                     size: itemsDetails[item.itemCd]?.data.size || '',
                     unitPrice: item.unitPrice,
+                    masterUnitPrice : itemsDetails[item.itemCd]?.data.unitPrice,
                     unit: item.unit,
                     quantity: 0,
                     prepareOrder: itemsDetails[item.itemCd]?.data.prepareOrder,
                     totalStock: itemsDetails[item.itemCd]?.data.totalStock || '',
                     startDate: item.startDate.split('T')[0],
                     endDate: item.endDate.split('T')[0],
-                    margin: 0 // 초기 마진을 0으로 설정
+                    margin: Math.round((item.unitPrice -  itemsDetails[item.itemCd]?.data.unitPrice) /  itemsDetails[item.itemCd]?.data.unitPrice * 100)
                 };
                 return originalItem;
             });
@@ -81,9 +83,9 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected, orderDate 
         if (itemsWithDetails.data.length > 0 && originalData.length > 0) {
             const updatedItems = itemsWithDetails.data.map(item => {
                 const originalItem = originalData.find(orig => orig.itemCd === item.itemCd);
-                if (originalItem) {
+                if (originalItem.margin) {
                     const margin = originalItem.unitPrice > 0
-                        ? ((item.unitPrice - originalItem.unitPrice) / originalItem.unitPrice) * 100 // 마진율 계산
+                        ? ((item.unitPrice - originalItem.masterUnitPrice) / originalItem.masterUnitPrice) * 100 // 마진율 계산
                         : 0;
                     const roundedMargin = Math.round(margin * 100) / 100;
                     return {

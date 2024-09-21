@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../auth/AuthContext';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, Title, Tooltip, Legend, PointElement } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import sendGetEmployeeReportRequest from '../../requests/GetReportEmployee';
 
 // Chart.js에서 사용될 기본 요소들을 등록
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
@@ -16,12 +18,75 @@ const dummyData = [
   { date: '2024-09-07', orderCount: 11, totalPrice: 5500000, marginRate: 18 },
 ];
 
-const SalesPerformanceChart = () => {
+const generateRecentFiveDaysRanges = () => {
+  const ranges = [];
+  const today = new Date();
+
+  for (let i = 0; i < 5; i++) {
+      const currentDate = new Date();
+      currentDate.setDate(today.getDate() - i);
+
+      const startDate = currentDate.toISOString().slice(0, 10);
+      const endDate = currentDate.toISOString().slice(0, 10);
+
+      ranges.unshift({ startDate, endDate });
+  }
+
+  return ranges;
+};
+
+const SalesPerformanceChart = ( {employee} ) => {
   // 데이터 처리
-  const labels = dummyData.map(item => item.date); // 날짜 리스트
-  const orderCounts = dummyData.map(item => item.orderCount); // 하루 주문 건수
-  const totalPrices = dummyData.map(item => item.totalPrice); // 하루 총 금액
-  const margins = dummyData.map(item => item.marginRate); // 마진율
+  const [employeeAllReport, setEmployeeAllReport] = useState([]);
+  const [recentFiveDaysReport, setRecentFiveDaysReport] = useState([]);
+  const { state } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const labels = recentFiveDaysReport.map(item => item.date); // 날짜 리스트
+  const orderCounts = recentFiveDaysReport.map(item => item.totalOrderCount); // 하루 주문 건수
+  const totalPrices = recentFiveDaysReport.map(item => item.totalOrderPrice); // 하루 총 금액
+  const margins = recentFiveDaysReport.map(item => item.margin);// 마진율
+
+
+//   useEffect(() => {
+//     sendGetEmployeeReportRequest(state, startDate, endDate, setEmployeeAllReport, setIsLoading);
+// }, [state, startDate, endDate]);
+
+
+useEffect(() => {
+  const fetchDailyReports = async () => {
+    const ranges = generateRecentFiveDaysRanges();
+    const dailyReport = [];
+
+    for (const range of ranges) {
+      await sendGetEmployeeReportRequest(state, range.startDate, range.endDate, (data) => {
+        const filteredData = data.filter(item => item.employeeId === employee.data.employeeId);
+        
+        if (filteredData.length > 0) {
+          const firstData = filteredData[0];
+          dailyReport.push({
+            date: range.startDate,
+            margin: firstData.marginRate,
+            totalOrderCount: firstData.totalOrderCount,
+            totalOrderPrice: firstData.totalOrderPrice
+          });
+        } else {
+          dailyReport.push({
+            date: range.startDate,
+            margin: 0,
+            totalOrderCount: 0,
+            totalOrderPrice: 0
+          });
+        }
+      }, setIsLoading);
+    }
+    setRecentFiveDaysReport(dailyReport);
+  };
+
+  if (employee.data && employee.data.employeeId) {
+    fetchDailyReports();
+  }
+}, [state, employee.data]);
+
 
   // 차트에 들어갈 데이터 구조
   const chartData = {
