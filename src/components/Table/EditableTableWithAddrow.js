@@ -97,7 +97,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     />
   );
 
-  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex, options, placeholder }, masterDataArr }) => {
+  const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex, options, placeholder, ...column }, masterDataArr }) => {
     const [value, setValue] = React.useState(initialValue);
     const [dropdownOptions, setDropdownOptions] = useState([]);
 
@@ -109,14 +109,17 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     const onBlur = () => {
       console.log('value in onBlur', value);
       if (type === 'number') {
-        if (value < 0) {
+        const max = column.max || 2147483647;
+        if (value > max) {
           setValue('');
-          Swal.fire({ text: '음수는 허용되지 않습니다.' });
+          Swal.fire({ text: `허용된 값${max}을 초과했습니다.` });
           return;
         }
-        if (value > 2147483647) {
+
+        const min = column.min || 0;
+        if(value < min){
           setValue('');
-          Swal.fire({ text: '허용된 범위를 초과했습니다.' });
+          Swal.fire({ text: `최소값(${min}) 미만일 수 없습니다.`});
           return;
         }
       }
