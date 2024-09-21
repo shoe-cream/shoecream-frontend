@@ -174,7 +174,7 @@ const OrderApprovalPage = () => {
         }
         if(status === 'REJECTED'){
             Swal.fire({
-                title: '납기일을 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
+                title: '납기일 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
                 text: '다시 되돌릴 수 없습니다.',
                 icon: 'warning',
                 
@@ -331,7 +331,7 @@ const OrderApprovalPage = () => {
         }
 
         Swal.fire({
-            title: '납기일을 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
+            title: '납기일 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
             text: '다시 되돌릴 수 없습니다.',
             icon: 'warning',
             
@@ -447,7 +447,6 @@ const OrderApprovalPage = () => {
                 icon: 'info',
                 confirmButtonText: '확인'
             });
-            return;
             return;
         }
 
@@ -799,6 +798,7 @@ const OrderApprovalPage = () => {
                             onClose={() => setIsDetailModalOpen(false)}
                             order={detailOrder}
                             status = {status}
+                            fetchOrders = {fetchOrders}
                         /> : <div />
                     }
                 </div>

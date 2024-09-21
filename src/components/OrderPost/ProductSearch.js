@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { useAuth } from '../../auth/AuthContext';
-import getBuyerWithItemsRequest from '../../requests/GetBuyerItems';
+import getBuyerRequest from '../../requests/GetBuyerRequest';
 import getItemRequest from '../../requests/GetItemRequest';
 import OrderPostModal from '../modal/OrderPostModal';
 import Swal from 'sweetalert2';
@@ -43,7 +43,7 @@ const ProductSearch = ({ onAddOrder }) => {
     };
 
     const handleBuyerSearch = () => {
-        getBuyerWithItemsRequest(state, searchParams.buyerCd, setBuyers, setIsLoading);
+        getBuyerRequest(state, searchParams.buyerCd, setBuyers, setIsLoading);
     };
 
     const handleOpenModal = () => {
@@ -77,7 +77,7 @@ const ProductSearch = ({ onAddOrder }) => {
             buyerCd: searchParams.buyerCd,
             buyerNm: buyers.data.buyerNm,
             tel: buyers.data.tel,
-            registrationDate: searchParams.orderDate, // 변경된 부분
+            registrationDate: searchParams.orderDate, 
             items: items.map(item => ({
                 itemCd: item.itemCd,
                 itemNm: item.itemNm,
@@ -160,17 +160,22 @@ const ReadOnlyInput = ({ label, id, value }) => (
     </div>
 );
 
-const DateInput = ({ label, id, value, onChange }) => (
-    <div className="search-box">
-        <span className="search-label">{label}</span>
-        <input
-            type='date'
-            id={id}
-            className='orderPostInput'
-            value={value}
-            onChange={onChange}
-        />
-    </div>
-);
+const DateInput = ({ label, id, value, onChange }) => {
+    const today = new Date().toISOString().split('T')[0]; // 오늘 날짜를 'YYYY-MM-DD' 형식으로 가져옵니다.
+
+    return (
+        <div className="search-box">
+            <span className="search-label">{label}</span>
+            <input
+                type='date'
+                id={id}
+                className='orderPostInput'
+                value={value}
+                onChange={onChange}
+                min={today}
+            />
+        </div>
+    );
+};
 
 export default ProductSearch;

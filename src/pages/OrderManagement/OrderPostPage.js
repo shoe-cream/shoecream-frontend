@@ -51,11 +51,11 @@ const OrderPostPage = () => {
                 itemCd: item.itemCd,
                 unitPrice: item.unitPrice,
                 qty: item.qty,
-                startDate: new Date(item.startDate),
-                endDate: new Date(item.endDate),
+                startDate: `${item.startDate}T00:00:00.000`,
+                endDate: `${item.endDate}T00:00:00.000`,
                 unit: item.unit
             }));
-    
+            console.log("dkfjsdkfjsd", order)
             return sendPostOrder(state, order.buyerCd, `${order.requestDate}T00:00:00.000`, orderItemDtoList);
         };
     

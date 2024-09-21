@@ -61,12 +61,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
   );
 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id }, row }) => {
-    const [value, setValue] = React.useState(() => {
-      if (id === 'requestDate' && !initialValue) {
-        return getCurrentDate();
-      }
-      return initialValue;
-    });
+    const [value, setValue] = React.useState(initialValue || '연도-월-일');
   
     const onChange = (e) => {
       setValue(e.target.value);
@@ -80,38 +75,42 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
       const newData = [...data.data];
       newData[index] = {
         ...newData[index],
-        [id]: value
+        [id]: value,
       };
       setData({ ...data, data: newData });
     };
   
-    React.useEffect(() => {
-      if (id === 'requestDate' && !initialValue) {
-        updateData(index, id, getCurrentDate());
-      }
-    }, []);
+    const getCurrentDate = () => {
+      const now = new Date();
+      return now.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+    };
   
     // 현재 행의 orderItems에서 가장 빠른 endDate를 구함
-    const minEndDate = row.original.orderItems.reduce((earliest, item) => {
-      return item.endDate < earliest ? item.endDate : earliest;
-    }, row.original.orderItems[0]?.endDate || getCurrentDate());
+    const minEndDate = React.useMemo(() => {
+      if (id === 'requestDate') {
+        return row.original.orderItems.reduce((earliest, item) => {
+          return item.endDate < earliest ? item.endDate : earliest;
+        }, row.original.orderItems[0]?.endDate || getCurrentDate());
+      }
+      return undefined;
+    }, [id, row.original.orderItems]);
   
     // 현재 날짜 기준으로 최소값 설정
-    const minDate = id === 'requestDate' ? getCurrentDate() : undefined;
+    const minDate = id === 'requestDate' ? getCurrentDate() : '';
   
     return (
-      <input
-        className='cell-input'
-        type={id === 'requestDate' ? 'date' : 'text'}
-        value={value || ''}
-        onChange={onChange}
-        onBlur={onBlur}
-        min={minDate}
-        max={minEndDate}  // 가장 빠른 endDate로 최대값 설정
-      />
+        <input
+          className='cell-input'
+          type={id === 'requestDate' ? 'date' : 'text'}
+          value={value || ''}
+          onChange={onChange}
+          onBlur={onBlur}
+          min={minDate}
+          max={minEndDate}
+        />
     );
   });
-
+  
   const ItemsCell = ({ items }) => (
     <div>
       {items.map((item, index) => (

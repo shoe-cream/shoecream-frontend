@@ -5,14 +5,11 @@ import Swal from 'sweetalert2';
 const getBuyerRequest = async (state ,buyerCd, setBuyer, setIsLoading) => {
     try {
         console.log('buyerCd:', buyerCd);
-        const response = await axios.get(`http://localhost:8080/buyers/search`, {
+        const response = await axios.get(`http://localhost:8080/buyers/${buyerCd}`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${state.token}`
+                'Authorization': state.token
             }   
-            ,params: {
-                buyerCd: buyerCd
-            }
         });
 
         if (response.status === 200) {
