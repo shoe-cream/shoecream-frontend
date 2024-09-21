@@ -4,15 +4,16 @@ import EditableTableWithCheckbox from '../Table/EditableTableWithCheckbox';
 import sendPatchMultiItemRequest from '../../requests/PatchOrders';
 import { useAuth } from '../../auth/AuthContext';
 import Swal from 'sweetalert2';
+import { FileDown, Printer, FileText, Edit, Check, XCircle, RotateCcw } from 'lucide-react';
 
-const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
+const OrderDetailModal = ({ isOpen, onClose, order, status, fetchOrders }) => {
     const { state } = useAuth();
     const [originalData, setOriginalData] = useState({ data: [] });
     const [modifiedData, setModifiedData] = useState({ data: [] });
     const [checkedItems, setCheckedItems] = useState([]);
     const [edited, setEdited] = useState([]);
 
-    
+
 
     const handlePatchOrder = () => {
         const ordersPatch = modifiedData.data.filter((item, index) => {
@@ -24,7 +25,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
                 item.endDate !== originalItem.endDate
             );
         });
-    
+
         if (ordersPatch.length === 0) {
             Swal.fire({
                 title: '알림',
@@ -34,7 +35,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
             });
             return;
         }
-    
+
         const itemsToSend = ordersPatch.map(item => ({
             orderId: item.orderId,
             itemId: item.itemId,
@@ -43,10 +44,11 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
             startDate: item.startDate,
             endDate: item.endDate
         }));
-    
+
         sendPatchMultiItemRequest(state, itemsToSend, () => {
             setCheckedItems([]);
             onClose();
+            fetchOrders();
             Swal.fire({
                 title: '성공',
                 text: '주문이 성공적으로 수정되었습니다.',
@@ -62,7 +64,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
             console.log("Invalid order data structure:", orderData);
             return [];
         }
-        
+
         return orderData.orderItems.map(item => ({
             employeeId: orderData.employeeId,
             orderId: orderData.orderId,
@@ -91,8 +93,8 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
             console.log("Original order:", order);
             const transformed = transOrderData(order);
             console.log("Transformed data:", transformed);
-            setOriginalData({data: transformed});
-            setModifiedData({data: transformed});
+            setOriginalData({ data: transformed });
+            setModifiedData({ data: transformed });
         }
     }, [order]);
 
@@ -143,12 +145,17 @@ const OrderDetailModal = ({ isOpen, onClose, order, status }) => {
                     setEdited={setEdited}
                 // onCheckboxChange={handleCheckboxChange}
                 // onRowClick={handleRowClick}
-                />
-                { status === 'REQUEST_TEMP' || status === 'REJECTED'? 
-                <button onClick={handlePatchOrder}>수정</button>
-                : <div></div>
-                }
-                <button onClick={onClose}>닫기</button>
+                /><div className ='modalActionBtn' style={{display : 'flex'}}>
+                    {status === 'REQUEST_TEMP' || status === 'REJECTED' ?
+                        <button className='btn btn-secondary' onClick={handlePatchOrder}>
+                            <Edit className="btn-icon" size={14} /> 수정
+                        </button>
+                        : <div></div>
+                    }
+                    <button className='btn btn-secondary' onClick={onClose}>
+                        <XCircle className='"btn-icon' size={14} /> 닫기
+                    </button>
+                </div>
             </div>
         </div>
     );
