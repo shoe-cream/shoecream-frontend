@@ -38,6 +38,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
   }, [data, ogData, setEdited]);
 
   const CheckboxCell = React.memo(({ row }) => (
+    <div className="checkbox-column">
     <input
       type="checkbox"
       checked={checked.includes(parseInt(row.id, 10))}
@@ -55,6 +56,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         }
       }}
     />
+    </div>
   ));
 
   const EditableCell = React.memo(({ value: initialValue, row ,row: { index }, column: { id, ...column } }) => {
@@ -109,6 +111,10 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         });
       }
     }, [column.type, id, index, setData]);
+
+    if (id === '불용재고') {
+      return <div className="unused-stock">{initialValue}</div>;
+    }
 
     if(column.type === undefined || column.type === 'cell'){
       return <span>{initialValue}</span>;

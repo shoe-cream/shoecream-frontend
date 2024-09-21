@@ -19,19 +19,24 @@
     text-align: left;
     color: #1d1d1d;
   }
+
+  th {
+  
+    
+  }
   
   .header-h {
     font-size: 13px;
     background-color: #f1f1f1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
     position: relative;
   }
   
   /* 테이블 헤더의 높이를 고정 */
   table thead tr {
-    height: 40px; /* 원하는 높이로 조정 가능 */
+    
   }
   
   .header-h:hover::after {
@@ -64,21 +69,24 @@
     background-color: #f9f9f9b8;
   }
   
+  /* 테이블 input 관련 */
   .cell-input {
     font-size: 12px !important;
     width: 100%;
+    padding: 2px 0px;
     box-sizing: border-box;
     border: none;
     background-color: transparent;
     word-wrap: break-word;
     white-space: nowrap;
-    max-width: 150px
+    max-width: 210px
   }
   
   th:first-child,
   td:first-child {
     width: 25px !important;
     min-width: 25px;
+
     /* text-align: center; */
   }
   
@@ -104,14 +112,7 @@
     text-align: left !important;
     /* padding-right: 5px; */
   }
-  
-  th:nth-child(10), 
-  td:nth-child(10) {
-    width: 55px !important;
-    min-width: 55px !important;
-    max-width: 60px !important;
-    text-align: left !important;
-  }
+
 
   /* 수량과 제품단가 입력 필드 스타일 */
     input[type="number"].cell-input {
@@ -141,5 +142,19 @@
   }
   .addrow-dropdown{
     width: 100%;
+  }
+
+  .checkbox-column {
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100%;
+  }
+  
+  .unused-stock {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100px;
   }
   
