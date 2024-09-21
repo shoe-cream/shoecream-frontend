@@ -25,7 +25,14 @@ const sendPatchMultiBuyerRequest = async(state, requestBody, executeAfter) => {
         }
     } catch(error){
         console.error('고객사 일괄 수정 실패(에러 발생): ', error);
-        Swal.fire({text: `요청 실패(${error.status})`});
+        switch(error.status){
+            case 409:
+                Swal.fire({text: `이메일 또는 전화번호가 이미 존재합니다.`});
+                break;
+            default:
+                Swal.fire({text: `요청 실패(${error.status})`});
+
+        }
     }
 }
 export default sendPatchMultiBuyerRequest;

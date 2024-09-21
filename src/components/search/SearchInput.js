@@ -93,6 +93,13 @@ const SearchInput = ({ placeholder, suggestions, onBlur, value, onChange, search
                 type="text"
                 placeholder={placeholder}
                 value={value}
+                onFocus={() => {
+                    // 처음에 누르면 모든 항목이 추천 리스트로 뜨게
+                    if(searchTerm === ''){
+                        setFilteredSuggestions(suggestions);
+                        setShowSuggestions(true);
+                    }
+                }}
                 onBlur={onBlur}
                 onChange={handleSearchChange}
                 onKeyDown={handleKeyDown}
@@ -100,7 +107,7 @@ const SearchInput = ({ placeholder, suggestions, onBlur, value, onChange, search
                 autoComplete="off"
             />
 
-            {showSuggestions && searchTerm && filteredSuggestions.length > 0 && (
+            {showSuggestions && filteredSuggestions.length > 0 && (
                 <ul className="header-suggestions">
                     {filteredSuggestions.map((suggestion, index) => (
                         <li

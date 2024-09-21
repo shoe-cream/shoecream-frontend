@@ -134,7 +134,8 @@ const ManufacturerItemPostPage = () => {
                                         value: 'mfNm', display: '제조사명', placeholder: '제조사 이름으로 검색',
                                         suggestions: allManufacturers.data.map(manufacturer => (
                                             { key: manufacturer.mfNm, onSearch: () => {
-                                                const mfNm = manufacturer.mfNm.replace(/\s+/g, '');
+                                                /* const mfNm = manufacturer.mfNm.replace(/\s+/g, ''); */
+                                                const mfNm = manufacturer.mfNm;
                                                 sendGetManufacturerItemsRequest({ state: state, page: page, size: 10, mfNm: mfNm, setData: resetData, sort: sortBy })} }
                                         )),
                                         defaultSearch: () => sendGetManufacturerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })
@@ -143,7 +144,8 @@ const ManufacturerItemPostPage = () => {
                                         value: 'itemNm', display: '제품명', placeholder: '제품 이름으로 검색',
                                         suggestions: allItems.data.map(item => (
                                             { key: item.itemNm, onSearch: () => {
-                                                const itemNm = item.itemNm.replace(/\s+/g, '');
+                                                /* const itemNm = item.itemNm.replace(/\s+/g, ''); */
+                                                const itemNm = item.itemNm;
                                                 sendGetManufacturerItemsRequest({ state: state, page: page, size: 10, itemNm: itemNm, setData: resetData, sort: sortBy })} }
                                         )),
                                         defaultSearch: () => sendGetManufacturerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })

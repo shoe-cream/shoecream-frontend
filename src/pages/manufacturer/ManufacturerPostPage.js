@@ -103,7 +103,8 @@ const ManufacturerPostPage = () => {
                                         allData.data.map(data => ({
                                             key: data.mfNm,
                                             onSearch: () => {
-                                                const mfNm = data.mfNm.replace(/\s+/g, '');
+                                                /* const mfNm = data.mfNm.replace(/\s+/g, ''); */
+                                                const mfNm = data.mfNm;
                                                 console.log('data: ', data);
                                                 console.log('mfNm: ', data.mfNm);
                                                 sendGetManufacturersRequest(
