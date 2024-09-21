@@ -115,17 +115,17 @@ const ManufacturerItemPostPage = () => {
                 <Sidebar></Sidebar>
                 <div className='app-content-container'>
                     <div className='app-background'>
-                        <h2 className="app-label">납품 관리</h2>
+                        <h2 className="app-label">납품 기록</h2>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
                                 <select onChange={(e) => setSortBy(e.target.value)}>
                                     <option disabled='true'>정렬 기준 선택</option>
                                     <option value='mfItemId'>ID</option>
                                     {/* <option value='buyerId'>등록순</option> */}
-                                    <option value='manufacturer.mfCd'>고객사별</option>
+                                    <option value='manufacture.mfNm'>고객사별</option>
                                     <option value='unitPrice'>단가순</option>
-                                    <option value='startDate'>적용 시작일순</option>
-                                    <option value='endDate'>적용 종료일순</option>
+                                    <option value='item.itemNm'>제품 이름순</option>
+                                    <option value='item.itemCd'>제품 코드순</option>
                                     <option value='modifiedAt'>최신 수정순</option>
                                 </select>
                                 <DropdownSearchWindow types={[
