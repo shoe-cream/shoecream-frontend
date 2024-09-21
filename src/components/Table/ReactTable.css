@@ -16,13 +16,8 @@
   th, td {
     border: 1px solid #bbbbbb;
     padding: 10px;
-    text-align: left;
+    text-align: left !important;
     color: #1d1d1d;
-  }
-
-  th {
-  
-    
   }
   
   .header-h {
