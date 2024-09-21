@@ -68,7 +68,7 @@ const Sidebar = () => {
                 <div className='리포트 카테고리'>
                     <Dropdown title={'리포트'} buttons={[
                         {name: '매출 요약', urlTo: '/dashboard'}, 
-                        {name: '판매 기록', urlTo: '/sales-history'},  
+                        /* {name: '판매 기록', urlTo: '/sales-history'},  */ 
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
                 </div>          
             </div>

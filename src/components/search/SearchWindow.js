@@ -85,6 +85,14 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
                 type="text"
                 placeholder={placeholder}
                 value={searchTerm}
+                onFocus={() => {
+                    // 처음에 누르면 모든 항목이 추천 리스트로 뜨게
+                    if(searchTerm === ''){
+                        setFilteredSuggestions(suggestions);
+                        setShowSuggestions(true);
+                    }
+                }}
+                onBlur={() => setShowSuggestions(false)}
                 onChange={handleSearchChange}
                 onKeyDown={handleKeyDown}
                 className="header-search-input"
@@ -94,13 +102,13 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
                 <Search size={15} />
             </button>
 
-            {showSuggestions && searchTerm && filteredSuggestions.length > 0 && (
+            {showSuggestions && filteredSuggestions.length > 0 && (
                 <ul className="header-suggestions">
                     {filteredSuggestions.map((suggestion, index) => (
                         <li
                             key={index}
                             className={index === activeSuggestion ? 'active' : ''}
-                            onClick={() => handleSuggestionClick(suggestion)}
+                            onMouseDown={() => handleSuggestionClick(suggestion)}
                         >
                             {suggestion.key}
                         </li>
