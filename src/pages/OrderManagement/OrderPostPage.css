@@ -116,12 +116,16 @@
 
 .modal-submit-btn {
     background-color: #2b538b;
+    color: #FFFFFF;
+    font-size: 15px;
     margin-left: 5px !important;
     margin-right: 10PX !important;
 }
 
 .modal-close-btn {
     background-color: #2b538b;
+    color: #FFFFFF;
+    font-size: 15px;
     margin-left: 5px !important;
     margin-right: 10PX !important;
 }

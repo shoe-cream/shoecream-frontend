@@ -2,7 +2,7 @@ import React from 'react';
 import './OrderItemsModal.css';
 
 const OrderItemsModal = ({ isOpen, onClose, items }) => {
-  if (!isOpen) return null; // 모달이 열려 있지 않으면 아무것도 렌더링하지 않음
+  if (!isOpen) return null;
 
   console.log("itemsssss", items)
 
@@ -23,18 +23,16 @@ const OrderItemsModal = ({ isOpen, onClose, items }) => {
             </thead>
             <tbody>
               {items.map((item, index) => (
-                <tr className='order-item-tr' key={index} style={{ border: '1px solid #ddd' }}>
-                  <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.itemNm}</td>
-                  <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.qty} {item.unit}</td>
-                  <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.endDate}</td>
-                  <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.margin}</td>
-                  <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.unitPrice * item.qty}</td>
+                <tr className='order-item-tr' key={index}>
+                  <td className='order-item-td'>{item.itemNm}</td>
+                  <td className='order-item-td'>{item.qty} {item.unit}</td>
+                  <td className='order-item-td'>{item.endDate}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <button onClick={onClose}>닫기</button>
+        <button className="close-button" onClick={onClose}>닫기</button>
       </div>
     </div>
   );
