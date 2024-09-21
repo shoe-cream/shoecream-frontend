@@ -171,9 +171,33 @@ const OrderApprovalPage = () => {
                 confirmButtonText: '확인'
             });
             return;
-            return;
         }
-        
+        if(status === 'REJECTED'){
+            Swal.fire({
+                title: '납기일을 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
+                text: '다시 되돌릴 수 없습니다.',
+                icon: 'warning',
+                
+                showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+                confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+                cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+                confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+                cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+                
+                reverseButtons: true, // 버튼 순서 거꾸로
+                
+             }).then(result => {
+                // 만약 Promise리턴을 받으면,
+                if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+                    setModalAction('approve');
+                    setIsMessageModalOpen(true);
+                }else {
+                    return;
+                }
+             });
+        }else{
+            
+        }
         let newStatus;
         switch (status) {
             case 'REQUEST_TEMP':
@@ -189,7 +213,7 @@ const OrderApprovalPage = () => {
                 Swal.fire({text: `현재 상태에서는 승인 작업을 수행할 수 없습니다.`});
                 return;
         }
-
+        
         // checkedItems에 해당하는 항목 필터링
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
 
@@ -303,7 +327,6 @@ const OrderApprovalPage = () => {
                 icon: 'info',
                 confirmButtonText: '확인'
             });
-            return;
             return;
         }
 

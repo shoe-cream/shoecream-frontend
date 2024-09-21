@@ -47,10 +47,18 @@ const ProductSearch = ({ onAddOrder }) => {
     };
 
     const handleOpenModal = () => {
-        if (searchParams.buyerCd) {
+        if (searchParams.buyerCd && searchParams.orderDate) {
             setIsModalOpen(true);
         } else {
-            Swal.fire({text : '고객코드를 입력해주세요'})
+            let errorMessage = '';
+            if (!searchParams.buyerCd && !searchParams.orderDate) {
+                errorMessage = '고객코드와 주문날짜를 입력해주세요.';
+            } else if (!searchParams.buyerCd) {
+                errorMessage = '고객코드를 입력해주세요.';
+            } else if (!searchParams.orderDate) {
+                errorMessage = '주문날짜를 입력해주세요.';
+            }
+            Swal.fire({text: errorMessage});
         }
     };
 
@@ -161,7 +169,6 @@ const DateInput = ({ label, id, value, onChange }) => (
             className='orderPostInput'
             value={value}
             onChange={onChange}
-            defaultValue={new Date()}
         />
     </div>
 );

@@ -21,13 +21,20 @@ const sendDeleteBuyersRequest = async (state, checkedData, setChecked, executeAf
 
         if (response.status === 204) {
             console.log('고객사 삭제 성공: ', response.data);
+            Swal.fire({text : '고객사 삭제 성공', icon : 'success'});
             setChecked([]);
             if(executeAfter !== undefined){
                 executeAfter();
             }
+        } else if (response.status === 400){
+            console.log('고객사 삭제 실패: ', response.status);
+            Swal.fire({text: `고객사 삭제 실패`});
+        } else if (response.status === 404){
+            console.log('고객사 삭제 실패: ', response.status);
+            Swal.fire({text: `삭제하려는 고객사가 없습니다`});
         } else {
             console.log('고객사 삭제 실패: ', response.status);
-            Swal.fire({text: `요청 실패(${response.status})`});
+            Swal.fire({text: `고객사 삭제 실패`});
         }
     } catch (error) {
         console.error('고객사 삭제 실패(에러 발생):', error);

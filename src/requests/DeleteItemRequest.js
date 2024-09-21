@@ -20,17 +20,18 @@ const sendDeleteItemRequest = async (state, pageInfo, checkedItems, setChecked, 
 
         if (response.status === 204) {
             console.log('제품 삭제 성공: ', response.data);
+            Swal.fire({text: `제품 삭제 성공`});
             setChecked([]);
             if(executeAfter !== undefined){
                 executeAfter();
             }
         } else {
             console.log('제품 삭제 실패: ', response.status);
-            Swal.fire({text: `요청 실패(${response.status})`});
+            Swal.fire({text: `제품 삭제 실패`});
         }
     } catch (error) {
         console.error('제품 삭제 실패(에러 발생):', error);
-        Swal.fire({text: `요청 실패(${error.status})`});
+        Swal.fire({text: `제품 삭제 실패(에러 발생)`});
     }
 };
 
