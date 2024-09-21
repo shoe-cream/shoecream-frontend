@@ -506,6 +506,7 @@ const OrderApprovalPage = () => {
     }, []);
 
     const handleSearch = useCallback((params) => {
+        setSearchParams({});
         setSearchParams(prevParams => ({
             ...prevParams,
             ...params,
@@ -734,11 +735,11 @@ const OrderApprovalPage = () => {
                                                         <Check className="btn-icon" size={14} /> 주문 재요청
                                                     </button>
                                                 )}
-                                                {tabIndex === 4 && (
+                                                {/* {tabIndex === 4 && (
                                                     <button className='btn btn-secondary' onClick={handlePatchOrder}>
                                                         <Edit className="btn-icon" size={14} /> 수정
                                                     </button>
-                                                )}
+                                                )} */}
                                             </div>
                                         </div>
 
