@@ -38,7 +38,7 @@ const ManufacturerPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetManufacturersRequest({state: state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading});
+        sendGetManufacturersRequest({state: state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
         sendGetAllManufacturersRequest(state, setAllData, setIsLoading2);
     }, [page, sortBy]);
 
@@ -92,10 +92,12 @@ const ManufacturerPostPage = () => {
                                 <select className='custom-select-class'
                                     onChange={(e) => setSortBy(e.target.value)}>
                                     <option disabled='true'>정렬 기준 선택</option>
-                                    <option value={'itemCd'}>제품코드</option>
-                                    <option value={'itemNm'}>제품명</option>
+                                    <option value={'mfId'}>ID</option>
+                                    <option value={'region'}>지역</option>
+                                    <option value={'email'}>이메일</option>
+                                    <option value={'mfCd'}>제조사 코드</option>
+                                    <option value={'mfNm'}>제조사명</option>
                                     <option value={'createdAt'}>등록순</option>
-                                    <option value={'unitPrice'}>단가순</option>
                                 </select>
                                 <SearchWindow
                                     placeholder='제조사 이름으로 검색'
