@@ -50,7 +50,7 @@ const Sidebar = () => {
                         {name: '고객사', urlTo: '/buyers'},   
                         {name: '제조사', urlTo: '/manufacturers'}, 
                         {name: '고객사 단가', urlTo: '/buyer-items'}, 
-                        {name: '제조사 단가', urlTo: '/manufacturer-items'}  
+                        {name: '납품 관리', urlTo: '/manufacturer-items'}  
                     ]} expandedDropdown={expandedDropdown} setExpandedDropdown={setExpandedDropdown} />
                 
                 <Dropdown 

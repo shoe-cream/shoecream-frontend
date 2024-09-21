@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Search } from 'lucide-react';
 import './SearchWindow.css';
+import Swal from "sweetalert2";
 
-const SearchWindow = ({ placeholder, suggestions }) => {
+const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestion, setActiveSuggestion] = useState(-1);
@@ -57,9 +58,18 @@ const SearchWindow = ({ placeholder, suggestions }) => {
 
     // 검색 실행
     const handleSearchSubmit = (suggestion) => {
-        setShowSuggestions(false); // 추천 리스트만 닫음
-        if (suggestion && suggestion.onSearch) {
-            suggestion.onSearch();
+        if (searchTerm === '') {
+            if (defaultSearch !== undefined) {
+                Swal.fire({text: '검색어가 없어 전체 데이터를 조회합니다.'});
+                defaultSearch();
+            }
+        } else if (suggestion) {
+            setShowSuggestions(false);
+            if (suggestion.onSearch) {
+                suggestion.onSearch();
+            }
+        } else {
+            Swal.fire({text: '올바른 항목을 입력해주세요.'});
         }
     };
 

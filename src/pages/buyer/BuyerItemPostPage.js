@@ -136,11 +136,15 @@ const BuyerItemPostPage = () => {
                                     {value: 'buyerNm', display: '고객사명', placeholder: '고객사 이름으로 검색', 
                                         suggestions:allBuyers.data.map(buyer => (
                                             {key: buyer.buyerNm, onSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, buyerNm: buyer.buyerNm, setData: resetData, sort: sortBy})}
-                                        ))},
+                                        )),
+                                        defaultSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy})
+                                    },
                                     {value: 'itemNm', display: '제품명', placeholder: '제품 이름으로 검색', 
                                         suggestions:allItems.data.map(item => (
                                             {key: item.itemNm, onSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, itemNm: item.itemNm, setData: resetData, sort: sortBy})}
-                                        ))},
+                                        )),
+                                        defaultSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy})
+                                    },
                                     ]}/>
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
