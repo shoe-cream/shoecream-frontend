@@ -1,3 +1,4 @@
+import axios from 'axios'; // axios import 추가
 import Swal from 'sweetalert2';
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
@@ -13,7 +14,7 @@ const AppContainer = styled.div`
 const ContentContainer = styled.div`
   flex: 1;
   padding: 20px;
-  font-size: 14px;  // 기본 글자 크기를 줄임
+  font-size: 14px;
 `;
 
 const QuotationCard = styled.div`
@@ -21,7 +22,7 @@ const QuotationCard = styled.div`
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 800px;  // 최대 너비를 제한하여 더 compact하게 만듦
+  max-width: 800px;
   margin: 0 auto;
 `;
 
@@ -59,23 +60,23 @@ const Table = styled.table`
 
 const TableHeader = styled.th`
   background-color: #f3f4f6;
-  padding: 8px;  // 패딩을 줄임
+  padding: 8px;
   text-align: left;
   font-weight: bold;
   font-size:18px;
-  white-space: nowrap;  // 줄넘김 방지
+  white-space: nowrap;
 `;
 
 const TableCell = styled.td`
-  padding: 8px;  // 패딩을 원래대로 유지
+  padding: 8px;
   font-size: 16px;
   border-bottom: 1px solid #e5e7eb;
-  white-space: nowrap;  // 줄넘김 방지
+  white-space: nowrap;
 `;
 
 const SummaryTable = styled(Table)`
-  width: 50%;  // 요약 테이블의 너비를 줄임
-  margin-left: auto;  // 오른쪽 정렬
+  width: 50%;
+  margin-left: auto;
 `;
 
 const TotalSection = styled.div`
@@ -113,6 +114,27 @@ const EmailButton = styled(Button)`
   color: white;
 `;
 
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`;
 
 const OrderDetail = () => {
     const { orderCd } = useParams();
@@ -123,7 +145,6 @@ const OrderDetail = () => {
     const location = useLocation(); // navigate로부터 넘겨받은 state 접근
     const token = location.state?.token;
     const [isLoading, setIsLoading] = useState(true);
-    const [employeeData, setEmployeeData] = useState(null);
 
     // API 요청으로 주문 데이터 받아오기
     useEffect(() => {
@@ -133,37 +154,19 @@ const OrderDetail = () => {
             return;
         }
 
-        fetch(`http://localhost:8080/orders/${orderCd}`, {
-            method: 'GET',
+        axios.get(`http://localhost:8080/orders/${orderCd}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${token}` // 토큰을 Authorization 헤더로 전달
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                setOrderData(data.data);
-
-                // // 주문 데이터에서 employeeId로 담당자 정보 조회
-                // return fetch(`http://localhost:8080/api/members/${data.data.employeeId}`, {
-                //     method: 'GET',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         'Authorization': `${token}` // 토큰을 Authorization 헤더로 전달
-                //     }
-                // });
-
+            .then(response => {
+                setOrderData(response.data.data);
             })
-            // .then(response => response.json())
-            // .then(data => {
-            //     setEmployeeData(data.data);  // 담당자 정보 설정
-            // })
             .catch(error => {
-                console.error('Error fetching order or employee data:', error);
+                console.error('Error fetching order data:', error);
             });
     }, [orderCd, token]);
-
-
 
     if (!orderData) {
         return <div>로딩 중...</div>;
@@ -177,23 +180,9 @@ const OrderDetail = () => {
     const tax = totalAmount * 0.1;
     const totalWithTax = totalAmount + tax;
 
-    // 납기일자는 각 주문 항목에서 가장 늦은 endDate로 설정
-    const dueDate = orderData.orderItems.reduce((latest, item) => {
-        const itemEndDate = new Date(item.endDate);
-        return itemEndDate > latest ? itemEndDate : latest;
-    }, new Date(orderData.orderItems[0].endDate));
-
     const handleDownloadPDF = () => {
         const element = document.getElementById('quotation-content');
         html2pdf().from(element).save('quotation.pdf');
-    };
-
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
     };
 
     const handleSendEmail = () => {
@@ -206,12 +195,9 @@ const OrderDetail = () => {
             formData.append("content", "Here is your attached file.");
             formData.append("file", pdf, "quotation.pdf");
 
-            fetch('http://localhost:8080/email/send', {
-                method: 'POST',
-                body: formData,
-            })
+            axios.post('http://localhost:8080/email/send', formData)
                 .then((response) => {
-                    if (response.ok) {
+                    if (response.status === 200) {
                         Swal.fire({
                             icon: 'success',
                             title: '메일 전송 성공',
@@ -235,22 +221,20 @@ const OrderDetail = () => {
                 })
                 .finally(() => {
                     setIsSending(false);
-                    handleCloseModal();
+                    setIsModalOpen(false);
                 });
         });
     };
 
     const handlePrint = () => {
         const printContent = document.getElementById('quotation-content').innerHTML;
-    
-        // 새로운 창을 열어 프린트 내용 렌더링
+
         const printWindow = window.open('', '', 'width=800,height=600');
         printWindow.document.write(`
             <html>
                 <head>
                     <title>견적서</title>
                     <style>
-                        /* 프린트할 때 필요한 스타일을 여기 추가할 수 있습니다 */
                         body {
                             font-family: Arial, sans-serif;
                         }
@@ -276,15 +260,15 @@ const OrderDetail = () => {
                 </body>
             </html>
         `);
-    
-        printWindow.document.close(); // 문서가 완성되면 닫기
-        printWindow.focus(); // 프린트 창에 포커스
-    
-        printWindow.print(); // 프린트 실행
+
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
         printWindow.onafterprint = function() {
-            printWindow.close(); // 프린트 완료 후 창 닫기
+            printWindow.close();
         };
     };
+
     return (
         <div>
             <Header />
@@ -302,16 +286,6 @@ const OrderDetail = () => {
                                 <p><strong>견적일:</strong> {orderData.createdAt}</p>
                                 <p><strong>견적서 만료일:</strong> {orderData.requestDate}</p>
                             </InfoColumn>
-                            {/*
-                                아래 코드 수정됨.
-                                수신자 컬럼 추가함. 기존의 orderData 말고, employee에서 받아오던 데이터를
-                                orderData에서 통합해서 받기로 함.
-                                수신자는 기존 orderData의 buyerNm으로 고정, 수정 필요 없음.
-                                담당자 이름은 orderData.employeeNm으로 들어올 예정. 미리 작성해 놓음
-                                내선번호는 고정됨. 고정된 데이터 수정 필요
-                                납기일자는 orderData.orderItems의 endDate로 고정함. 
-                                orderItems가 현재 배열임으로, 0번째로 고정해 놓음. 수정되면 변경해야 함.
-                            */}
                             <InfoColumn>
                                 <p><strong>수신</strong> {orderData.buyerNm || '정보 없음'}</p>
                                 <p><strong>담당자 이름</strong> {orderData.employeeNm || '수정될 예정'}</p>
@@ -324,56 +298,70 @@ const OrderDetail = () => {
                         <Table>
                             <thead>
                                 <tr>
-                                    <TableHeader>제품 코드</TableHeader>
+                                    <TableHeader>품목</TableHeader>
                                     <TableHeader>수량</TableHeader>
                                     <TableHeader>단가</TableHeader>
-                                    <TableHeader>총액</TableHeader>
+                                    <TableHeader>금액</TableHeader>
                                 </tr>
                             </thead>
                             <tbody>
                                 {orderData.orderItems.map((item, index) => (
-                                    <tr key={item.orderItemCd || index}>
-                                        <TableCell>{item.itemCd}</TableCell>
-                                        <TableCell>{item.qty || 0}</TableCell>
-                                        <TableCell>${item.unitPrice ? item.unitPrice.toFixed(2) : '0.00'}</TableCell>
-                                        <TableCell>${(item.qty * item.unitPrice || 0).toFixed(2)}</TableCell>
+                                    <tr key={index}>
+                                        <TableCell>{item.itemNm || '정보 없음'}</TableCell>
+                                        <TableCell>{item.qty || '정보 없음'}</TableCell>
+                                        <TableCell>{item.unitPrice || '정보 없음'}</TableCell>
+                                        <TableCell>{(item.qty * item.unitPrice).toLocaleString() || '0'}</TableCell>
                                     </tr>
                                 ))}
                             </tbody>
                         </Table>
 
+                        <SummaryTable>
+                            <tbody>
+                                <tr>
+                                    <TableCell>총 금액</TableCell>
+                                    <TableCell>{totalAmount.toLocaleString()}</TableCell>
+                                </tr>
+                                <tr>
+                                    <TableCell>부가세 (10%)</TableCell>
+                                    <TableCell>{tax.toLocaleString()}</TableCell>
+                                </tr>
+                                <tr>
+                                    <TableCell><strong>합계</strong></TableCell>
+                                    <TableCell><strong>{totalWithTax.toLocaleString()}</strong></TableCell>
+                                </tr>
+                            </tbody>
+                        </SummaryTable>
+
                         <TotalSection>
-                            <SummaryTable>
-                                <tbody>
-                                    <tr>
-                                        <TableCell><strong>수량</strong></TableCell>
-                                        <TableCell>{orderData.orderItems.reduce((total, item) => total + (item.qty || 0), 0)}</TableCell>
-                                    </tr>
-                                    <tr>
-                                        <TableCell><strong>소계</strong></TableCell>
-                                        <TableCell>${totalAmount.toFixed(2)}</TableCell>
-                                    </tr>
-                                    <tr>
-                                        <TableCell><strong>공급가액</strong></TableCell>
-                                        <TableCell>${totalAmount.toFixed(2)}</TableCell>
-                                    </tr>
-                                    <tr>
-                                        <TableCell><strong>부가세 (10%)</strong></TableCell>
-                                        <TableCell>${tax.toFixed(2)}</TableCell>
-                                    </tr>
-                                    <tr>
-                                        <TableCell><strong>총합계</strong></TableCell>
-                                        <TableCell><strong>${totalWithTax.toFixed(2)}</strong></TableCell>
-                                    </tr>
-                                </tbody>
-                            </SummaryTable>
+                            <h2>총 합계: {totalWithTax.toLocaleString()} 원</h2>
                         </TotalSection>
                     </QuotationCard>
+
                     <ButtonContainer>
-                        <PdfButton onClick={handleDownloadPDF}>PDF 다운로드</PdfButton>
-                        <PrintButton onClick={handlePrint}>인쇄</PrintButton>
-                        <EmailButton onClick={handleSendEmail}>메일로 보내기</EmailButton>
+                        <PdfButton onClick={handleDownloadPDF}>PDF로 저장</PdfButton>
+                        <PrintButton onClick={handlePrint}>인쇄하기</PrintButton>
+                        <EmailButton onClick={() => setIsModalOpen(true)}>이메일로 전송</EmailButton>
                     </ButtonContainer>
+
+                    {isModalOpen && (
+                        <>
+                            <Overlay onClick={() => setIsModalOpen(false)} />
+                            <ModalContainer>
+                                <h2>이메일로 전송</h2>
+                                <input 
+                                    type="email" 
+                                    value={email} 
+                                    onChange={(e) => setEmail(e.target.value)} 
+                                    placeholder="이메일 주소를 입력하세요" 
+                                />
+                                <button onClick={handleSendEmail} disabled={isSending}>
+                                    {isSending ? "전송 중..." : "전송"}
+                                </button>
+                                <button onClick={() => setIsModalOpen(false)}>닫기</button>
+                            </ModalContainer>
+                        </>
+                    )}
                 </ContentContainer>
             </AppContainer>
         </div>

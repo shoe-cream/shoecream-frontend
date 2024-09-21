@@ -654,9 +654,7 @@ const OrderApprovalPage = () => {
                                                         <FileText className="btn-icon" size={14} /> 견적서 발행
                                                     </button>
                                                 )}
-                                                <button className='btn btn-third' onClick={handlePrint}>
-                                                    <Printer className="btn-icon" size={14} /> 인쇄
-                                                </button>
+                                        
                                                 <button className='btn btn-third' onClick={handleExportToExcel}>
                                                     <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
                                                 </button>
