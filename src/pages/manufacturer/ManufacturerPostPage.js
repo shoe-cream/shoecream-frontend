@@ -98,7 +98,7 @@ const ManufacturerPostPage = () => {
                                     <option value={'unitPrice'}>단가순</option>
                                 </select>
                                 <SearchWindow
-                                    placeholder='제품 이름으로 검색'
+                                    placeholder='제조사 이름으로 검색'
                                     suggestions={
                                         allData.data.map(data => ({
                                             key: data.mfNm,
@@ -112,6 +112,11 @@ const ManufacturerPostPage = () => {
                                             }
                                         }))
                                     }
+                                    defaultSearch={() => {
+                                        sendGetManufacturersRequest(
+                                            { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading }
+                                        )
+                                    }}
                                 />
                                 <div />
                                 <div className='manufacturer-button-container'>

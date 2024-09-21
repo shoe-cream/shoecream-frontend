@@ -14,7 +14,7 @@ const DropdownSearchWindow = ({ types }) => {
                 ))};
             </select>
             {types.map((type) => (
-                (searchType === type.value ? <SearchWindow placeholder={type.placeholder} suggestions={type.suggestions}></SearchWindow> : <div/>)
+                (searchType === type.value ? <SearchWindow placeholder={type.placeholder} suggestions={type.suggestions} defaultSearch={type.defaultSearch}></SearchWindow> : <div/>)
             ))}
         </div>
     );

@@ -153,9 +153,12 @@ const ItemPostPage = () => {
                           sendGetItemsRequest(
                             {state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, itemNm:itemNm, setData:resetData, setIsLoading:setIsLoading}
                           );
-                        }
+                        }                        
                       }))
                     }
+                    defaultSearch = {() => sendGetItemsRequest(
+                      {state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData, setIsLoading:setIsLoading}
+                    )}
                   />
                   <div />
                   <div className='manufacturer-button-container'>

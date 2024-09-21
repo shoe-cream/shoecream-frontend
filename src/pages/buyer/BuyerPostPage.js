@@ -131,6 +131,8 @@ const BuyerPostPage = () => {
                       )}
                     }))
                   }
+                  defaultSearch={() => sendGetBuyersRequest(
+                    {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading})}
                 />
                 <div />
                 <div className='manufacturer-button-container'>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const sendGetManufacturerItemsRequest = async (state, page, size, setData, sort, setIsLoading ) => {
+const sendGetManufacturerItemsRequest = async ({state, page, size, setData, sort, mfNm, itemNm, setIsLoading }) => {
     try {
         /* console.log('state:', state.token); */
         const response = await axios.get(`http://localhost:8080/manufacture-items`, {
@@ -12,7 +12,9 @@ const sendGetManufacturerItemsRequest = async (state, page, size, setData, sort,
             ,params: {
                 page: page,
                 size: size,
-                /* sort: sort, */
+                sort: sort,
+                mfNm: mfNm,
+                itemNm: itemNm,
             }
         });
 
