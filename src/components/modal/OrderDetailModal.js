@@ -84,7 +84,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, status, fetchOrders }) => {
             startDate: item.startDate,
             endDate: item.endDate,
             startDateV2: item.startDate ? item.startDate.split('T')[0] : '',
-            endDateV2: item.endDate ? item.endDate.split('T')[0] : ''
+            endDateV2: item.endDate ? item.endDate.split('T')[0] : '',
         }));
     };
 

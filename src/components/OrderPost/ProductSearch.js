@@ -92,10 +92,11 @@ const ProductSearch = ({ onAddOrder }) => {
                 unit: item.unit,
                 startDate: item.startDate,
                 endDate: item.endDate,
+                margin : item.margin,
                 contractPeriod: `${item.startDate || ''} ~ ${item.endDate || ''}`,
             }))
         };
-
+        console.log("new Order" , newOrder);
         onAddOrder(newOrder);
         setIsModalOpen(false);
     };

@@ -6,18 +6,19 @@ import Swal from 'sweetalert2';
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited, onRowClick ,onCheckboxChange}) => {
 
   useEffect(() => {
-    console.log('data in editableTable: ', data);
-    
     if (ogData && data && ogData.data && data.data) {
       const updatedEdited = data.data.reduce((acc, row, index) => {
         const ogRow = ogData.data[index];
         if (ogRow) {
           const changedCells = Object.keys(row).reduce((cellAcc, key) => {
-            const rowValue = (typeof row[key] === 'number' ? row[key] : String(row[key]));
-            const ogValue = (typeof ogRow[key] === 'number' ? ogRow[key] : String(ogRow[key]));
+            // 마진율('margin')을 비교 대상에서 제외
+            if (key !== 'margin') {
+              const rowValue = typeof row[key] === 'number' ? row[key] : String(row[key]);
+              const ogValue = typeof ogRow[key] === 'number' ? ogRow[key] : String(ogRow[key]);
 
-            if (rowValue !== ogValue) {
-              cellAcc[key] = row[key];
+              if (rowValue !== ogValue) {
+                cellAcc[key] = row[key];
+              }
             }
             return cellAcc;
           }, {});
@@ -25,8 +26,6 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           if (Object.keys(changedCells).length > 0) {
             acc[index] = changedCells;
           }
-        } else {
-          acc[index] = { ...row };
         }
         return acc;
       }, {});
