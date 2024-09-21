@@ -64,44 +64,34 @@ const OrderApprovalPage = () => {
         }, 100);
     }, []);
 
-    // const transOrderData = ({ data }) => {
-    //     if (!Array.isArray(data)) {
-    //         return []; // data가 배열이 아니면 빈 배열 반환
-    //     }
-    //     let result = [];
-    //     for (let i = 0; i < data.length; i++) {
-    //         for (let j = 0; j < data[i].orderItems.length; j++) {
-    //             let obj = {};
-    //             obj["employeeId"] = data[i].employeeId;
-    //             obj["orderId"] = data[i].orderId;
-    //             obj["orderCd"] = data[i].orderCd;
-    //             obj["status"] = data[i].status;
-    //             obj["createdAt"] = data[i].createdAt;
-    //             obj["requestDate"] = data[i].requestDate;
-    //             // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
-    //             obj["createdAtV2"] = data[i].createdAt.split('T')[0];
-    //             obj["requestDateV2"] = data[i].requestDate.split('T')[0];
-    //             obj["buyerNm"] = data[i].buyerNm;
-    //             obj["buyerCd"] = data[i].buyerCd;
-    //             obj["itemId"] = data[i].orderItems[j].orderItemId;
-    //             obj["itemCd"] = data[i].orderItems[j].itemCd;
-    //             obj["itemNm"] = data[i].orderItems[j].itemNm;
-    //             obj["qty"] = data[i].orderItems[j].qty;
-    //             obj["unitPrice"] = data[i].orderItems[j].unitPrice;
-    //             obj["startDate"] = data[i].orderItems[j].startDate;
-    //             obj["endDate"] = data[i].orderItems[j].endDate;
-    //             // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
-    //             obj["startDateV2"] = data[i].orderItems[j].startDate.split('T')[0];
-    //             obj["endDateV2"] = data[i].orderItems[j].endDate.split('T')[0];
-    //             result.push(obj);
-    //         }
-    //     }
-    //     console.log("result", result)
-    //     return result;
-    // };
+    const fetchOrders = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const data = await new Promise((resolve) => {
+                getOrderAllRequest(
+                    state,
+                    searchParams,
+                    page,
+                    10,
+                    (data) => {
+                        resolve(data);
+                    },
+                    setIsLoading
+                );
+            });
     
-
-    const transOrderDataV2 = ({ data }) => {
+            const transformed = await transOrderDataV2(data);
+            setOriginalData({ data: transformed });
+            setModifiedData({ data: transformed });
+            setOrders(data); // 데이터를 처리한 후에만 상태 업데이트
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        } finally {
+            setIsLoading(false); // 모든 작업이 끝난 후에 로딩 상태 해제
+        }
+    }, [state, searchParams, page]);
+   
+    const transOrderDataV2 = async ({ data }) => {
         if (!Array.isArray(data)) {
             return []; // data가 배열이 아니면 빈 배열 반환
         }
@@ -124,36 +114,32 @@ const OrderApprovalPage = () => {
             let totalPrice = 0; // 초기화
             let weightedMarginSum = 0; // 가중 마진 합
             let totalQty = 0; // 총 수량
-    
+
             if (Array.isArray(data[i].orderItems)) {
-              
                 for (let j = 0; j < data[i].orderItems.length; j++) {
                     const item = data[i].orderItems[j];
                     const qty = item.qty || 0;
                     const unitPrice = item.unitPrice || 0;
-                    
                     const fetchItemDetails = async () => {
                         try {
-                            const details = {};
-                                if (!details[item.itemCd]) {
-                                    await getItemRequest(state, item.itemCd, (data) => {
-                                        setMasterItem(data);
-                                    }, setIsLoading);
-                                }
-                        } catch (error) {
+                            return await getItemRequest(state, item.itemCd, (data) => {
+                                setMasterItem(data);
+                                setIsLoading(false);
+                            }, setIsLoading);
+                        }
+                        catch (error) {
                             console.error("Failed to fetch item details:", error);
                             Swal.fire({ text: '아이템 세부정보를 가져오는데 실패했습니다.' });
+                            throw error;
                         }
                     };
 
-                    if (!isLoading) {
-                        fetchItemDetails();
-                    }
-                    console.log("MasterItem", masterItem)
-                    const marginRate = masterItem.data.unitPrice 
-                        ? Math.round(((unitPrice - masterItem.data.unitPrice) / masterItem.data.unitPrice) * 100) 
+                    const masterItemData = await fetchItemDetails();
+                    console.log("MasterItem", masterItem.data.unitPrice);
+                    const marginRate = masterItem.data.unitPrice
+                        ? Math.round(((unitPrice - masterItem.data.unitPrice) / masterItem.data.unitPrice) * 100)
                         : 0; // unitPrice가 0일 경우를 대비
-    
+
                     const itemTotalPrice = qty * unitPrice;
                     totalPrice += itemTotalPrice;
                     weightedMarginSum += marginRate * itemTotalPrice;
@@ -162,7 +148,7 @@ const OrderApprovalPage = () => {
             }
             const averageMargin = totalQty > 0 ? (weightedMarginSum / totalPrice).toFixed(2) : "0.00"; // 평균 마진율 계산
             obj["averageMargin"] = `${averageMargin}%`; // 평균 마진율 추가
-            obj["totalPrice"] = `$${totalPrice}`; // 계산된 totalPrice를 할당
+            obj["totalPrice"] =`$${totalPrice}`; // 계산된 totalPrice를 할당
             obj["orderItems"] = data[i].orderItems;
             result.push(obj);
         }
@@ -170,26 +156,12 @@ const OrderApprovalPage = () => {
         return result;
     };
 
-    // 새로운 함수: 평균 마진율 계산 (가중 평균)
-    const calculateAverageMargin = (items) => {
-        let totalAmount = 0;
-        let weightedMarginSum = 0;
+    useEffect(() => {
+        fetchOrders();
+        console.log("State: ", state);
+    }, [fetchOrders, state, status]); // status도 의존성에 추가하여 상태가 바뀔 때마다 다시 호출
 
-        items.forEach(item => {
-            const qty = item.qty || 0;
-            const unitPrice = item.unitPrice || 0;
-            const marginRate = item.margin || 0;
-            console.log(qty);
-            console.log(unitPrice);
-            console.log(marginRate);
-            const itemTotal = qty * unitPrice;
-            totalAmount += itemTotal;
-            weightedMarginSum += marginRate * itemTotal;
-        });
-
-        return totalAmount > 0 ? (weightedMarginSum / totalAmount).toFixed(2) : "0.00";
-    };
-
+    
     const handleCheckboxChange = (order) => {
         setSelectedOrders(prevSelectedOrders => {
             const exists = prevSelectedOrders.find(o => o.orderCd === order.orderCd);
@@ -200,31 +172,6 @@ const OrderApprovalPage = () => {
             }
         });
     };
-
-    const fetchOrders = useCallback(() => {
-        setIsLoading(true);
-        getOrderAllRequest(
-            state,
-            searchParams,
-            page,
-            10,
-            (data) => {
-                setOrders(data);
-                const transformed = transOrderDataV2(data);
-                setOriginalData({ data: transformed });
-                setModifiedData({ data: transformed });
-                setIsLoading(false);
-            },
-            setIsLoading
-        );
-    }, [state, searchParams, page]);
-
-    useEffect(() => {
-        fetchOrders();
-        console.log("State : ", state);
-    }, [fetchOrders, status]);
-
-
 
 
     const handleApprove = () => {
@@ -501,39 +448,6 @@ const OrderApprovalPage = () => {
     };
 
 
-    const handlePatchOrder = () => {
-        // modifiedData.data 배열에서 수정된 항목만 필터링
-        const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
-
-        if (ordersPatch.length === 0) {
-            Swal.fire({
-                title: '알림',
-                text: '수정할 항목이 없습니다.',
-                icon: 'info',
-                confirmButtonText: '확인'
-            });
-            return;
-        }
-
-        // 항목을 업데이트하기 위한 배열을 생성
-        const itemsToSend = ordersPatch.map(item => ({
-            orderId: item.orderId,
-            itemId: item.itemId,
-            unitPrice: item.unitPrice,
-            qty: item.qty,
-            startDate: item.startDate,
-            endDate: item.endDate
-        }));
-
-        // 업데이트 요청을 보내는 함수 호출
-        sendPatchMultiItemRequest(state, itemsToSend, () => {
-            // 요청 성공 후 데이터 다시 가져오기
-            fetchOrders();
-            // 수정 상태 초기화
-            setCheckedItems([]);
-        });
-    };
-
     const handleGetOrdersAll = useCallback(() => {
         setPage(1);
         fetchOrders();
@@ -729,7 +643,7 @@ const OrderApprovalPage = () => {
                                                         <FileText className="btn-icon" size={14} /> 견적서 발행
                                                     </button>
                                                 )}
-                                        
+
                                                 <button className='btn btn-third' onClick={handleExportToExcel}>
                                                     <FileDown className="btn-icon" size={14} /> 엑셀 다운로드
                                                 </button>
