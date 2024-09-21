@@ -8,7 +8,7 @@ const sendPostBuyerItemsRequest = async(state, requestBody, executeAfter) => {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': state.token
+                    'Authorization': state.token,
                 }   
             }
         );
@@ -23,7 +23,13 @@ const sendPostBuyerItemsRequest = async(state, requestBody, executeAfter) => {
         }
     } catch(error){
         console.error('바이어 아이템 등록 실패(에러 발생): ', error);
-        Swal.fire({text: `요청 실패(${error.status})`});
+        switch(error.status){
+            case 409:
+                Swal.fire({text: `해당 기간에 이미 설정된 단가가 있습니다.`});
+                break;
+            default:
+                Swal.fire({text: `요청 실패(${error.status})`});
+        }
     }
 }
 export default sendPostBuyerItemsRequest;

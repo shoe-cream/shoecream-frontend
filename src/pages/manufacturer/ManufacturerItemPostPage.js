@@ -68,12 +68,14 @@ const ManufacturerItemPostPage = () => {
         {
             accessor: 'mfNm',
             Header: '제조사 명',
-            type: 'dropdown',
+            type: 'search-input',
+            placeholder: '제조사명으로 검색',
         },
         {
             accessor: 'itemNm',
             Header: '제품 명',
-            type: 'dropdown',
+            type: 'search-input',
+            placeholder: '제품명으로 검색',
         },
         {
             accessor: 'qty',
@@ -232,7 +234,7 @@ const ManufacturerItemPostPage = () => {
                                 sendPostManufacturerItemsRequest(state, checkedData, () => {
                                     setChecked([]);
                                     setOpened(false);
-                                    sendGetManufacturerItemsRequest(state, page, 10, resetData, sortBy, setIsLoading);
+                                    sendGetManufacturerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy, setIsLoading: setIsLoading});
                                 });
                             }}
                             page={page}
