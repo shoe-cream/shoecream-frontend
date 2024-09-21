@@ -31,7 +31,7 @@ const sendGetMasterBuyerItemsRequest = async ({state, page, size, buyerNm, buyer
             Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch (error) {
-        console.error('바이어 아이템 정보 GET요청 성공 (에러 발생):', error);
+        console.error('바이어 아이템 정보 GET요청 실패 (에러 발생):', error);
         Swal.fire({text: `요청 실패(${error.status})`});
     }
 };

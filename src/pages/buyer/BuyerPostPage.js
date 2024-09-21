@@ -223,7 +223,7 @@ const BuyerPostPage = () => {
                 sendPostBuyersRequest(state, checkedData, () => {
                   setChecked([]);
                   setOpened(false);
-                  sendGetBuyersRequest(state, page, setPage, 10, sortBy, (value) => setParentData(value));
+                  sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: (value) => setParentData(value)});
                 });
               }}
               page={page}

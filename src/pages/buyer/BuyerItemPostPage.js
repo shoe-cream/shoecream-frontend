@@ -224,7 +224,7 @@ const BuyerItemPostPage = () => {
                                         });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchMultiBuyerItemsRequest(state, requestBody, () => {
-                                            sendGetMasterBuyerItemsRequest(state, page, 10, resetData, sortBy, setIsLoading);
+                                            sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort:sortBy, setIsLoading: setIsLoading});
                                             setChecked([]);
                                         });
                                     }}><Edit size={16} /> 수정</button>
@@ -271,7 +271,7 @@ const BuyerItemPostPage = () => {
                                 sendPostBuyerItemsRequest(state, checkedData, () => {
                                     setChecked([]);
                                     setOpened(false);
-                                    sendGetMasterBuyerItemsRequest(state, page, 10, resetData, sortBy);
+                                    sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy});
                                 });
                             }}
                             page={page}

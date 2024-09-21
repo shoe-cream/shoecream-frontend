@@ -23,7 +23,16 @@ const sendPostManufacturersRequest = async(state, requestBody, executeAfter) => 
         }
     } catch(error){
         console.error('제조사 등록 실패(에러 발생): ', error);
-        Swal.fire({text: `요청 실패(${error.status})`});
+        switch(error.status){
+            case 400:
+                Swal.fire({text: '이메일을 올바른 형식으로 입력해주세요'});
+                break;
+            case 409:
+                Swal.fire({text: `제조사명 또는 이메일이 이미 존재합니다`});
+                break;
+            default:
+                Swal.fire({text: `요청 실패(${error.status})`});
+        }
     }
 }
 export default sendPostManufacturersRequest;

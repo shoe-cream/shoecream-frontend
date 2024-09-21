@@ -2,7 +2,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const sendGetBuyersRequest = async ({state ,page, setPage, size, sortBy, buyerNm, setData, setIsLoading}) => {
-    /* console.log("state: ", state); */
+    console.log("state: ", state);
     console.log('sortBy in request: ', sortBy);
     try {
         const response = await axios.get(`http://localhost:8080/buyers`, 
