@@ -26,7 +26,7 @@ const OrderPostPage = () => {
             
             if (existingOrderIndex !== -1) {
                 // 기존 주문이 있다면, 사용자에게 알림
-                alert(`이미 ${newOrder.buyerCd} 고객의 주문이 존재합니다. 새로운 주문으로 처리됩니다.`);
+                Swal.fire({text : `이미 ${newOrder.buyerCd} 고객의 주문이 존재합니다. 새로운 주문으로 처리됩니다.`})
             }
             
             // 항상 새로운 주문으로 추가
@@ -70,7 +70,7 @@ const OrderPostPage = () => {
                     setOrderData(prevData => prevData.filter((_, index) => !selectedOrders.includes(index)));
                     setSelectedOrders([]); // 선택 초기화
                 } else {
-                    Swal.fire({text : '납기일을 입력해주세요'})
+                    Swal.fire({text : '납기일 입력이 비어있거나 주문이 선택되지 않았습니다.'})
                 }
             })
             .catch(error => {

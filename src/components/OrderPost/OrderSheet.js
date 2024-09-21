@@ -96,8 +96,12 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
     }, [id, row.original.orderItems]);
   
     // 현재 날짜 기준으로 최소값 설정
-    const minDate = id === 'requestDate' ? getCurrentDate() : '';
-  
+    // 현재 날짜 기준으로 최소값 설정
+const minDate = id === 'requestDate' ? (() => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1); // 하루 더하기
+  return tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+})() : '';
     return (
         <input
           className='cell-input'
@@ -105,7 +109,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
           value={value || ''}
           onChange={onChange}
           onBlur={onBlur}
-          min={minDate}
+          min={minDate} 
           max={minEndDate}
         />
     );

@@ -43,6 +43,10 @@ const ProductSearch = ({ onAddOrder }) => {
     };
 
     const handleBuyerSearch = () => {
+        if(!searchParams.buyerCd){
+            Swal.fire({text : '고객코드를 입력해주세요'});
+            return;
+        }
         getBuyerRequest(state, searchParams.buyerCd, setBuyers, setIsLoading);
     };
 
@@ -118,7 +122,7 @@ const ProductSearch = ({ onAddOrder }) => {
 
             <div className='button-container'>
                 <button onClick={handleOpenModal} className="add-items-button">
-                    <Plus size={13} /> 아이템 추가
+                    <Plus size={13} /> 제품 추가
                 </button>
             </div>
 
