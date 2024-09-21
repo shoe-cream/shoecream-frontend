@@ -11,10 +11,12 @@ import { useAuth } from '../../auth/AuthContext';
 import sendGetReportsRequest from '../../requests/GetReports';
 import './LandingPage.css';
 import { Calendar } from 'lucide-react';
+import sendGetEmployeeReportRequest from '../../requests/GetReportEmployee';
+import sendGetMyInfoRequest from '../../requests/GetMyInfoRequest';
 
 const flatData = (data) => {
     let totalAmount = 0;
-    for(let i = 0; i < data.length; i++){
+    for (let i = 0; i < data.length; i++) {
         totalAmount += data[i].totalOrderedPrice;
     }
     return totalAmount;
@@ -37,9 +39,11 @@ const LandingPage = () => {
     const [endDate, setEndDate] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [monthlyData, setMonthlyData] = useState([]);
+    const [employee, setEmployee] = useState({});
 
     useEffect(() => {
         // BarChart와 PieChart를 위한 데이터 요청 (topNumber = 5)
+        sendGetMyInfoRequest(state, setEmployee, setIsLoading);
         sendGetReportsRequest(state, startDate, endDate, setReports, setIsLoading, 5);
     }, [state, startDate, endDate]);
 
@@ -68,7 +72,7 @@ const LandingPage = () => {
             const year = new Date().getFullYear();
             const ranges = generateMonthlyRanges(year);
             const monthlyTotals = [];
-    
+
             for (const range of ranges) {
                 await sendGetReportsRequest(state, range.startDate, range.endDate, (data) => {
                     const totalAmount = flatData(data);
@@ -111,7 +115,7 @@ const LandingPage = () => {
                                 value={endDate}
                                 onChange={handleEndDateChange}
                             />
-                            <button 
+                            <button
                                 onClick={handleResetDates}
                                 className="reset-button"
                             >
@@ -131,12 +135,14 @@ const LandingPage = () => {
 
                             <TabPanel>
                                 <div className="chart-container">
-                                <SalesChart amountData={barChartData} quantityData={pieChartData} />
+                                    <SalesChart amountData={barChartData} quantityData={pieChartData} />
                                 </div>
                             </TabPanel>
                             <TabPanel>
                                 <div className="chart-container">
-                                    <SalesCircleChart data={pieChartData} />
+                                    <SalesCircleChart
+                                        employee={employee}
+                                    />
                                 </div>
                             </TabPanel>
                             <TabPanel>

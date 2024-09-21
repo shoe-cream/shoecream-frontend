@@ -10,6 +10,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
 
   useEffect(() => {
     setTableData(data.data);
+    console.log("dsfsdfs",data);
   }, [data]);
 
   useEffect(() => {
@@ -85,7 +86,6 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
       return now.toISOString().split('T')[0]; // YYYY-MM-DD 형식
     };
   
-    // 현재 행의 orderItems에서 가장 빠른 endDate를 구함
     const minEndDate = React.useMemo(() => {
       if (id === 'requestDate') {
         return row.original.orderItems.reduce((earliest, item) => {
@@ -95,13 +95,11 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
       return undefined;
     }, [id, row.original.orderItems]);
   
-    // 현재 날짜 기준으로 최소값 설정
-    // 현재 날짜 기준으로 최소값 설정
-const minDate = id === 'requestDate' ? (() => {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1); // 하루 더하기
-  return tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
-})() : '';
+    const minDate = id === 'requestDate' ? (() => {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1); // 하루 더하기
+      return tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+    })() : '';
     return (
         <input
           className='cell-input'
@@ -138,6 +136,34 @@ const minDate = id === 'requestDate' ? (() => {
     </div>
   );
 
+
+    // 새로운 함수: 총 금액 계산
+    const calculateTotalPrice = (items) => {
+      return items.reduce((total, item) => {
+        return total + (item.qty * item.unitPrice);
+      }, 0);
+    };
+
+    // 새로운 함수: 평균 마진율 계산 (가중 평균)
+    const calculateAverageMargin = (items) => {
+      let totalAmount = 0;
+      let weightedMarginSum = 0;
+
+      items.forEach(item => {
+        const qty = item.qty || 0;
+        const unitPrice = item.unitPrice || 0;
+        const marginRate = item.margin || 0;
+        console.log(qty);
+        console.log(unitPrice);
+        console.log(marginRate);
+        const itemTotal = qty * unitPrice;
+        totalAmount += itemTotal;
+        weightedMarginSum += marginRate * itemTotal;
+      });
+
+      return totalAmount > 0 ? (weightedMarginSum / totalAmount).toFixed(2) : "0.00";
+    };
+
   const columns = React.useMemo(() => [
     {
       id: 'selection',
@@ -173,6 +199,18 @@ const minDate = id === 'requestDate' ? (() => {
       Header: '납기일',
       accessor: 'requestDate',
       Cell: EditableCell
+    },
+    {
+      id: 'averageMargin',  // 고유 id 추가
+      Header: '평균 마진율',
+      accessor: 'orderItems',
+      Cell: ({ value }) => <span>{calculateAverageMargin(value)}%</span>
+    },
+    {
+      id: 'totalPrice',  // 고유 id 추가
+      Header: '총 금액',
+      accessor: 'orderItems',  // 원본 데이터는 동일한 필드를 참조
+      Cell: ({ value }) => <span>{calculateTotalPrice(value).toLocaleString()} $</span>
     },
     {
       Header: '주문 아이템',

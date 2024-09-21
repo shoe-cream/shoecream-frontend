@@ -4,6 +4,8 @@ import './OrderItemsModal.css';
 const OrderItemsModal = ({ isOpen, onClose, items }) => {
   if (!isOpen) return null; // 모달이 열려 있지 않으면 아무것도 렌더링하지 않음
 
+  console.log("itemsssss", items)
+
   return (
     <div className="order-item-modal">
       <div className="order-item-modal-content">
@@ -15,6 +17,8 @@ const OrderItemsModal = ({ isOpen, onClose, items }) => {
                 <th className = 'order-item-th' style={{ border: '1px solid #ddd', padding: '8px' }}>상품명</th>
                 <th className = 'order-item-th' style={{ border: '1px solid #ddd', padding: '8px' }}>수량</th>
                 <th className = 'order-item-th' style={{ border: '1px solid #ddd', padding: '8px' }}>단가 적용 만료일</th>
+                <th className = 'order-item-th' style={{ border: '1px solid #ddd', padding: '8px' }}>마진율</th>
+                <th className = 'order-item-th' style={{ border: '1px solid #ddd', padding: '8px' }}>제품 주문별 금액</th>
               </tr>
             </thead>
             <tbody>
@@ -23,6 +27,8 @@ const OrderItemsModal = ({ isOpen, onClose, items }) => {
                   <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.itemNm}</td>
                   <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.qty} {item.unit}</td>
                   <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.endDate}</td>
+                  <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.margin}</td>
+                  <td className = 'order-item-td' style={{ border: '1px solid #ddd', padding: '8px' }}>{item.unitPrice * item.qty}</td>
                 </tr>
               ))}
             </tbody>

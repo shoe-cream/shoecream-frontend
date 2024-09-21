@@ -23,6 +23,7 @@ import sendGetSaleHistoryRequest from '../../requests/GetSaleHistoryRequest';
 import MessageModal from '../../components/modal/MessageModal';
 import Swal from 'sweetalert2';
 import OrderDetailModal from '../../components/modal/OrderDetailModal';
+import getItemRequest from '../../requests/GetItemRequest';
 
 
 const OrderApprovalPage = () => {
@@ -53,6 +54,7 @@ const OrderApprovalPage = () => {
 
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     const [detailOrder, setDetailOrder] = useState({});
+    const [masterItem, setMasterItem] = useState({});
 
 
     useEffect(() => {
@@ -97,6 +99,7 @@ const OrderApprovalPage = () => {
     //     console.log("result", result)
     //     return result;
     // };
+    
 
     const transOrderDataV2 = ({ data }) => {
         if (!Array.isArray(data)) {
@@ -117,12 +120,74 @@ const OrderApprovalPage = () => {
             obj["requestDateV2"] = data[i].requestDate.split('T')[0];
             obj["buyerNm"] = data[i].buyerNm;
             obj["buyerCd"] = data[i].buyerCd;
+
+            let totalPrice = 0; // 초기화
+            let weightedMarginSum = 0; // 가중 마진 합
+            let totalQty = 0; // 총 수량
+    
+            if (Array.isArray(data[i].orderItems)) {
+              
+                for (let j = 0; j < data[i].orderItems.length; j++) {
+                    const item = data[i].orderItems[j];
+                    const qty = item.qty || 0;
+                    const unitPrice = item.unitPrice || 0;
+                    
+                    const fetchItemDetails = async () => {
+                        try {
+                            const details = {};
+                                if (!details[item.itemCd]) {
+                                    await getItemRequest(state, item.itemCd, (data) => {
+                                        setMasterItem(data);
+                                    }, setIsLoading);
+                                }
+                        } catch (error) {
+                            console.error("Failed to fetch item details:", error);
+                            Swal.fire({ text: '아이템 세부정보를 가져오는데 실패했습니다.' });
+                        }
+                    };
+
+                    if (!isLoading) {
+                        fetchItemDetails();
+                    }
+                    console.log("MasterItem", masterItem)
+                    const marginRate = masterItem.data.unitPrice 
+                        ? Math.round(((unitPrice - masterItem.data.unitPrice) / masterItem.data.unitPrice) * 100) 
+                        : 0; // unitPrice가 0일 경우를 대비
+    
+                    const itemTotalPrice = qty * unitPrice;
+                    totalPrice += itemTotalPrice;
+                    weightedMarginSum += marginRate * itemTotalPrice;
+                    totalQty += qty;
+                }
+            }
+            const averageMargin = totalQty > 0 ? (weightedMarginSum / totalPrice).toFixed(2) : "0.00"; // 평균 마진율 계산
+            obj["averageMargin"] = `${averageMargin}%`; // 평균 마진율 추가
+            obj["totalPrice"] = `$${totalPrice}`; // 계산된 totalPrice를 할당
             obj["orderItems"] = data[i].orderItems;
             result.push(obj);
-
         }
         console.log("result", result)
         return result;
+    };
+
+    // 새로운 함수: 평균 마진율 계산 (가중 평균)
+    const calculateAverageMargin = (items) => {
+        let totalAmount = 0;
+        let weightedMarginSum = 0;
+
+        items.forEach(item => {
+            const qty = item.qty || 0;
+            const unitPrice = item.unitPrice || 0;
+            const marginRate = item.margin || 0;
+            console.log(qty);
+            console.log(unitPrice);
+            console.log(marginRate);
+            const itemTotal = qty * unitPrice;
+            totalAmount += itemTotal;
+            weightedMarginSum += marginRate * itemTotal;
+        });
+
+        return totalAmount > 0 ? (weightedMarginSum / totalAmount).toFixed(2) : "0.00";
     };
 
     const handleCheckboxChange = (order) => {
@@ -172,31 +237,31 @@ const OrderApprovalPage = () => {
             });
             return;
         }
-        if(status === 'REJECTED'){
+        if (status === 'REJECTED') {
             Swal.fire({
                 title: '납기일 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
                 text: '다시 되돌릴 수 없습니다.',
                 icon: 'warning',
-                
+
                 showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
                 confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
                 cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
                 confirmButtonText: '승인', // confirm 버튼 텍스트 지정
                 cancelButtonText: '취소', // cancel 버튼 텍스트 지정
-                
+
                 reverseButtons: true, // 버튼 순서 거꾸로
-                
-             }).then(result => {
+
+            }).then(result => {
                 // 만약 Promise리턴을 받으면,
                 if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
                     setModalAction('approve');
                     setIsMessageModalOpen(true);
-                }else {
+                } else {
                     return;
                 }
-             });
-        }else{
-            
+            });
+        } else {
+
         }
         let newStatus;
         switch (status) {
@@ -210,10 +275,10 @@ const OrderApprovalPage = () => {
                 newStatus = 'CANCELLED';
                 break;
             default:
-                Swal.fire({text: `현재 상태에서는 승인 작업을 수행할 수 없습니다.`});
+                Swal.fire({ text: `현재 상태에서는 승인 작업을 수행할 수 없습니다.` });
                 return;
         }
-        
+
         // checkedItems에 해당하는 항목 필터링
         const ordersPatch = modifiedData.data.filter((_, index) => checkedItems.includes(index));
 
@@ -334,25 +399,25 @@ const OrderApprovalPage = () => {
             title: '납기일 변경은 더 이상 불가합니다. 바꾸시겠습니까?',
             text: '다시 되돌릴 수 없습니다.',
             icon: 'warning',
-            
+
             showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
             confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
             cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
             confirmButtonText: '승인', // confirm 버튼 텍스트 지정
             cancelButtonText: '취소', // cancel 버튼 텍스트 지정
-            
+
             reverseButtons: true, // 버튼 순서 거꾸로
-            
-         }).then(result => {
+
+        }).then(result => {
             // 만약 Promise리턴을 받으면,
             if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
                 setModalAction('approve');
                 setIsMessageModalOpen(true);
-            }else {
+            } else {
                 return;
             }
-         });
-    
+        });
+
         // setModalAction('approve');
         // setIsMessageModalOpen(true);
     }
@@ -545,7 +610,9 @@ const OrderApprovalPage = () => {
         console.log("Updated detailOrder:", detailOrder);
     }, [detailOrder, setDetailOrder]);
 
+
     const columns = useMemo(() => {
+
         const commonColumns = [
             { Header: "담당자", accessor: "employeeId" },
             { Header: "주문코드", accessor: "orderCd" },
@@ -553,6 +620,14 @@ const OrderApprovalPage = () => {
             { Header: "등록일", accessor: "createdAtV2" },
             { Header: "고객사 명", accessor: "buyerNm" },
             { Header: "고객 코드", accessor: "buyerCd" },
+            {
+                Header: "총 금액",
+                accessor: "totalPrice",
+            },
+            {
+                Header: "주문 마진",
+                accessor: "averageMargin",
+            },
             // { Header: "제품 코드", accessor: "itemCd" },
             // {
             //     Header: '제품 단가 시작일',
@@ -562,18 +637,18 @@ const OrderApprovalPage = () => {
             //     Header: '제품 단가 만료일',
             //     accessor: 'endDateV2'
             //   }
-            { Header: "상세 보기", accessor: "details", type: 'button', onClick: (row) => handleDetailClick(row) , buttonTitle : '더 보기' },
+            { Header: "상세 보기", accessor: "details", type: 'button', onClick: (row) => handleDetailClick(row), buttonTitle: '더 보기' },
         ];
 
         // // 조건부로 컬럼 추가
         if (status === 'REQUEST_TEMP' || status === 'REJECTED') {
             commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDate", type: "date" });
-        //     // commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
-        //     // commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
+            //     // commonColumns.splice(7, 0, { Header: "수량", accessor: "qty", type: "number" });
+            //     // commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice", type: "number" });
         } else {
             commonColumns.splice(4, 0, { Header: "납기일", accessor: "requestDateV2" });
-        //     // commonColumns.splice(7, 0, { Header: "수량", accessor: "qty" });
-        //     // commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice" });
+            //     // commonColumns.splice(7, 0, { Header: "수량", accessor: "qty" });
+            //     // commonColumns.splice(8, 0, { Header: "제품 단가", accessor: "unitPrice" });
         }
 
         return commonColumns;
@@ -758,7 +833,7 @@ const OrderApprovalPage = () => {
                                                         edited={edited}
                                                         setEdited={setEdited}
                                                         onCheckboxChange={handleCheckboxChange}
-                                                        // onRowClick={handleRowClick}
+                                                    // onRowClick={handleRowClick}
                                                     />
                                                 ) : (
                                                     <div>검색 결과가 없습니다.</div>
@@ -798,8 +873,8 @@ const OrderApprovalPage = () => {
                             isOpen={isDetailModalOpen}
                             onClose={() => setIsDetailModalOpen(false)}
                             order={detailOrder}
-                            status = {status}
-                            fetchOrders = {fetchOrders}
+                            status={status}
+                            fetchOrders={fetchOrders}
                         /> : <div />
                     }
                 </div>
