@@ -22,14 +22,14 @@ const Header = () => {
             <SearchWindow
                 placeholder='이동할 메뉴 검색'
                 suggestions={[
-                    { key: '제조사', onSearch: () => navigate('/manufactureres') },
+                    { key: '제조사', onSearch: () => navigate('/manufacturers') },
                     { key: '고객사', onSearch: () => navigate('/buyers') },
-                    { key: '주문', onSearch: () => navigate('/orders') },
+                    { key: '주문', onSearch: () => navigate('/order') },
                     { key: '주문 승인', onSearch: () => navigate('/order-approval') },
                     { key: '제품', onSearch: () => navigate('/items') },
                     { key: '고객사 단가', onSearch: () => navigate('/buyer-items') },
-                    { key: '제조사 단가', onSearch: () => navigate('/manufacturer-items') },
-                    { key: '판매 기록', onSearch: () => navigate('/sales-history') },
+                    { key: '납품 관리', onSearch: () => navigate('/manufacturer-items') },
+                    /* { key: '판매 기록', onSearch: () => navigate('/sales-history') }, */
                 ]}
             />
 

@@ -4,6 +4,7 @@ import './ReactTable.css';
 import SearchInput from '../search/SearchInput';
 import SearchWindow from '../search/SearchWindow';
 import SearchModal from '../../components/modal/SearchModal';
+import Swal from 'sweetalert2';
 
 const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, requestArr }) => {
   // 빈 객체를 n개 가진 배열로 초기화
@@ -106,6 +107,12 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
     };
 
     const onBlur = () => {
+      console.log('value in onBlur', value);
+      if(type === 'number' && value < 0){
+        setValue('');
+        Swal.fire({text: '음수는 허용되지 않습니다.'});
+        return;
+      }
       const newData = [...tableData];
       if (!newData[index]) {
         newData[index] = {};
