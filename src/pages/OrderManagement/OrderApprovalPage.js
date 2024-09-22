@@ -24,7 +24,6 @@ import MessageModal from '../../components/modal/MessageModal';
 import Swal from 'sweetalert2';
 import OrderDetailModal from '../../components/modal/OrderDetailModal';
 import getItemRequest from '../../requests/GetItemRequest';
-import sendGetManufacturerItemsRequest from '../../requests/GetManufacturerItemsRequest';
 
 
 const OrderApprovalPage = () => {
@@ -110,7 +109,17 @@ const OrderApprovalPage = () => {
                 employeeId: data[i].employeeId,
                 orderId: data[i].orderId,
                 orderCd: data[i].orderCd,
-                status: data[i].status,
+                status: (() => {
+                    switch (data[i].status) {
+                        case 'REQUEST_TEMP': return '대기';
+                        case 'APPROVED': return '승인';
+                        case 'REJECTED': return '반려';
+                        case 'CANCELLED': return '취소';
+                        case 'PRODUCT_PASS': return '합격';
+                        case 'PRODUCT_FAIL': return '불합격';
+                        default: return '알 수 없음';
+                    }
+                })(),
                 createdAt: data[i].createdAt,
                 requestDate: data[i].requestDate,
                 createdAtV2: data[i].createdAt.split('T')[0],
@@ -133,25 +142,19 @@ const OrderApprovalPage = () => {
                     try {
                         let itemData = null;
                         await new Promise((resolve) => {
-                            sendGetManufacturerItemsRequest({
+                            getItemRequest(
                                 state,
-                                page: 1,  // 필요한 값에 맞춰 수정
-                                size: 10,
-                                sort: null,  // 정렬 필요 시 설정
-                                mfNm: null,  // 제조사 이름 필요 시 설정
-                                itemNm: null,  // 항목 이름으로 요청
-                                itemCd: item.itemCd,
-                                setIsLoading,
-                                setData: (data) => {
+                                item.itemCd,
+                                (data) => {
                                     itemData = data;
                                     resolve();
-                                }
-                            });
+                                },
+                                () => resolve()
+                            );
                         });
 
                         if (itemData) {
-                            console.log("asdasdasdsad",itemData.data[0].unitPrice)
-                            const masterItemUnitPrice = itemData.data[0].unitPrice || 0;
+                            const masterItemUnitPrice = itemData.data.unitPrice || 0;
                             console.log(itemData)
                             const marginRate = masterItemUnitPrice
                                 ? (((unitPrice - masterItemUnitPrice) / masterItemUnitPrice) * 100).toFixed(2)
@@ -235,7 +238,7 @@ const OrderApprovalPage = () => {
         let newStatus;
         switch (status) {
             case 'REQUEST_TEMP':
-                newStatus = 'APPROVED';
+                newStatus = 'APPROVED'; 
                 break;
             case 'APPROVED':
                 newStatus = 'PRODUCT_PASS';
@@ -281,7 +284,6 @@ const OrderApprovalPage = () => {
                 icon: 'info',
                 confirmButtonText: '확인'
             });
-            return;
             return;
         }
 
