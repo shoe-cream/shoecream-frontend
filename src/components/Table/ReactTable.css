@@ -52,11 +52,14 @@
     font-size: 12px !important;
   }
   .body-r{
-    cursor: pointer;
+    /* cursor: pointer; */
+  }
+  #addrow{
+    text-align: center !important;
   }
   
   .body-r-edited {
-    background-color: #fceae1;
+    background-color: #f3ebd0;
     cursor: pointer;
   }
   
@@ -151,5 +154,11 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     max-width: 100px;
+  }
+
+  .cell-clickable{
+    cursor: pointer;
+    color: #5a6eb1;
+    text-decoration: underline;
   }
   

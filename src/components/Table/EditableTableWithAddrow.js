@@ -288,7 +288,7 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
             );
           })}
           <tr className="body-r">
-            <td colSpan={allColumns.length} className="body-d" style={{ textAlign: 'center' }} onClick={addEmptyRow}> + 추가
+            <td colSpan={allColumns.length} className="body-d" id='addrow' style={{ textAlign: 'center' }} onClick={addEmptyRow}> + 추가
               {/* <button onClick={addEmptyRow} className="add-row-button">+ 추가</button> */}
             </td>
           </tr>
