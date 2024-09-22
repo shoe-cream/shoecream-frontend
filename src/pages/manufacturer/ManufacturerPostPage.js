@@ -16,6 +16,7 @@ import sendGetAllManufacturersRequest from '../../requests/GetAllManufacturersRe
 import { Plus, Edit, Trash2 } from 'lucide-react';
 
 import SearchWindow from '../../components/search/SearchWindow';
+import ConfirmAlert from '../../components/alert/ConfirmAlert';
 
 const ManufacturerPostPage = () => {
     const { state } = useAuth();
@@ -38,7 +39,7 @@ const ManufacturerPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetManufacturersRequest({state: state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
+        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
         sendGetAllManufacturersRequest(state, setAllData, setIsLoading2);
     }, [page, sortBy]);
 
@@ -162,7 +163,7 @@ const ManufacturerPostPage = () => {
                                         });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchManufacturersRequest(state, requestBody, () => {
-                                            sendGetManufacturersRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData});
+                                            sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData });
                                             setChecked([]);
                                         });
                                     }}>
@@ -174,12 +175,17 @@ const ManufacturerPostPage = () => {
                                                 Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
                                                 return;
                                             }
-                                            /* console.log('checked: ', checked); */
-                                            const checkedItems = checked.map(item => data.data[item].mfId);
-                                            sendDeleteManufacturersRequest(state, checkedItems, setChecked, () => {
-                                                sendGetManufacturersRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData});
-                                                setChecked([]);
-                                            });
+                                            ConfirmAlert({
+                                                dataLength: checked.length,
+                                                onConfirm: () => {
+                                                    /* console.log('checked: ', checked); */
+                                                    const checkedItems = checked.map(item => data.data[item].mfId);
+                                                    sendDeleteManufacturersRequest(state, checkedItems, setChecked, () => {
+                                                        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData });
+                                                        setChecked([]);
+                                                    });
+                                                },
+                                            })
                                         }}>
                                         <Trash2 size={16} /> 삭제
                                     </button>
@@ -215,7 +221,7 @@ const ManufacturerPostPage = () => {
                                 sendPostManufacturersRequest(state, checkedData, () => {
                                     setChecked([]);
                                     setOpened(false);
-                                    sendGetManufacturersRequest({state:state, page:page, setPage:setPage, size:10, sortBy:sortBy, setData:resetData});
+                                    sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData });
                                 });
                             }}
                             page={page}

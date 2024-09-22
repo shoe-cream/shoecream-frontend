@@ -14,6 +14,7 @@ import './itemPostPage.css';
 import Swal from 'sweetalert2';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import SearchWindow from '../../components/search/SearchWindow';
+import ConfirmAlert from '../../components/alert/ConfirmAlert';
 
 
 const ItemPostPage = () => {
@@ -42,7 +43,7 @@ const ItemPostPage = () => {
   }
 
   useEffect(() => {
-    sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
+    sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
     sendGetAllItemsRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
@@ -135,8 +136,8 @@ const ItemPostPage = () => {
               <h2 className="app-label">제품 관리</h2>
               <div className='manufacturer-list-container'>
                 <div className='manufacturer-tool-container'>
-                  <select className='custom-select-class' 
-                  onChange={(e) => setSortBy(e.target.value)}>
+                  <select className='custom-select-class'
+                    onChange={(e) => setSortBy(e.target.value)}>
                     <option disabled='true'>정렬 기준 선택</option>
                     <option value={'itemCd'}>제품코드</option>
                     <option value={'itemNm'}>제품명</option>
@@ -153,13 +154,13 @@ const ItemPostPage = () => {
                           console.log('data: ', data);
                           console.log('itemNm: ', data.itemNm);
                           sendGetItemsRequest(
-                            {state:state, page:page, setPage:setPage, size:10, sort:sortBy, itemNm:itemNm, setData:resetData, setIsLoading:setIsLoading}
+                            { state: state, page: page, setPage: setPage, size: 10, sort: sortBy, itemNm: itemNm, setData: resetData, setIsLoading: setIsLoading }
                           );
-                        }                        
+                        }
                       }))
                     }
-                    defaultSearch = {() => sendGetItemsRequest(
-                      {state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading}
+                    defaultSearch={() => sendGetItemsRequest(
+                      { state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading }
                     )}
                   />
                   <div />
@@ -198,7 +199,7 @@ const ItemPostPage = () => {
                       });
                       console.log('requestBody: ', requestBody);
                       sendPatchMultiItemRequest(state, requestBody, () => {
-                        sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
+                        sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
                         setChecked([]);
                       });
                     }}><Edit size={16} /> 수정</button>
@@ -208,12 +209,17 @@ const ItemPostPage = () => {
                           Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
                           return;
                         }
-                        /* console.log('checked: ', checked); */
-                        const checkedItems = checked.map(item => items.data[item].itemId);
-                        sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
-                          sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
-                          setChecked([]);
-                        });
+                        ConfirmAlert({
+                          dataLength: checked.length,
+                          onConfirm: () => {
+                            /* console.log('checked: ', checked); */
+                            const checkedItems = checked.map(item => items.data[item].itemId);
+                            sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
+                              sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
+                              setChecked([]);
+                            });
+                          },
+                        })
                       }}><Trash2 size={16} /> 삭제</button>
                   </div>
                 </div>
@@ -229,12 +235,12 @@ const ItemPostPage = () => {
                 >
                 </EditableTableWithCheckbox>
               </div>
-              {isLoading || isLoading2? <div /> : <PageContainer
+              {isLoading || isLoading2 ? <div /> : <PageContainer
                 currentPage={page}
                 setPage={setPage}
                 pageInfo={items.pageInfo}
                 getPage={(page) => {
-                  sendGetItemsRequest({state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading});
+                  sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
                 }}
                 setChecked={(value) => setChecked(value)}
                 setIsLoading={setIsLoading}
@@ -248,7 +254,7 @@ const ItemPostPage = () => {
                 sendPostMultiItemRequest(state, checkedData, () => {
                   setChecked([]);
                   setOpened(false);
-                  sendGetItemsRequest({state: state, page:page, setPage:setPage, size:10, sort:sortBy, setData:(value) => setParentData(value)});
+                  sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: (value) => setParentData(value) });
                 });
               }}
               page={page}

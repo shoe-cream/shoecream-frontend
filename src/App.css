@@ -48,3 +48,8 @@ body, html {
   padding-bottom: 5px;
   margin-bottom: 30px;
 }
+
+.no-wrap-title {
+  white-space: nowrap;
+  overflow: hidden;
+}
