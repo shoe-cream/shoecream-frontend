@@ -18,7 +18,11 @@ const Header = () => {
 
     return (
         <div className="header-container">
-            <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate((state.isAuthenticated ? "/dashboard" : '/'))}></img>
+          <img 
+  className="header-logo" 
+  src="/logo/text-logo.png" 
+  onClick={() => navigate(state.isAuthenticated ? "/dashboard" : '/')}>
+</img>
             <SearchWindow
                 placeholder='이동할 메뉴 검색'
                 suggestions={[
