@@ -27,6 +27,8 @@ const OrderItemsModal = ({ isOpen, onClose, items }) => {
                   <td className='order-item-td'>{item.itemNm}</td>
                   <td className='order-item-td'>{item.qty} {item.unit}</td>
                   <td className='order-item-td'>{item.endDate}</td>
+                  <td className='order-item-td'>{item.margin}</td>
+                  <td className='order-item-td'>{(item.qty * item.unitPrice).toLocaleString()} $</td>
                 </tr>
               ))}
             </tbody>
