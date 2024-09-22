@@ -129,7 +129,7 @@ const BuyerItemPostPage = () => {
                         <h2 className="app-label">고객사 단가 관리</h2>
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
-                            <select onChange={(e) => setSortBy(e.target.value)}>                                                            
+                                <select onChange={(e) => setSortBy(e.target.value)}>
                                     <option disabled selected>정렬 기준 선택</option>
                                     <option value='buyerItemId'>ID</option>
                                     {/* <option value='buyerId'>등록순</option> */}
