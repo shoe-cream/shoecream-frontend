@@ -79,6 +79,7 @@
     display: flex;   
     align-items: center;
     max-width: 250px;
+    position: relative;
 }
 .header-search-container{
     height: 70%;
