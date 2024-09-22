@@ -56,7 +56,7 @@ const OrderPostPage = () => {
                 unit: item.unit
             }));
             console.log("dkfjsdkfjsd", order)
-            return sendPostOrder(state, order.buyerCd, `${order.requestDate}T00:00:00.000`, orderItemDtoList);
+            return sendPostOrder(state, order.buyerCd, `${order.requestDate}T15:44:00.000`, orderItemDtoList);
         };
     
         Promise.all(ordersToRegister.map(sendOrderRequests))
@@ -70,7 +70,7 @@ const OrderPostPage = () => {
                     setOrderData(prevData => prevData.filter((_, index) => !selectedOrders.includes(index)));
                     setSelectedOrders([]); // 선택 초기화
                 } else {
-                    Swal.fire({text : '납기일 입력이 비어있거나 주문이 선택되지 않았습니다.'})
+                    Swal.fire({text : '납기일 비어있거나 주문이 선택되지 않았습니다.'})
                 }
             })
             .catch(error => {

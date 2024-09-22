@@ -24,6 +24,7 @@ import MessageModal from '../../components/modal/MessageModal';
 import Swal from 'sweetalert2';
 import OrderDetailModal from '../../components/modal/OrderDetailModal';
 import getItemRequest from '../../requests/GetItemRequest';
+import sendGetManufacturerItemsRequest from '../../requests/GetManufacturerItemsRequest';
 
 
 const OrderApprovalPage = () => {
@@ -127,26 +128,33 @@ const OrderApprovalPage = () => {
                     const item = data[i].orderItems[j];
                     const qty = item.qty || 0;
                     const unitPrice = item.unitPrice || 0;
+                    console.log("Asdasd", item.itemNm);
                     
                     try {
                         let itemData = null;
                         await new Promise((resolve) => {
-                            getItemRequest(
+                            sendGetManufacturerItemsRequest({
                                 state,
-                                item.itemCd,
-                                (data) => {
+                                page: 1,  // 필요한 값에 맞춰 수정
+                                size: 10,
+                                sort: null,  // 정렬 필요 시 설정
+                                mfNm: null,  // 제조사 이름 필요 시 설정
+                                itemNm: null,  // 항목 이름으로 요청
+                                itemCd: item.itemCd,
+                                setIsLoading,
+                                setData: (data) => {
                                     itemData = data;
                                     resolve();
-                                },
-                                () => resolve()
-                            );
+                                }
+                            });
                         });
 
                         if (itemData) {
-                            const masterItemUnitPrice = itemData.data.unitPrice || 0;
+                            console.log("asdasdasdsad",itemData.data[0].unitPrice)
+                            const masterItemUnitPrice = itemData.data[0].unitPrice || 0;
                             console.log(itemData)
                             const marginRate = masterItemUnitPrice
-                                ? Math.round(((unitPrice - masterItemUnitPrice) / masterItemUnitPrice) * 100)
+                                ? (((unitPrice - masterItemUnitPrice) / masterItemUnitPrice) * 100).toFixed(2)
                                 : 0;
 
                             const itemTotalPrice = qty * unitPrice;

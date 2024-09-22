@@ -5,6 +5,7 @@ import EditableTableWithCheckbox from '../../components/Table/EditableTableWithC
 import getBuyerItemsPeriodRequest from '../../requests/GetBuyerItemsPeriod';
 import getItemRequest from '../../requests/GetItemRequest';
 import Swal from 'sweetalert2';
+import sendGetManufacturerItemsRequest from '../../requests/GetManufacturerItemsRequest';
 
 const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected, orderDate }) => {
     const [buyerItems, setBuyerItems] = useState({ data: [] });
@@ -53,36 +54,69 @@ const OrderPostModal = ({ state, setOpened, buyerCd, onItemsSelected, orderDate 
     }, [buyerItems, state, isLoading]);
 
     useEffect(() => {
-        if (buyerItems.data.length > 0 && Object.keys(itemsDetails).length > 0) {
-            const combinedItems = buyerItems.data.map(item => {
-                const originalItem = {
-                    itemCd: item.itemCd,
-                    itemNm: item.itemNm,
-                    color: itemsDetails[item.itemCd]?.data.color || '',
-                    size: itemsDetails[item.itemCd]?.data.size || '',
-                    unitPrice: item.unitPrice,
-                    masterUnitPrice : itemsDetails[item.itemCd]?.data.unitPrice,
-                    unit: item.unit,
-                    quantity: 0,
-                    prepareOrder: itemsDetails[item.itemCd]?.data.prepareOrder,
-                    totalStock: itemsDetails[item.itemCd]?.data.totalStock || '',
-                    startDate: item.startDate.split('T')[0],
-                    endDate: item.endDate.split('T')[0],
-                    margin: Math.round((item.unitPrice -  itemsDetails[item.itemCd]?.data.unitPrice) /  itemsDetails[item.itemCd]?.data.unitPrice * 100)
-                };
-                return originalItem;
-            });
-            if (originalData.length === 0) { // 원본 데이터가 비어 있을 때만 설정
-                setOriginalData(combinedItems); // 원본 데이터를 설정합니다.
+        const fetchManufacturerItems = async () => {
+            if (buyerItems.data.length > 0) {
+                let combinedItems = [];
+    
+                for (let i = 0; i < buyerItems.data.length; i++) {
+                    const item = buyerItems.data[i];
+    
+                    try {
+                        let itemData = null;
+                        await new Promise((resolve) => {
+                            sendGetManufacturerItemsRequest({
+                                state,
+                                page: 1,  // 필요한 값에 맞춰 수정
+                                size: 10,
+                                sort: null,  // 정렬 필요 시 설정
+                                mfNm: null,  // 제조사 이름 필요 시 설정
+                                itemNm: item.itemNm,  // 아이템 이름으로 요청
+                                itemCd: item.itemCd,
+                                setIsLoading,
+                                setData: (data) => {
+                                    itemData = data;
+                                    resolve();
+                                }
+                            });
+                        });
+                        console.log("aksjdkasjdasd",itemsDetails[item.itemCd].data.color);
+                        const originalItem = {
+                            itemCd: item.itemCd,
+                            itemNm: item.itemNm,
+                            color: itemsDetails[item.itemCd].data.color || '',
+                            size: itemsDetails[item.itemCd].data.size || '',
+                            unitPrice: item.unitPrice,
+                            masterUnitPrice: itemData.data[0].unitPrice,
+                            unit: item.unit,
+                            quantity: 0,
+                            prepareOrder: itemsDetails[item.itemCd].data.prepareOrder,
+                            totalStock: itemsDetails[item.itemCd].data.totalStock || '',
+                            startDate: item.startDate.split('T')[0],
+                            endDate: item.endDate.split('T')[0],
+                            margin: Math.round((item.unitPrice - (itemData.data[0].unitPrice)) / (itemData.data[0].unitPrice) * 100)
+                        };
+    
+                        combinedItems.push(originalItem);
+                    } catch (error) {
+                        console.error(`Failed to fetch manufacturer item data for ${item.itemCd}:`, error);
+                    }
+                }
+    
+                if (originalData.length === 0) {
+                    setOriginalData(combinedItems); // 원본 데이터를 설정합니다.
+                }
+                setItemsWithDetails({ data: combinedItems }); // 데이터 테이블에 표시할 데이터를 설정합니다.
             }
-            setItemsWithDetails({ data: combinedItems }); // 데이터 테이블에 표시할 데이터를 설정합니다.
-        }
-    }, [buyerItems, itemsDetails]);
+        };
+    
+        fetchManufacturerItems();
+    }, [buyerItems, itemsDetails, state, originalData]);
     
     useEffect(() => {
         if (itemsWithDetails.data.length > 0 && originalData.length > 0) {
             const updatedItems = itemsWithDetails.data.map(item => {
                 const originalItem = originalData.find(orig => orig.itemCd === item.itemCd);
+                console.log("asdasd", originalItem)
                 if (originalItem.margin) {
                     const margin = originalItem.unitPrice > 0
                         ? ((item.unitPrice - originalItem.masterUnitPrice) / originalItem.masterUnitPrice) * 100 // 마진율 계산
