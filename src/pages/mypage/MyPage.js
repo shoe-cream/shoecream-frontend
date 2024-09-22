@@ -73,8 +73,8 @@ const MyPage = () => {
     ]);
 
     const getRole = (role) => {
-        if(role){
-            switch(role){
+        if (role) {
+            switch (role) {
                 case 'ROLE_ADMIN':
                     return '팀장';
                 case 'ROLE_USER':
@@ -87,7 +87,7 @@ const MyPage = () => {
     };
 
     useEffect(() => {
-        sendGetMyInfoRequest(state, setMydata, setIsLoading, 
+        sendGetMyInfoRequest(state, setMydata, setIsLoading,
             (data) => {
                 const employeeRole = data.roles && data.roles.length > 0 ? getRole(data.roles[0]) : '데이터 없음';
                 console.log('변환된 직책:', employeeRole);  // 콘솔에서 확인
@@ -101,9 +101,9 @@ const MyPage = () => {
                 ]);
             }
         );
-    }, []); 
+    }, []);
 
-    
+
     const columns = [
         "사원번호",
         "성명",
@@ -112,8 +112,12 @@ const MyPage = () => {
         "전화번호",
         "주소",
     ];
+    const initializeModal = () => {
+        setNameInput('');
+        setTelInput('');
+        setAddressInput('');
+    }
 
-    
     return (
         <div>
             <Header />
@@ -122,9 +126,9 @@ const MyPage = () => {
                 <div className='app-content-container'>
                     <div className='mypage-container'>
                         <h1 className="page-title">마이 페이지</h1>
-                        <EmployeeInfoCard 
-                            columns={columns} 
-                            employeeData={employeeInfo} 
+                        <EmployeeInfoCard
+                            columns={columns}
+                            employeeData={employeeInfo}
                             setIsEditModalOpen={setIsEditModalOpen}
                             setIsPasswordEditModalOpen={setIsPasswordEditModalOpen}
                         />
@@ -133,6 +137,7 @@ const MyPage = () => {
             </div>
             {isEditModalOpen && (
                 <ProfileEditModal
+                    initialize={initializeModal}
                     setOpened={setIsEditModalOpen}
                     inputs={[
                         { input: nameInput, setInput: setNameInput, placeholder: '성명', accessor: 'name' },
@@ -141,9 +146,9 @@ const MyPage = () => {
                     ]}
                     onModify={(requestBody) => sendPatchMyInfoRequest(state, myData.data.memberId, requestBody, () => {
                         setIsEditModalOpen(false);
-                        sendGetMyInfoRequest(state, setMydata, setIsLoading, 
+                        sendGetMyInfoRequest(state, setMydata, setIsLoading,
                             (data) => setEmployeeInfo([
-                                data.employeeId || '데이터 없음', 
+                                data.employeeId || '데이터 없음',
                                 data.name || '데이터 없음',
                                 getRole(data.roles[0]) || '데이터 없음',
                                 data.tel || '데이터 없음',

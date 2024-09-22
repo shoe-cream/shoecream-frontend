@@ -1,6 +1,14 @@
+import Swal from "sweetalert2";
 import sendPatchMyInfoRequest from "../../requests/PatchMyInfoRequest";
+import { useEffect } from "react";
 
-const ProfileEditModal = ({ setOpened, inputs, onModify }) => {
+const ProfileEditModal = ({ initialize, setOpened, inputs, onModify }) => {
+    useEffect(() => {
+        if(initialize !== undefined){
+            console.log('초기화!');
+            initialize();
+        }
+    },[]);
     return (
         <div className="modal-overlay">
             <div className='modal-content'>
@@ -27,7 +35,11 @@ const ProfileEditModal = ({ setOpened, inputs, onModify }) => {
                             }
                             return acc;
                         }, {});
-                        console.log(requestBody);
+                        console.log('requestBody: ', requestBody);
+                        if(Object.keys(requestBody).length === 0){
+                            Swal.fire({text: '수정할 항목을 하나 이상 입력해주세요'});
+                            return;
+                        }
                         onModify(requestBody);
                     }}>수정</button>
                     <button className="modal-button" onClick={() => {
