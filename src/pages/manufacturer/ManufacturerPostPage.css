@@ -107,6 +107,7 @@
     padding: 8px 12px;
     width: 10%;
     border: 1px solid #848282;
+
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
     font-size: 14px;
@@ -139,6 +140,7 @@
     margin-right: 5px;
     vertical-align: middle;
 }
+
 
 /* @media (max-width: 768px) {
     .manufacturer-list-container {

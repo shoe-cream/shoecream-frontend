@@ -7,6 +7,69 @@ import styled from 'styled-components';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Header from "../../components/header/Header";
 
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+
+  &:hover {
+    color: #333;
+  }
+`;
+
+const ModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const EmailInput = styled.input`
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: #2b538b;
+  }
+`;
+
+const SendButton = styled.button`
+  padding: 10px;
+  background-color: #2b538b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #1e3a62;
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+`;
+
 const AppContainer = styled.div`
   display: flex;
 `;
@@ -350,17 +413,21 @@ const OrderDetail = () => {
                         <>
                             <Overlay onClick={() => setIsModalOpen(false)} />
                             <ModalContainer>
+                            <ModalHeader>
                                 <h2>이메일로 전송</h2>
-                                <input 
-                                    type="email" 
-                                    value={email} 
-                                    onChange={(e) => setEmail(e.target.value)} 
-                                    placeholder="이메일 주소를 입력하세요" 
+                                <CloseButton onClick={() => setIsModalOpen(false)}>&times;</CloseButton>
+                            </ModalHeader>
+                            <ModalContent>
+                                <EmailInput 
+                                type="email" 
+                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)} 
+                                placeholder="이메일 주소를 입력하세요" 
                                 />
-                                <button onClick={handleSendEmail} disabled={isSending}>
-                                    {isSending ? "전송 중..." : "전송"}
-                                </button>
-                                <button onClick={() => setIsModalOpen(false)}>닫기</button>
+                                <SendButton onClick={handleSendEmail} disabled={isSending}>
+                                {isSending ? "전송 중..." : "전송"}
+                                </SendButton>
+                            </ModalContent>
                             </ModalContainer>
                         </>
                     )}

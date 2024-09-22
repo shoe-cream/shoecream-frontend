@@ -13,20 +13,21 @@
   display: flex;
   background-color: #f0f0f0;
   border-radius: 8px;
-  padding: 4px;
+  padding: 8px !important;
   margin-bottom: 24px;
   flex: 1;
   text-align: center;
   padding: 12px;
   cursor: pointer;
   background-color: transparent;
-  color: #666;
+  color: #242424;
   transition: all 0.3s ease;
 }
 .react-tabs__tab--selected {
   color: #2b538b;
+  font-weight: bold;
   background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1) !important;
 }
 .react-tabs__tab:hover {
     color: rgb(255, 255, 255);
@@ -39,7 +40,7 @@
     border-radius: 8px;
     padding: 20px;
     margin-top: 0px;
-    margin-bottom: 20px;
+    margin-bottom: px;
     font-size: 16px;
 }
 

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import './Header.css';
+import '../search/SearchWindow.css';
 import { useAuth } from "../../auth/AuthContext";
 import { useEffect, useState } from "react";
 import sendGetMyInfoRequest from "../../requests/GetMyInfoRequest";

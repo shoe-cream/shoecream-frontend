@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 import './SearchWindow.css';
 import Swal from "sweetalert2";
 
-const SearchWindow = ({ placeholder, suggestions, defaultSearch, setSearchCondition }) => {
+const SearchWindow = ({ placeholder, suggestions, defaultSearch, setSearchCondition, className }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestion, setActiveSuggestion] = useState(-1);
@@ -94,13 +94,12 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch, setSearchCondit
     };
 
     return (
-        <form onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(suggestions.find(s => s.key.toLowerCase() === searchTerm.toLowerCase())); }} className="header-search-form">
+        <form onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(suggestions.find(s => s.key.toLowerCase() === searchTerm.toLowerCase())); }} className={`header-search-form ${className}`}>
             <input
                 type="text"
                 placeholder={placeholder}
                 value={searchTerm}
                 onFocus={() => {
-                    // 처음에 누르면 모든 항목이 추천 리스트로 뜨게
                     if(searchTerm === ''){
                         setFilteredSuggestions(suggestions);
                         setShowSuggestions(true);
