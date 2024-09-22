@@ -24,11 +24,25 @@ const sendPostBuyersRequest = async(state, requestBody, executeAfter) => {
         }
     } catch(error){
         console.error('고객사 일괄 등록 실패(에러 발생): ', error);
+        const errorMessage = error.response.data.message.toLowerCase();
+        console.log(errorMessage);
         switch(error.status){
             case 400:
                 Swal.fire({text: '이메일을 올바른 형식으로 입력해주세요'});
                 break;
             case 409:
+                if(errorMessage.includes('buyer')){
+                    Swal.fire({text: `이미 등록된 고객사명입니다.`});
+                    break;
+                }
+                if(errorMessage.includes('email')){
+                    Swal.fire({text: `이미 등록된 이메일입니다.`});
+                    break;
+                }
+                if(errorMessage.includes('tel')){
+                    Swal.fire({text: `이미 등록된 전화번호입니다.`});
+                    break;
+                }
                 Swal.fire({text: `고객사명 또는 연락처 또는 이메일이 이미 존재합니다`});
                 break;
             default:
