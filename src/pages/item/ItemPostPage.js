@@ -202,7 +202,7 @@ const ItemPostPage = () => {
                       });
                       console.log('requestBody: ', requestBody);
                       sendPatchMultiItemRequest(state, requestBody, () => {
-                        sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
+                        sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, itemNm: searchCondition, setData: resetData, setIsLoading: setIsLoading });
                         setChecked([]);
                       });
                     }}><Edit size={16} /> 수정</button>
@@ -218,7 +218,7 @@ const ItemPostPage = () => {
                             /* console.log('checked: ', checked); */
                             const checkedItems = checked.map(item => items.data[item].itemId);
                             sendDeleteItemRequest(state, items.pageInfo, checkedItems, setChecked, () => {
-                              sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
+                              sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, itemNm: searchCondition, setData: resetData, setIsLoading: setIsLoading });
                               setChecked([]);
                             });
                           },
