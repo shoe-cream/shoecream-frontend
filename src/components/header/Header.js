@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import './Header.css';
+import '../search/SearchWindow.css';
 import { useAuth } from "../../auth/AuthContext";
 import { useEffect, useState } from "react";
 import sendGetMyInfoRequest from "../../requests/GetMyInfoRequest";
@@ -20,6 +21,7 @@ const Header = () => {
         <div className="header-container">
             <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate((state.isAuthenticated ? "/dashboard" : '/'))}></img>
             <SearchWindow
+                className="header-search-window"
                 placeholder='이동할 메뉴 검색'
                 suggestions={[
                     { key: '제조사', onSearch: () => navigate('/manufacturers') },

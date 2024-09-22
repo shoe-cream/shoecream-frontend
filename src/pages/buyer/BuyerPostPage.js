@@ -119,7 +119,7 @@ const BuyerPostPage = () => {
                   <option value='address'>주소</option>
                   <option value='businessType'>사업 분류</option>
                 </select>
-                <SearchWindow
+                <SearchWindow                  
                   placeholder='고객사 이름으로 검색'
                   suggestions={
                     allData.data.map(data => ({

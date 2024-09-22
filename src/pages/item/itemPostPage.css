@@ -22,16 +22,16 @@
     padding: 20px !important;
   }
 
-.manufacturer-tool-container {
+/* .manufacturer-tool-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-  }
+  } */
   
-  .manufacturer-button-container {
+  /* .manufacturer-button-container {
     display: flex;
-  }
+  } */
   
   .manufacturer-button {
     font-size: 12px !important;
@@ -39,7 +39,8 @@
     justify-content: center;
     background-color: #2b538b !important;
     color: white;
-    padding: 10px!important;
+    padding: 8px!important;
+    margin-top: 5.5px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -112,7 +113,74 @@
   width: 20px; 
 }
 
+.manufacturer-tool-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 
+.custom-select-class {
+  margin-top: 10px;
+  margin-right: 490px;
+}
+
+.item-search-window {
+  flex: 1;
+  margin-top: 20px;
+  max-width: 215px;  /* 원하는 크기로 조정 */
+}
+
+.item-search-window .header-search-input {
+  font-size: 13px;
+  border: 1px solid #848282;
+  border-right: none !important;
+  /* width: 100%; */
+}
+
+.manufacturer-button-container {
+  display: flex;
+}
+
+.item-search-window {
+  position: relative;
+  width: 300px; /* 원하는 너비로 조정 */
+}
+
+.item-search-window .header-search-input {
+  width: 100%;
+}
+
+.item-search-window .header-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 81%;
+  max-height: 150px; /* 원하는 최대 높이로 조정 */
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+  font-size: 13px; /* 글꼴 크기 조정 */
+}
+
+.item-search-window .header-suggestions li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.item-search-window .header-suggestions li:hover,
+.item-search-window .header-suggestions li.active {
+  background-color: #f0f0f0;
+}
+
+.addrow-dropdown {
+  
+}
 
 /* 상품 코드 컬럼 */
 /* .item-post-page th:nth-child(3),
