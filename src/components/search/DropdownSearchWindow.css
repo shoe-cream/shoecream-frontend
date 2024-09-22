@@ -1,3 +1,6 @@
 .dropdown-search-window-container{
     display: flex;
 }
+.search-window-dropdown{
+    width: 100px;
+}

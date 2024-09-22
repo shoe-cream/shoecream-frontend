@@ -97,7 +97,7 @@ const BuyerPostPage = () => {
     setDbData(value);
   }
   useEffect(() => {
-    sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm:searchCondition, setData: resetData, setIsLoading: setIsLoading });
+    sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: searchCondition, setData: resetData, setIsLoading: setIsLoading });
     sendGetAllBuyersRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
@@ -119,27 +119,27 @@ const BuyerPostPage = () => {
                   <option value='address'>주소</option>
                   <option value='businessType'>사업 분류</option>
                 </select>
-                <SearchWindow
-                  placeholder='고객사 이름으로 검색'
-                  suggestions={
-                    allData.data.map(data => ({
-                      key: data.buyerNm,
-                      onSearch: () => {
-                        const buyerNm = data.buyerNm.replace(/\s+/g, '');
-                        console.log('data: ', data);
-                        console.log('buyerNm: ', data.buyerNm);
-                        sendGetBuyersRequest(
-                          { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: buyerNm, setData: resetData, setIsLoading: setIsLoading }
-                        )
-                      }
-                    }))
-                  }
-                  defaultSearch={() => sendGetBuyersRequest(
-                    { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading })}
-                  setSearchCondition={setSearchCondition}
-                />
                 <div />
                 <div className='manufacturer-button-container'>
+                  <SearchWindow
+                    placeholder='고객사 이름으로 검색'
+                    suggestions={
+                      allData.data.map(data => ({
+                        key: data.buyerNm,
+                        onSearch: () => {
+                          const buyerNm = data.buyerNm.replace(/\s+/g, '');
+                          console.log('data: ', data);
+                          console.log('buyerNm: ', data.buyerNm);
+                          sendGetBuyersRequest(
+                            { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: buyerNm, setData: resetData, setIsLoading: setIsLoading }
+                          )
+                        }
+                      }))
+                    }
+                    defaultSearch={() => sendGetBuyersRequest(
+                      { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading })}
+                    setSearchCondition={setSearchCondition}
+                  />
                   <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                   <button className='manufacturer-button' onClick={() => {
                     if (checked.length === 0) {
