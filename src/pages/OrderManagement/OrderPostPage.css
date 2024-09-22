@@ -115,17 +115,22 @@
 }
 
 .modal-submit-btn {
+    margin-top: 4px;
+    padding: 4px 8px;
+    border-radius: 4px !important;
     background-color: #2b538b;
     color: #FFFFFF;
-    font-size: 15px;
+    font-size: 14px;
     margin-left: 5px !important;
     margin-right: 10PX !important;
 }
 
 .modal-close-btn {
+    padding: 4px 8px;
+    border-radius: 4px !important;
     background-color: #2b538b;
     color: #FFFFFF;
-    font-size: 15px;
+    font-size: 14px;
     margin-left: 5px !important;
     margin-right: 10PX !important;
 }
@@ -148,6 +153,12 @@
     margin-top: 15px;
     margin-bottom: 20px;
 }
+
+.search-container {
+    padding-left: 0; /* 왼쪽 패딩 제거 */
+    margin-left: 1px !important; /* 왼쪽으로 약간 이동 */
+    margin-right: 8px !important;
+  }
 
 .search-box {
     width: auto;
@@ -203,4 +214,8 @@
 .search-icon {
     width: 20px;
     height: 20px;
+}
+
+.product-search {
+    
 }

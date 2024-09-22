@@ -31,7 +31,7 @@ const BuyerPostPage = () => {
   const [checked, setChecked] = useState([]);
   const [isPostMode, setIsPostMode] = useState(false);
   const [edited, setEdited] = useState([]);
-  const [sortBy, setSortBy] = useState('buyerId');
+  const [sortBy, setSortBy] = useState('buyerCd');
 
   const [allData, setAllData] = useState({ data: [] });
 
