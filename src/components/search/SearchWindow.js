@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 import './SearchWindow.css';
 import Swal from "sweetalert2";
 
-const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
+const SearchWindow = ({ placeholder, suggestions, defaultSearch, setSearchCondition }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestion, setActiveSuggestion] = useState(-1);
@@ -16,6 +16,9 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
         
         const value = e.target.value;
         setSearchTerm(value);
+        if(setSearchCondition !== undefined){
+            setSearchCondition(value);
+        }
 
         const filtered = suggestions.filter(suggestion =>
             suggestion.key.toLowerCase().includes(value.toLowerCase())
@@ -33,6 +36,9 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
                 const newIndex = activeSuggestion + 1;
                 setActiveSuggestion(newIndex);
                 setSearchTerm(filteredSuggestions[newIndex].key);
+                if(setSearchCondition !== undefined){
+                    setSearchCondition(filteredSuggestions[newIndex].key);
+                }
             }
         } else if (e.key === "ArrowUp") {
             e.preventDefault();
@@ -40,6 +46,9 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
                 const newIndex = activeSuggestion - 1;
                 setActiveSuggestion(newIndex);
                 setSearchTerm(filteredSuggestions[newIndex].key);
+                if(setSearchCondition !== undefined){
+                    setSearchCondition(filteredSuggestions[newIndex].key);
+                }
             }
         } else if (e.key === "Enter") {
             e.preventDefault();
@@ -76,6 +85,9 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch }) => {
     // 추천 항목 클릭 시 검색 실행
     const handleSuggestionClick = (suggestion) => {
         setSearchTerm(suggestion.key);
+        if(setSearchCondition !== undefined){
+            setSearchCondition(suggestion.key);
+        }
         setShowSuggestions(false); // 추천 리스트만 닫음
     };
 

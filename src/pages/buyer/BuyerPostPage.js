@@ -34,6 +34,7 @@ const BuyerPostPage = () => {
   const [sortBy, setSortBy] = useState('buyerCd');
 
   const [allData, setAllData] = useState({ data: [] });
+  const [searchCondition, setSearchCondition] = useState('');
 
   const columnData = [
     {
@@ -96,7 +97,7 @@ const BuyerPostPage = () => {
     setDbData(value);
   }
   useEffect(() => {
-    sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading });
+    sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm:searchCondition, setData: resetData, setIsLoading: setIsLoading });
     sendGetAllBuyersRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
@@ -111,7 +112,7 @@ const BuyerPostPage = () => {
             <div className='manufacturer-list-container'>
               <div className='manufacturer-tool-container'>
                 <select onChange={(e) => setSortBy(e.target.value)}>
-                  <option disabled='true'>정렬 기준 선택</option>
+                  <option disabled selected>정렬 기준 선택</option>
                   <option value='buyerCd'>고객사 코드</option>
                   <option value='buyerNm'>고객사 명</option>
                   <option value='buyerId'>등록순</option>
@@ -135,6 +136,7 @@ const BuyerPostPage = () => {
                   }
                   defaultSearch={() => sendGetBuyersRequest(
                     { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading })}
+                  setSearchCondition={setSearchCondition}
                 />
                 <div />
                 <div className='manufacturer-button-container'>
@@ -193,7 +195,7 @@ const BuyerPostPage = () => {
                           const checkedData = checked.map(item => data.data[item].buyerId);
                           console.log('checkedData: ', checkedData);
                           sendDeleteBuyersRequest(state, checkedData, setChecked, () => {
-                            sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading});
+                            sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading });
                             setChecked([]);
                           });
                         },
