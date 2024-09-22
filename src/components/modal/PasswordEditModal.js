@@ -72,6 +72,16 @@ const PasswordEditModal = ({ setOpened, state, memberId, onModify }) => {
                             Swal.fire({text: '현재 비밀번호를 입력해주세요'});
                             return;
                         }
+                        if(passwordInput === ''){
+                            Swal.fire({text: '새 비밀번호를 입력해주세요'});
+                            setPasswordError(true);
+                            return;
+                        }
+                        if(passwordCheckInput === ''){
+                            Swal.fire({text: '새 비밀번호를 확인해주세요'});
+                            setPasswordCheckError(true);
+                            return;
+                        }
                         if(passwordError){
                             Swal.fire({text: '비밀번호를 올바른 형태로 입력해주세요'});
                             return;
