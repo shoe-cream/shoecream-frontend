@@ -111,10 +111,10 @@ const BuyerItemPostPage = () => {
         setDbData(value);
     }
     useEffect(() => {
-        if(searchType === 'buyerNm'){
-            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, buyerNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
-        }else if (searchType === 'itemNm'){
-            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, itemNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+        if (searchType === 'buyerNm') {
+            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, buyerNm: searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+        } else if (searchType === 'itemNm') {
+            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, itemNm: searchCondition, sort: sortBy, setIsLoading: setIsLoading });
         }
         sendGetAllBuyersRequest(state, setAllBuyers, setIsLoading2);
         sendGetAllItemsRequest(state, setAllItems, setIsLoading3);
@@ -139,27 +139,27 @@ const BuyerItemPostPage = () => {
                                     <option value='endDate'>적용 종료일순</option>
                                     <option value='modifiedAt'>최신 수정순</option>
                                 </select>
-                                <DropdownSearchWindow
-                                    types={[
-                                        {
-                                            value: 'buyerNm', display: '고객사명', placeholder: '고객사 이름으로 검색',
-                                            suggestions: allBuyers.data.map(buyer => (
-                                                { key: buyer.buyerNm, onSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, buyerNm: buyer.buyerNm, setData: resetData, sort: sortBy }) }
-                                            )),
-                                            defaultSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })
-                                        },
-                                        {
-                                            value: 'itemNm', display: '제품명', placeholder: '제품 이름으로 검색',
-                                            suggestions: allItems.data.map(item => (
-                                                { key: item.itemNm, onSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, itemNm: item.itemNm, setData: resetData, sort: sortBy }) }
-                                            )),
-                                            defaultSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })
-                                        },
-                                    ]}
-                                    setSearchTypeParent={setSearchType}
-                                    setSearchCondition={setSearchCondition}
-                                     />
                                 <div className='manufacturer-button-container'>
+                                    <DropdownSearchWindow
+                                        types={[
+                                            {
+                                                value: 'buyerNm', display: '고객사명', placeholder: '고객사 이름으로 검색',
+                                                suggestions: allBuyers.data.map(buyer => (
+                                                    { key: buyer.buyerNm, onSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, buyerNm: buyer.buyerNm, setData: resetData, sort: sortBy }) }
+                                                )),
+                                                defaultSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })
+                                            },
+                                            {
+                                                value: 'itemNm', display: '제품명', placeholder: '제품 이름으로 검색',
+                                                suggestions: allItems.data.map(item => (
+                                                    { key: item.itemNm, onSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, itemNm: item.itemNm, setData: resetData, sort: sortBy }) }
+                                                )),
+                                                defaultSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })
+                                            },
+                                        ]}
+                                        setSearchTypeParent={setSearchType}
+                                        setSearchCondition={setSearchCondition}
+                                    />
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                                     <button className='manufacturer-button' onClick={() => {
                                         if (checked.length === 0) {
@@ -237,10 +237,10 @@ const BuyerItemPostPage = () => {
                                         });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchMultiBuyerItemsRequest(state, requestBody, () => {
-                                            if(searchType === 'buyerNm'){
-                                                sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, buyerNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
-                                            }else if (searchType === 'itemNm'){
-                                                sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, itemNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+                                            if (searchType === 'buyerNm') {
+                                                sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, buyerNm: searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+                                            } else if (searchType === 'itemNm') {
+                                                sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, itemNm: searchCondition, sort: sortBy, setIsLoading: setIsLoading });
                                             }
                                             setChecked([]);
                                         });
