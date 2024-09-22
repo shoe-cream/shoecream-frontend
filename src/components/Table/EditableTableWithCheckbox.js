@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useTable } from 'react-table';
 import './ReactTable.css';
 import Swal from 'sweetalert2';
+import { ChevronRight } from 'lucide-react';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited, onRowClick ,onCheckboxChange}) => {
 
@@ -144,8 +145,9 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
               column.onClick(row.original); // row.original을 전달
             }
           }}
+          title="상세 정보 보기"
         >
-          {column.buttonTitle}
+          {column.buttonTitle} <ChevronRight size={16} />
         </button>
       );
     }

@@ -78,8 +78,8 @@ const SalesChart = ({ amountData, quantityData }) => {
           font: { size: 14, weight: 'bold' },
         },
         ticks: {
-          maxRotation: 45,
-          minRotation: 45,
+          maxRotation: 0,
+          minRotation: 0,
         },
         grid: {
           display: false,

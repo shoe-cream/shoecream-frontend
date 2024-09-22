@@ -101,6 +101,8 @@ const SalesPerformanceChart = ({ employee }) => {
   }, [recentFiveDaysReport]);
 
   const options = {
+    responsive: false,
+    maintainAspectRatio: false,
     responsive: true,
     interaction: {
       mode: 'index',
@@ -152,7 +154,11 @@ const SalesPerformanceChart = ({ employee }) => {
     return <div>Loading...</div>;
   }
 
-  return <Bar data={chartData} options={options} />;
+  return (
+    <div style={{ width: '100%', height: '400px' }}> {/* 원하는 크기로 조절 */}
+      <Bar data={chartData} options={options} />
+    </div>
+  );
 };
 
 export default SalesPerformanceChart;
