@@ -18,6 +18,7 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import './BuyerPostPage.css';
 import SearchWindow from "../../components/search/SearchWindow";
 import sendGetAllBuyersRequest from "../../requests/GetAllBuyersRequest";
+import ConfirmAlert from "../../components/alert/ConfirmAlert";
 
 const BuyerPostPage = () => {
   const { state } = useAuth();
@@ -64,7 +65,7 @@ const BuyerPostPage = () => {
     {
       accessor: 'buyerNm',
       Header: '고객사 명',
-    
+
     },
     {
       accessor: 'email',
@@ -88,14 +89,14 @@ const BuyerPostPage = () => {
       options: ['개인', '기업'],
     },
   ]
-  
+
   const resetData = (value) => {
     console.log('reset data: ', value);
     setData(value);
     setDbData(value);
   }
   useEffect(() => {
-    sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading});
+    sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading });
     sendGetAllBuyersRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
@@ -121,18 +122,19 @@ const BuyerPostPage = () => {
                   placeholder='고객사 이름으로 검색'
                   suggestions={
                     allData.data.map(data => ({
-                      key: data.buyerNm, 
+                      key: data.buyerNm,
                       onSearch: () => {
                         const buyerNm = data.buyerNm.replace(/\s+/g, '');
                         console.log('data: ', data);
                         console.log('buyerNm: ', data.buyerNm);
                         sendGetBuyersRequest(
-                        {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: buyerNm, setData: resetData, setIsLoading: setIsLoading}
-                      )}
+                          { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: buyerNm, setData: resetData, setIsLoading: setIsLoading }
+                        )
+                      }
                     }))
                   }
                   defaultSearch={() => sendGetBuyersRequest(
-                    {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading})}
+                    { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading })}
                 />
                 <div />
                 <div className='manufacturer-button-container'>
@@ -173,7 +175,7 @@ const BuyerPostPage = () => {
                     });
                     console.log('requestBody: ', requestBody);
                     sendPatchMultiBuyerRequest(state, requestBody, () => {
-                      sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading});
+                      sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading });
                       setChecked([]);
                     });
                   }}><Edit size={16} /> 수정</button>
@@ -183,13 +185,19 @@ const BuyerPostPage = () => {
                         Swal.fire({ text: "하나 이상의 데이터를 선택해주세요" });
                         return;
                       }
-                      console.log('checked: ', checked);
-                      const checkedData = checked.map(item => data.data[item].buyerId);
-                      console.log('checkedData: ', checkedData);
-                      sendDeleteBuyersRequest(state, checkedData, setChecked, () => {
-                        sendGetBuyersRequest(state, page, setPage, 10, sortBy, resetData, setIsLoading);
-                        setChecked([]);
-                      });
+
+                      ConfirmAlert({
+                        dataLength: checked.length,
+                        onConfirm: () => {
+                          console.log('checked: ', checked);
+                          const checkedData = checked.map(item => data.data[item].buyerId);
+                          console.log('checkedData: ', checkedData);
+                          sendDeleteBuyersRequest(state, checkedData, setChecked, () => {
+                            sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading});
+                            setChecked([]);
+                          });
+                        },
+                      })
                     }}><Trash2 size={16} /> 삭제</button>
                 </div>
               </div>
@@ -223,7 +231,7 @@ const BuyerPostPage = () => {
                 sendPostBuyersRequest(state, checkedData, () => {
                   setChecked([]);
                   setOpened(false);
-                  sendGetBuyersRequest({state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: (value) => setParentData(value)});
+                  sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: (value) => setParentData(value) });
                 });
               }}
               page={page}

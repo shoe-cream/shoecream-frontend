@@ -124,6 +124,17 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     };
     const minDate = getCurrentDate();
 
+    if(column.type === 'clickable'){
+      return(
+        <div
+          className='cell-clickable'
+          onClick={() => onRowClick(row.original)}
+        >
+        {initialValue}  
+        </div>
+      )
+    }
+
     if (column.type === 'button') {
       return (
         <button
@@ -182,10 +193,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           value={value}
           row={row}
           column={column}
+          onRowClick={onRowClick}
         />
       ),
     }))
-  ], [columns, data.data, checked, setChecked]);
+  ], [columns, data.data, checked, setChecked, onRowClick]);
 
   const {
     getTableProps,
@@ -230,7 +242,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           prepareRow(row);
           return (
             <tr className={getRowClassName(row)} {...row.getRowProps()}
-                onClick={(e) => handleRowClick(e, row)}
+                /* onClick={(e) => handleRowClick(e, row)} */
             >
               {row.cells.map(cell => (
                 <td 

@@ -543,7 +543,7 @@ const OrderApprovalPage = () => {
 
         const commonColumns = [
             { Header: "담당자", accessor: "employeeId" },
-            { Header: "주문코드", accessor: "orderCd" },
+            { Header: "주문코드", accessor: "orderCd", type:'clickable' },
             { Header: "주문상태", accessor: "status" },
             { Header: "등록일", accessor: "createdAtV2" },
             { Header: "고객사 명", accessor: "buyerNm" },
@@ -763,6 +763,7 @@ const OrderApprovalPage = () => {
                                                         edited={edited}
                                                         setEdited={setEdited}
                                                         onCheckboxChange={handleCheckboxChange}
+                                                        onRowClick={handleRowClick}
                                                     />
                                                 ) : (
                                                     <div>검색 결과가 없습니다.</div>
