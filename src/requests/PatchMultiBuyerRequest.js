@@ -25,8 +25,21 @@ const sendPatchMultiBuyerRequest = async(state, requestBody, executeAfter) => {
         }
     } catch(error){
         console.error('고객사 일괄 수정 실패(에러 발생): ', error);
+        const errorMessage = error.response.data.message.toLowerCase();
         switch(error.status){
             case 409:
+                if(errorMessage.includes('buyer')){
+                    Swal.fire({text: `이미 등록된 고객사명입니다.`});
+                    break;
+                }
+                if(errorMessage.includes('email')){
+                    Swal.fire({text: `이미 등록된 이메일입니다.`});
+                    break;
+                }
+                if(errorMessage.includes('tel')){
+                    Swal.fire({text: `이미 등록된 전화번호입니다.`});
+                    break;
+                }
                 Swal.fire({text: `이메일 또는 전화번호가 이미 존재합니다.`});
                 break;
             default:

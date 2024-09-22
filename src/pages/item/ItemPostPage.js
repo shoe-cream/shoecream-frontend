@@ -141,27 +141,29 @@ const ItemPostPage = () => {
                     <option value={'createdAt'}>등록순</option>
                     <option value={'unitPrice'}>단가순</option>
                   </select>
-                  <SearchWindow
-                    placeholder='제품 이름으로 검색'
-                    suggestions={
-                      allData.data.map(data => ({
-                        key: data.itemNm,
-                        onSearch: () => {
-                          const itemNm = data.itemNm.replace(/\s+/g, '');
-                          console.log('data: ', data);
-                          console.log('itemNm: ', data.itemNm);
-                          sendGetItemsRequest(
-                            {state:state, page:page, setPage:setPage, size:10, sort:sortBy, itemNm:itemNm, setData:resetData, setIsLoading:setIsLoading}
-                          );
-                        }                        
-                      }))
-                    }
-                    defaultSearch = {() => sendGetItemsRequest(
-                      {state:state, page:page, setPage:setPage, size:10, sort:sortBy, setData:resetData, setIsLoading:setIsLoading}
-                    )}
-                  />
                   <div />
                   <div className='manufacturer-button-container'>
+                    <SearchWindow
+                      placeholder='제품 이름으로 검색'
+                      suggestions={
+                        allData.data.map(data => ({
+                          key: data.itemNm,
+                          onSearch: () => {
+                            /* const itemNm = data.itemNm.replace(/\s+/g, ''); */
+                            const itemNm = data.itemNm;
+                            console.log('data: ', data);
+                            console.log('itemNm: ', data.itemNm);
+                            sendGetItemsRequest(
+                              { state: state, page: page, setPage: setPage, size: 10, sort: sortBy, itemNm: itemNm, setData: resetData, setIsLoading: setIsLoading }
+                            );
+                          }
+                        }))
+                      }
+                      defaultSearch={() => sendGetItemsRequest(
+                        { state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading }
+                      )}
+                      setSearchCondition={setSearchCondition}
+                    />
                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                     <button className='manufacturer-button' onClick={() => {
                       if (checked.length === 0) {

@@ -102,8 +102,10 @@ const Title = styled.h1`
 `;
 
 const Logo = styled.img`
-  height: 40px;
+  max-width: 150px;  
+  height: auto;    
 `;
+
 
 const InfoSection = styled.div`
   margin-bottom: 20px;
@@ -339,13 +341,13 @@ const OrderDetail = () => {
                 <Sidebar />
                 <ContentContainer>
                     <QuotationCard id="quotation-content">
-                        <QuotationHeader>
-                            <Title>견적서</Title>
-                            <Logo src="logo/text-logo.png" alt="Logo" />
-                        </QuotationHeader>
+                    <QuotationHeader>
+    <Title>견적서</Title>
+    <Logo src="/logo/logo-shoeCream.png" />
+</QuotationHeader>
                         <InfoSection>
                             <InfoColumn>
-                                <p><strong>Invoice No:</strong> {orderData.orderCd}</p>
+                                <p><strong>Order No:</strong> {orderData.orderCd}</p>
                                 <p><strong>견적일:</strong> {orderData.createdAt}</p>
                                 <p><strong>견적서 만료일:</strong> {orderData.requestDate}</p>
                             </InfoColumn>

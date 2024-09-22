@@ -1,26 +1,29 @@
-
-
-.header-container{
+.header-container {
     width: 100%;
     height: 45px;
     margin: 0 auto;
     background-color: white;
-    
+
     margin-top: 7px;
-    display: flex; /* 자식들의 가로 방향으로 정렬됨 */
+    display: flex;
+    /* 자식들의 가로 방향으로 정렬됨 */
     /* flex-direction: column; 애는 세로로 바뀜 */
     justify-content: space-between;
     /* border-bottom: 1px solid #000000;   */
-    align-items: center; /* 자식들의 flex수직방향 정렬 기준 정해줌 */
+    align-items: center;
+    /* 자식들의 flex수직방향 정렬 기준 정해줌 */
 }
-.header-logo{
-    height: 78%; /* 크기 조정 */
+
+.header-logo {
+    height: 78%;
+    /* 크기 조정 */
     /* margin-left: 1px; */
     cursor: pointer;
     margin-right: 21px;
-    /* width: 170px;  양옆 크기조절 */ 
+    /* width: 170px;  양옆 크기조절 */
 }
-.header-userinfo-container{
+
+.header-userinfo-container {
     display: flex;
     width: 140px !important;
     align-items: center;
@@ -28,11 +31,13 @@
     margin-left: 13px !important;
 
 }
-.header-welcome-text{
+
+.header-welcome-text {
     font-size: 14px;
     width: auto;
     display: flex;
 }
+
 .header-profile-icon,
 .header-logout-icon {
     cursor: pointer;
@@ -47,7 +52,7 @@
     color: #1f3750;
 }
 
-.header-login-button{
+.header-login-button {
     font-size: 13px;
     font-weight: bold;
     color: white;
@@ -60,18 +65,27 @@
     margin-right: 22px;
     cursor: pointer;
 }
-.header-login-button:hover{
+
+.header-login-button:hover {
     background-color: #1f3750;
 }
 
-.header-search-form {
-    display: flex; /* 자식 요소들을 가로로 정렬 */
-    width: 20%;
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    margin: 0 10px; /* 양쪽 여백을 적게 설정 */
-    margin-right: auto; /* 오른쪽으로 여백을 자동으로 밀어넣음, 왼쪽에 붙음 */
-    position: relative; 
+.header-logo-container{
+    display: flex;
+    height: 100%;
+    align-items: center;
 }
+.header-search-form {
+    display: flex;   
+    align-items: center;
+    max-width: 250px;
+    position: relative;
+}
+.header-search-container{
+    height: 70%;
+    display: flex;
+}
+
 .header-suggestions {
     position: absolute;
     top: 100%; /* 입력 필드 바로 아래에 위치 */
@@ -85,28 +99,53 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
-    z-index: 1000; /* 다른 요소 위에 표시 */
-  }
-  
-  .header-suggestions li {
-    padding: 5px 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.header-suggestions li {
+    padding: 10px;
     cursor: pointer;
-  }
-  
-  .header-suggestions li:hover,
-  .header-suggestions li.active {
+}
+
+.header-suggestions li.active {
     background-color: #f0f0f0;
-  }
+}
 
 .header-search-input {
-    padding: 6px 10px; /* 패딩을 줄여서 크기 조정 */
-    border: 1px solid #ccc; /* 기본 테두리 설정 */
-    border-radius: 4px; /* 모서리 둥글게 처리 */
-    width: 60%; 
-    font-size: 13px; 
-    transition: width 0.3s ease; 
+    height: 90%;
+    border: 1px solid #ccc;
+    /* 기본 테두리 설정 */
+    border-radius: 4px;
+    /* 모서리 둥글게 처리 */
+    /* width: 60%; */
+    font-size: 13px;
+    transition: width 0.3s ease;
+    display: flex;
+    flex-direction: column !important;
+    border-right: none;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    font-size: 14px;
+    min-width: 150px !important;
 }
 
 .header-search-button:hover {
     background-color: #1f3750;
+}
+
+
+.header-search-button {
+    background-color: #3b5998;
+    height: 100%;
+    color: white;
+    border: none;
+    padding: 9px 12px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

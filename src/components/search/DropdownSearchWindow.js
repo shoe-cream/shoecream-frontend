@@ -7,7 +7,7 @@ const DropdownSearchWindow = ({ types, setSearchTypeParent, setSearchCondition }
     console.log('types: ', types);
     return (
         <div className="dropdown-search-window-container">
-            <select id = 'manufactur-item' value={searchType} onChange={(e) => {            
+            <select className = 'search-window-dropdown' value={searchType} onChange={(e) => {
                 setSearchType(e.target.value);
                 setSearchTypeParent(e.target.value);
                 }}>

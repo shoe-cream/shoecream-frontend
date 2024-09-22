@@ -13,6 +13,8 @@ const SearchWindow = ({ placeholder, suggestions, defaultSearch, setSearchCondit
     const handleSearchChange = (e) => {
 
         console.log('suggestions: ', suggestions);
+        console.log('filtered Suggestions: ', filteredSuggestions);
+        console.log('showSuggestions: ', showSuggestions);
         
         const value = e.target.value;
         setSearchTerm(value);

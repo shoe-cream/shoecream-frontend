@@ -1,15 +1,6 @@
 .dropdown-search-window-container{
     display: flex;
-    margin-right: 10px;
-    margin-top: 23px;
-    width: 100%;
 }
-
-.header-search-input {
-
-}
-
-.manufacture-item {
-    display: flex;
-    
+.search-window-dropdown{
+    width: 100px;
 }

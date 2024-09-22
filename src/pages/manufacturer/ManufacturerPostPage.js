@@ -40,7 +40,7 @@ const ManufacturerPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, mfNm:searchCondition, setData: resetData, setIsLoading: setIsLoading });
+        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, mfNm: searchCondition, setData: resetData, setIsLoading: setIsLoading });
         sendGetAllManufacturersRequest(state, setAllData, setIsLoading2);
     }, [page, sortBy]);
 
@@ -101,31 +101,31 @@ const ManufacturerPostPage = () => {
                                     <option value={'mfNm'}>제조사명</option>
                                     <option value={'createdAt'}>등록순</option>
                                 </select>
-                                <SearchWindow
-                                    placeholder='제조사 이름으로 검색'
-                                    suggestions={
-                                        allData.data.map(data => ({
-                                            key: data.mfNm,
-                                            onSearch: () => {
-                                                /* const mfNm = data.mfNm.replace(/\s+/g, ''); */
-                                                const mfNm = data.mfNm;
-                                                console.log('data: ', data);
-                                                console.log('mfNm: ', data.mfNm);
-                                                sendGetManufacturersRequest(
-                                                    { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, mfNm: mfNm, setData: resetData, setIsLoading: setIsLoading }
-                                                );
-                                            }
-                                        }))
-                                    }
-                                    defaultSearch={() => {
-                                        sendGetManufacturersRequest(
-                                            { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading }
-                                        )
-                                    }}
-                                    setSearchCondition={setSearchCondition}
-                                />
                                 <div />
                                 <div className='manufacturer-button-container'>
+                                    <SearchWindow
+                                        placeholder='제조사 이름으로 검색'
+                                        suggestions={
+                                            allData.data.map(data => ({
+                                                key: data.mfNm,
+                                                onSearch: () => {
+                                                    /* const mfNm = data.mfNm.replace(/\s+/g, ''); */
+                                                    const mfNm = data.mfNm;
+                                                    console.log('data: ', data);
+                                                    console.log('mfNm: ', data.mfNm);
+                                                    sendGetManufacturersRequest(
+                                                        { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, mfNm: mfNm, setData: resetData, setIsLoading: setIsLoading }
+                                                    );
+                                                }
+                                            }))
+                                        }
+                                        defaultSearch={() => {
+                                            sendGetManufacturersRequest(
+                                                { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading }
+                                            )
+                                        }}
+                                        setSearchCondition={setSearchCondition}
+                                    />
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}>
                                         <Plus size={16} /> 추가
                                     </button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { useAuth } from '../../auth/AuthContext';
@@ -6,14 +6,17 @@ import getBuyerRequest from '../../requests/GetBuyerRequest';
 import getItemRequest from '../../requests/GetItemRequest';
 import OrderPostModal from '../modal/OrderPostModal';
 import Swal from 'sweetalert2';
-import '../OrderPost/ProductSearch.css' ;
+import '../OrderPost/ProductSearch.css';
+import SearchWindow from '../search/SearchWindow';
+import sendGetAllBuyersRequest from '../../requests/GetAllBuyersRequest';
+import sendGetBuyersRequest from '../../requests/GetBuyersRequest';
 
 const ProductSearch = ({ onAddOrder }) => {
     const [searchParams, setSearchParams] = useState({
         buyerCd: '',
         buyerNm: '',
         tel: '',
-        orderDate : ''
+        orderDate: ''
     });
     const [buyers, setBuyers] = useState({ data: {} });
     const [isLoading, setIsLoading] = useState(false);
@@ -21,12 +24,27 @@ const ProductSearch = ({ onAddOrder }) => {
     const [findItem, setFindItem] = useState(null);
     const [buyerItemUnitPrice, setBuyerItemUnitPrice] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [allBuyers, setAllBuyers] = useState({ data: [] });
+    const [searchCondition, setSearchCondition] = useState('');
+    const [page, setPage] = useState(1);
+    const [sortBy, setSortBy] = useState('buyerCd');
 
     const { state } = useAuth();
+
+    useEffect(() => {
+        // sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerCd:searchCondition, setData: resetData, setIsLoading: setIsLoading });
+        sendGetAllBuyersRequest(state, setAllBuyers, setIsLoading);
+      }, [page, sortBy]);
+
+      const resetData = (value) => {
+        console.log('reset data: ', value);
+        setAllBuyers(value);
+      }
 
     const handleChange = (e) => {
         const { id, value } = e.target;
         setSearchParams(prevState => ({ ...prevState, [id]: value }));
+        console.log("buyersdfsd",buyers);
     };
 
     const handleSelectChange = (event) => {
@@ -43,26 +61,28 @@ const ProductSearch = ({ onAddOrder }) => {
     };
 
     const handleBuyerSearch = () => {
-        if(!searchParams.buyerCd){
-            Swal.fire({text : '고객코드를 입력해주세요'});
+        if (!searchCondition) {
+            Swal.fire({ text: '고객코드를 입력해주세요' });
             return;
         }
-        getBuyerRequest(state, searchParams.buyerCd, setBuyers, setIsLoading);
+        console.log("asdasdasdasd", searchCondition);
+        getBuyerRequest(state, searchCondition, setBuyers, setIsLoading);
     };
 
     const handleOpenModal = () => {
-        if (searchParams.buyerCd && searchParams.orderDate) {
+        if (buyers.data.buyerCd && searchParams.orderDate) {
+            console.log(buyers.data.buyerCd);
             setIsModalOpen(true);
         } else {
             let errorMessage = '';
-            if (!searchParams.buyerCd && !searchParams.orderDate) {
+            if (!buyers.data.buyerCd && !searchParams.orderDate) {
                 errorMessage = '고객코드와 주문날짜를 입력해주세요.';
-            } else if (!searchParams.buyerCd) {
+            } else if (!buyers.data.buyerCd) {
                 errorMessage = '고객코드를 입력해주세요.';
             } else if (!searchParams.orderDate) {
                 errorMessage = '주문날짜를 입력해주세요.';
             }
-            Swal.fire({text: errorMessage});
+            Swal.fire({ text: errorMessage });
         }
     };
 
@@ -78,10 +98,10 @@ const ProductSearch = ({ onAddOrder }) => {
             : '';
 
         const newOrder = {
-            buyerCd: searchParams.buyerCd,
+            buyerCd: buyers.data.buyerCd,
             buyerNm: buyers.data.buyerNm,
             tel: buyers.data.tel,
-            registrationDate: searchParams.orderDate, 
+            registrationDate: searchParams.orderDate,
             items: items.map(item => ({
                 itemCd: item.itemCd,
                 itemNm: item.itemNm,
@@ -92,11 +112,11 @@ const ProductSearch = ({ onAddOrder }) => {
                 unit: item.unit,
                 startDate: item.startDate,
                 endDate: item.endDate,
-                margin : item.margin,
+                margin: item.margin,
                 contractPeriod: `${item.startDate || ''} ~ ${item.endDate || ''}`,
             }))
         };
-        console.log("new Order" , newOrder);
+        console.log("new Order", newOrder);
         onAddOrder(newOrder);
         setIsModalOpen(false);
     };
@@ -104,13 +124,24 @@ const ProductSearch = ({ onAddOrder }) => {
     return (
         <div className='product-search'>
             <div className="search-container">
-                <SearchBox
-                    label="고객코드"
-                    id="buyerCd"
-                    value={searchParams.buyerCd}
-                    onChange={handleChange}
-                    onSearch={handleBuyerSearch}
-                />
+                <div className="search-box">
+                    <span className="search-label">고객코드</span>
+                    <SearchWindow
+                        placeholder="고객코드를 입력하세요"
+                        suggestions={
+                            allBuyers.data.map(data => ({
+                                key: data.buyerCd,
+                                onSearch: () => {
+                                    handleBuyerSearch();
+                                }
+                            }))
+                        }
+                        defaultSearch={handleBuyerSearch}
+                        setSearchCondition={setSearchCondition}
+                    />
+                    {/* <button className="search-button" onClick={handleBuyerSearch}>
+                    </button> */}
+                </div>
                 <ReadOnlyInput label="고객사" id="buyerNm" value={buyers.data.buyerNm} />
                 <ReadOnlyInput label="고객사 연락처" id="tel" value={buyers.data.tel} />
                 <DateInput
@@ -120,6 +151,7 @@ const ProductSearch = ({ onAddOrder }) => {
                     onChange={handleChange}
                 />
             </div>
+
 
             <div className='button-container'>
                 <button onClick={handleOpenModal} className="add-items-button">
@@ -131,9 +163,9 @@ const ProductSearch = ({ onAddOrder }) => {
                 <OrderPostModal
                     state={state}
                     setOpened={setIsModalOpen}
-                    buyerCd={searchParams.buyerCd}
+                    buyerCd={buyers.data.buyerCd}
                     onItemsSelected={handleItemsSelected}
-                    orderDate = {searchParams.orderDate}
+                    orderDate={searchParams.orderDate}
                 />
             )}
         </div>
@@ -152,7 +184,7 @@ const SearchBox = ({ label, id, value, onChange, onSearch }) => (
                 onChange={onChange}
             />
             <button className="search-button" onClick={onSearch}>
-                <Search size={14} color="#ffffff"/>
+                <Search size={14} color="#ffffff" />
             </button>
         </div>
     </div>

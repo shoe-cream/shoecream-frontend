@@ -24,7 +24,13 @@ const sendPostMultiItemRequest = async(state, requestBody, executeAfter) => {
         }
     } catch(error){
         console.error('제품 일괄 등록 실패(에러 발생): ', error);
-        Swal.fire({text: `요청 실패(${error.status})`});
+        switch (error.status){
+            case 409:
+                Swal.fire({text: '이미 등록된 제품명입니다.'});
+                break;
+            default:
+                Swal.fire({text: `요청 실패(${error.status})`});
+        }
     }
 }
 export default sendPostMultiItemRequest;

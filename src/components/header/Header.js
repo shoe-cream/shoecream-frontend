@@ -19,22 +19,28 @@ const Header = () => {
 
     return (
         <div className="header-container">
-            <img className="header-logo" src="logo/text-logo.png" onClick={() => navigate((state.isAuthenticated ? "/dashboard" : '/'))}></img>
-            <SearchWindow
-                className="header-search-window"
-                placeholder='이동할 메뉴 검색'
-                suggestions={[
-                    { key: '제조사', onSearch: () => navigate('/manufacturers') },
-                    { key: '고객사', onSearch: () => navigate('/buyers') },
-                    { key: '주문', onSearch: () => navigate('/order') },
-                    { key: '주문 승인', onSearch: () => navigate('/order-approval') },
-                    { key: '제품', onSearch: () => navigate('/items') },
-                    { key: '고객사 단가', onSearch: () => navigate('/buyer-items') },
-                    { key: '납품 관리', onSearch: () => navigate('/manufacturer-items') },
-                    /* { key: '판매 기록', onSearch: () => navigate('/sales-history') }, */
-                ]}
-            />
-
+            <div className="header-logo-container">
+                <img
+                    className="header-logo"
+                    src="/logo/text-logo.png"
+                    onClick={() => navigate(state.isAuthenticated ? "/dashboard" : '/')}>
+                </img>
+                <div className="header-search-container">
+                    <SearchWindow
+                        placeholder='이동할 메뉴 검색'
+                        suggestions={[
+                            { key: '제조사', onSearch: () => navigate('/manufacturers') },
+                            { key: '고객사', onSearch: () => navigate('/buyers') },
+                            { key: '주문', onSearch: () => navigate('/order') },
+                            { key: '주문 승인', onSearch: () => navigate('/order-approval') },
+                            { key: '제품', onSearch: () => navigate('/items') },
+                            { key: '고객사 단가', onSearch: () => navigate('/buyer-items') },
+                            { key: '납품 관리', onSearch: () => navigate('/manufacturer-items') },
+                            /* { key: '판매 기록', onSearch: () => navigate('/sales-history') }, */
+                        ]}
+                    />
+                </div>
+            </div>
             <div className="header-userinfo-container">
                 {state.isAuthenticated ? <div className="header-welcome-text">{myData.data.name} 님</div> :
                     <button className="header-login-button" onClick={() => navigate('/login')}>로그인</button>}
