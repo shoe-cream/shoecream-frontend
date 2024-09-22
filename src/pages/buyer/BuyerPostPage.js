@@ -177,7 +177,7 @@ const BuyerPostPage = () => {
                     });
                     console.log('requestBody: ', requestBody);
                     sendPatchMultiBuyerRequest(state, requestBody, () => {
-                      sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading });
+                      sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: searchCondition, setData: resetData, setIsLoading: setIsLoading });
                       setChecked([]);
                     });
                   }}><Edit size={16} /> 수정</button>
@@ -195,7 +195,7 @@ const BuyerPostPage = () => {
                           const checkedData = checked.map(item => data.data[item].buyerId);
                           console.log('checkedData: ', checkedData);
                           sendDeleteBuyersRequest(state, checkedData, setChecked, () => {
-                            sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading });
+                            sendGetBuyersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: searchCondition, setData: resetData, setIsLoading: setIsLoading });
                             setChecked([]);
                           });
                         },

@@ -165,7 +165,7 @@ const ManufacturerPostPage = () => {
                                         });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchManufacturersRequest(state, requestBody, () => {
-                                            sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData });
+                                            sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, mfNm: searchCondition, size: 10, sortBy: sortBy, setData: resetData });
                                             setChecked([]);
                                         });
                                     }}>
@@ -183,7 +183,7 @@ const ManufacturerPostPage = () => {
                                                     /* console.log('checked: ', checked); */
                                                     const checkedItems = checked.map(item => data.data[item].mfId);
                                                     sendDeleteManufacturersRequest(state, checkedItems, setChecked, () => {
-                                                        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData });
+                                                        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, mfNm: searchCondition, size: 10, sortBy: sortBy, setData: resetData });
                                                         setChecked([]);
                                                     });
                                                 },

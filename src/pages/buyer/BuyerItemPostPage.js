@@ -237,7 +237,11 @@ const BuyerItemPostPage = () => {
                                         });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchMultiBuyerItemsRequest(state, requestBody, () => {
-                                            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy, setIsLoading: setIsLoading });
+                                            if(searchType === 'buyerNm'){
+                                                sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, buyerNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+                                            }else if (searchType === 'itemNm'){
+                                                sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, itemNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+                                            }
                                             setChecked([]);
                                         });
                                     }}><Edit size={16} /> 수정</button>
