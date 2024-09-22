@@ -30,7 +30,7 @@ const BuyerPostPage = () => {
   const [checked, setChecked] = useState([]);
   const [isPostMode, setIsPostMode] = useState(false);
   const [edited, setEdited] = useState([]);
-  const [sortBy, setSortBy] = useState('buyerId');
+  const [sortBy, setSortBy] = useState('buyerCd');
 
   const [allData, setAllData] = useState({ data: [] });
 
@@ -105,36 +105,41 @@ const BuyerPostPage = () => {
       <div className='app-container'>
         <Sidebar></Sidebar>
         <div className="app-content-container">
-          <div className="app-background">
-            <h2 className="app-label">고객사 관리</h2>
-            <div className='manufacturer-list-container'>
-              <div className='manufacturer-tool-container'>
-                <select onChange={(e) => setSortBy(e.target.value)}>
-                  <option disabled='true'>정렬 기준 선택</option>
-                  <option value='buyerCd'>고객사 코드</option>
-                  <option value='buyerNm'>고객사 명</option>
-                  <option value='buyerId'>등록순</option>
-                  <option value='address'>주소</option>
-                  <option value='businessType'>사업 분류</option>
-                </select>
-                <SearchWindow
-                  placeholder='고객사 이름으로 검색'
-                  suggestions={
-                    allData.data.map(data => ({
-                      key: data.buyerNm, 
-                      onSearch: () => {
-                        const buyerNm = data.buyerNm.replace(/\s+/g, '');
-                        console.log('data: ', data);
-                        console.log('buyerNm: ', data.buyerNm);
-                        sendGetBuyersRequest(
-                        {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, buyerNm: buyerNm, setData: resetData, setIsLoading: setIsLoading}
-                      )}
-                    }))
-                  }
-                  defaultSearch={() => sendGetBuyersRequest(
-                    {state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading})}
-                />
-                <div />
+  <div className="app-background">
+    <h2 className="app-label">고객사 관리</h2>
+    <div className='manufacturer-list-container'>
+      <div className='manufacturer-tool-container'>
+        <div className="search-sort-container">
+          <div className="sort-select-container">
+            <label htmlFor="sortSelect">정렬 기준:</label>
+            <select 
+              id="sortSelect"
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value='buyerCd'>고객사 코드</option>
+              <option value='buyerNm'>고객사 명</option>
+              <option value='buyerId'>등록순</option>
+              <option value='address'>주소</option>
+              <option value='businessType'>사업 분류</option>
+            </select>
+          </div>
+          <div className="search-container">
+            <label htmlFor="searchInput">고객사 검색:</label>
+            <SearchWindow
+              id="searchInput"
+              placeholder='고객사 이름으로 검색'
+              suggestions={allData.data.map(data => ({
+                key: data.buyerNm, 
+                onSearch: () => {
+                  const buyerNm = data.buyerNm.replace(/\s+/g, '');
+                  sendGetBuyersRequest({state, page, setPage, size: 10, sortBy, buyerNm, setData: resetData, setIsLoading})
+                }
+              }))}
+              defaultSearch={() => sendGetBuyersRequest({state, page, setPage, size: 10, sortBy, setData: resetData, setIsLoading})}
+            />
+          </div>
+        </div>
                 <div className='manufacturer-button-container'>
                   <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                   <button className='manufacturer-button' onClick={() => {

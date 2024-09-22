@@ -5,6 +5,7 @@ import SearchInput from '../search/SearchInput';
 import SearchWindow from '../search/SearchWindow';
 import SearchModal from '../../components/modal/SearchModal';
 import Swal from 'sweetalert2';
+import './EditableTableWithAddrow';
 
 const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, requestArr }) => {
   // 빈 객체를 n개 가진 배열로 초기화
@@ -81,20 +82,32 @@ const EditableTableWithAddrow = ({ columns, data, setData, checked, setChecked, 
   }, [createEmptyRow]);
 
 
+  const HeaderCheckbox = ({ checked, onChange }) => (
+    <div className="checkbox-container">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+      />
+    </div>
+  );
+
   // 체크박스를 렌더링하는 셀 컴포넌트
   const CheckboxCell = ({ row }) => (
-    <input
-      type="checkbox"
-      checked={checked.includes(parseInt(row.id, 10))}
-      onChange={() => {
-        const rowId = parseInt(row.id, 10);
-        setChecked(prev =>
-          prev.includes(rowId)
-            ? prev.filter(id => id !== rowId)
-            : [...prev, rowId]
-        );
-      }}
-    />
+    <div className="checkbox-container">
+      <input
+        type="checkbox"
+        checked={checked.includes(parseInt(row.id, 10))}
+        onChange={() => {
+          const rowId = parseInt(row.id, 10);
+          setChecked(prev =>
+            prev.includes(rowId)
+              ? prev.filter(id => id !== rowId)
+              : [...prev, rowId]
+          );
+        }}
+      />
+    </div>
   );
 
   const EditableCell = React.memo(({ value: initialValue, row: { index }, column: { id, type, masterDataIndex, options, placeholder, ...column }, masterDataArr }) => {

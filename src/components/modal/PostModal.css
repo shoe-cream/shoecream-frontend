@@ -19,7 +19,7 @@
 }
 
 .post-modal-button {
-    width: 100px;
+    padding: 4px 8px !important;
     height: 50px;
     background-color: #769adc;
     color: white;
@@ -33,3 +33,15 @@
 .post-modal-button:hover {
     background-color: #8aabe9;
 }
+
+.addrow-dropdown {
+    padding: 2px !important;
+    width: 80px;
+}
+
+.checkbox-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
