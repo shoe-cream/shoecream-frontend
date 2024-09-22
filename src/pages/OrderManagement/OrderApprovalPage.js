@@ -37,8 +37,8 @@ const OrderApprovalPage = () => {
     const [edited, setEdited] = useState([]);
     const [status, setStatus] = useState('');
     const [isPageLoaded, setIsPageLoaded] = useState(false);
-    const [originalData, setOriginalData] = useState({ data: [] });
-    const [modifiedData, setModifiedData] = useState({ data: [] });
+    const [originalData, setOriginalData] = useState(null);
+    const [modifiedData, setModifiedData] = useState(null);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [searchParams, setSearchParams] = useState({});
@@ -64,6 +64,13 @@ const OrderApprovalPage = () => {
         }, 100);
     }, []);
 
+    useEffect(() => {
+        sendGetMyInfoRequest(state, setMember, setIsLoading);
+        setTimeout(() => {
+            setIsPageLoaded(true);
+        }, 100);
+    }, [state]);
+
     const fetchOrders = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -83,85 +90,92 @@ const OrderApprovalPage = () => {
             const transformed = await transOrderDataV2(data);
             setOriginalData({ data: transformed });
             setModifiedData({ data: transformed });
-            setOrders(data); // 데이터를 처리한 후에만 상태 업데이트
+            setOrders(data);
         } catch (error) {
             console.error("Error fetching orders:", error);
+            Swal.fire({ text: '주문 데이터를 가져오는데 실패했습니다.' });
         } finally {
-            setIsLoading(false); // 모든 작업이 끝난 후에 로딩 상태 해제
+            setIsLoading(false);
         }
     }, [state, searchParams, page]);
    
     const transOrderDataV2 = async ({ data }) => {
         if (!Array.isArray(data)) {
-            return []; // data가 배열이 아니면 빈 배열 반환
+            return [];
         }
         let result = [];
         for (let i = 0; i < data.length; i++) {
+            let obj = {
+                employeeId: data[i].employeeId,
+                orderId: data[i].orderId,
+                orderCd: data[i].orderCd,
+                status: data[i].status,
+                createdAt: data[i].createdAt,
+                requestDate: data[i].requestDate,
+                createdAtV2: data[i].createdAt.split('T')[0],
+                requestDateV2: data[i].requestDate.split('T')[0],
+                buyerNm: data[i].buyerNm,
+                buyerCd: data[i].buyerCd,
+            };
 
-            let obj = {};
-            obj["employeeId"] = data[i].employeeId;
-            obj["orderId"] = data[i].orderId;
-            obj["orderCd"] = data[i].orderCd;
-            obj["status"] = data[i].status;
-            obj["createdAt"] = data[i].createdAt;
-            obj["requestDate"] = data[i].requestDate;
-            // 테이블에 yyyy-mm-dd 형식으로 보여주기 위한 obj[key]
-            obj["createdAtV2"] = data[i].createdAt.split('T')[0];
-            obj["requestDateV2"] = data[i].requestDate.split('T')[0];
-            obj["buyerNm"] = data[i].buyerNm;
-            obj["buyerCd"] = data[i].buyerCd;
-
-            let totalPrice = 0; // 초기화
-            let weightedMarginSum = 0; // 가중 마진 합
-            let totalQty = 0; // 총 수량
+            let totalPrice = 0;
+            let weightedMarginSum = 0;
+            let totalQty = 0;
 
             if (Array.isArray(data[i].orderItems)) {
                 for (let j = 0; j < data[i].orderItems.length; j++) {
                     const item = data[i].orderItems[j];
                     const qty = item.qty || 0;
                     const unitPrice = item.unitPrice || 0;
-                    const fetchItemDetails = async () => {
-                        try {
-                            return await getItemRequest(state, item.itemCd, (data) => {
-                                setMasterItem(data);
-                                setIsLoading(false);
-                            }, setIsLoading);
-                        }
-                        catch (error) {
-                            console.error("Failed to fetch item details:", error);
-                            Swal.fire({ text: '아이템 세부정보를 가져오는데 실패했습니다.' });
-                            throw error;
-                        }
-                    };
+                    
+                    try {
+                        let itemData = null;
+                        await new Promise((resolve) => {
+                            getItemRequest(
+                                state,
+                                item.itemCd,
+                                (data) => {
+                                    itemData = data;
+                                    resolve();
+                                },
+                                () => resolve()
+                            );
+                        });
 
-                    const masterItemData = await fetchItemDetails();
-                    console.log("MasterItem", masterItem.data.unitPrice);
-                    const marginRate = masterItem.data.unitPrice
-                        ? Math.round(((unitPrice - masterItem.data.unitPrice) / masterItem.data.unitPrice) * 100)
-                        : 0; // unitPrice가 0일 경우를 대비
+                        if (itemData) {
+                            const masterItemUnitPrice = itemData.data.unitPrice || 0;
+                            console.log(itemData)
+                            const marginRate = masterItemUnitPrice
+                                ? Math.round(((unitPrice - masterItemUnitPrice) / masterItemUnitPrice) * 100)
+                                : 0;
 
-                    const itemTotalPrice = qty * unitPrice;
-                    totalPrice += itemTotalPrice;
-                    weightedMarginSum += marginRate * itemTotalPrice;
-                    totalQty += qty;
+                            const itemTotalPrice = qty * unitPrice;
+                            totalPrice += itemTotalPrice;
+                            weightedMarginSum += marginRate * itemTotalPrice;
+                            totalQty += qty;
+                        } else {
+                            console.warn(`Invalid itemData for itemCd: ${item.itemCd}`);
+                        }
+                    } catch (error) {
+                        console.error("Failed to fetch item details:", error);
+                    }
                 }
             }
-            const averageMargin = totalQty > 0 ? (weightedMarginSum / totalPrice).toFixed(2) : "0.00"; // 평균 마진율 계산
-            obj["averageMargin"] = `${averageMargin}%`; // 평균 마진율 추가
-            obj["totalPrice"] =`$${totalPrice}`; // 계산된 totalPrice를 할당
-            obj["orderItems"] = data[i].orderItems;
+            
+            const averageMargin = totalPrice > 0 ? (weightedMarginSum / totalPrice).toFixed(2) : "0.00";
+            obj.averageMargin = `${averageMargin}%`;
+            obj.totalPrice = `$${totalPrice.toFixed(2)}`;
+            obj.orderItems = data[i].orderItems;
             result.push(obj);
         }
-        console.log("result", result)
         return result;
     };
 
     useEffect(() => {
         fetchOrders();
-        console.log("State: ", state);
-    }, [fetchOrders, state, status]); // status도 의존성에 추가하여 상태가 바뀔 때마다 다시 호출
+    }, [fetchOrders]);
 
-    
+
     const handleCheckboxChange = (order) => {
         setSelectedOrders(prevSelectedOrders => {
             const exists = prevSelectedOrders.find(o => o.orderCd === order.orderCd);
@@ -734,7 +748,11 @@ const OrderApprovalPage = () => {
                                             <div></div>
                                         ) : (
                                             <>
-                                                {modifiedData.data.length > 0 ? (
+                                                {isLoading ? (
+                                                    <div></div>
+                                                ) : modifiedData === null ? (
+                                                    <div>데이터를 불러오는 중 오류가 발생했습니다.</div>
+                                                ) : modifiedData.data.length > 0 ? (
                                                     <EditableTableWithCheckbox
                                                         columns={columns}
                                                         ogData={originalData}
@@ -745,7 +763,6 @@ const OrderApprovalPage = () => {
                                                         edited={edited}
                                                         setEdited={setEdited}
                                                         onCheckboxChange={handleCheckboxChange}
-                                                    // onRowClick={handleRowClick}
                                                     />
                                                 ) : (
                                                     <div>검색 결과가 없습니다.</div>
