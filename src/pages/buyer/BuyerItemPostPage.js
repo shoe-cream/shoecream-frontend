@@ -32,6 +32,9 @@ const BuyerItemPostPage = () => {
     const [sortBy, setSortBy] = useState('buyerItemId');
     const [isPostMode, setIsPostMode] = useState(false);
 
+    const [searchType, setSearchType] = useState('buyerNm');
+    const [searchCondition, setSearchCondition] = useState('');
+
     const columnData = [
         {
             accessor: 'buyerNm',
@@ -108,7 +111,11 @@ const BuyerItemPostPage = () => {
         setDbData(value);
     }
     useEffect(() => {
-        sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy, setIsLoading: setIsLoading});
+        if(searchType === 'buyerNm'){
+            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, buyerNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+        }else if (searchType === 'itemNm'){
+            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, itemNm:searchCondition, sort: sortBy, setIsLoading: setIsLoading });
+        }
         sendGetAllBuyersRequest(state, setAllBuyers, setIsLoading2);
         sendGetAllItemsRequest(state, setAllItems, setIsLoading3);
     }, [page, sortBy]);
@@ -123,7 +130,7 @@ const BuyerItemPostPage = () => {
                         <div className='manufacturer-list-container'>
                             <div className='manufacturer-tool-container'>
                                 <select onChange={(e) => setSortBy(e.target.value)}>
-                                    <option disabled='true'>정렬 기준 선택</option>
+                                    <option disabled selected>정렬 기준 선택</option>
                                     <option value='buyerItemId'>ID</option>
                                     {/* <option value='buyerId'>등록순</option> */}
                                     <option value='buyer.buyerCd'>고객사별</option>
@@ -132,20 +139,26 @@ const BuyerItemPostPage = () => {
                                     <option value='endDate'>적용 종료일순</option>
                                     <option value='modifiedAt'>최신 수정순</option>
                                 </select>
-                                <DropdownSearchWindow types = {[
-                                    {value: 'buyerNm', display: '고객사명', placeholder: '고객사 이름으로 검색', 
-                                        suggestions:allBuyers.data.map(buyer => (
-                                            {key: buyer.buyerNm, onSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, buyerNm: buyer.buyerNm, setData: resetData, sort: sortBy})}
-                                        )),
-                                        defaultSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy})
-                                    },
-                                    {value: 'itemNm', display: '제품명', placeholder: '제품 이름으로 검색', 
-                                        suggestions:allItems.data.map(item => (
-                                            {key: item.itemNm, onSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, itemNm: item.itemNm, setData: resetData, sort: sortBy})}
-                                        )),
-                                        defaultSearch: () => sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy})
-                                    },
-                                    ]}/>
+                                <DropdownSearchWindow
+                                    types={[
+                                        {
+                                            value: 'buyerNm', display: '고객사명', placeholder: '고객사 이름으로 검색',
+                                            suggestions: allBuyers.data.map(buyer => (
+                                                { key: buyer.buyerNm, onSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, buyerNm: buyer.buyerNm, setData: resetData, sort: sortBy }) }
+                                            )),
+                                            defaultSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })
+                                        },
+                                        {
+                                            value: 'itemNm', display: '제품명', placeholder: '제품 이름으로 검색',
+                                            suggestions: allItems.data.map(item => (
+                                                { key: item.itemNm, onSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, itemNm: item.itemNm, setData: resetData, sort: sortBy }) }
+                                            )),
+                                            defaultSearch: () => sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy })
+                                        },
+                                    ]}
+                                    setSearchTypeParent={setSearchType}
+                                    setSearchCondition={setSearchCondition}
+                                     />
                                 <div className='manufacturer-button-container'>
                                     <button className='manufacturer-button' onClick={() => setIsPostMode(true)}><Plus size={16} /> 추가</button>
                                     <button className='manufacturer-button' onClick={() => {
@@ -159,14 +172,14 @@ const BuyerItemPostPage = () => {
                                         let areDatesValid = true;
 
                                         Object.keys(edited).forEach((key) => {
-                                            const row = edited[key]; 
-                                            const index = parseInt(key, 10); 
+                                            const row = edited[key];
+                                            const index = parseInt(key, 10);
                                             const startDateChanged = 'startDate' in row;
                                             const endDateChanged = 'endDate' in row;
 
                                             console.log('startDateChanged: ', startDateChanged);
                                             console.log('endDateChanged: ', endDateChanged);
-                                        
+
                                             if (startDateChanged && endDateChanged) {
                                                 if (new Date(row.startDate) > new Date(row.endDate)) {
                                                     Swal.fire({
@@ -192,7 +205,7 @@ const BuyerItemPostPage = () => {
                                                 return;
                                             }
                                         });
-                                        if(!areDatesValid){
+                                        if (!areDatesValid) {
                                             return;
                                         }
                                         /* const checkedAndEdited = checked.filter(element => edited.includes(element)); */
@@ -208,7 +221,7 @@ const BuyerItemPostPage = () => {
                                             Swal.fire({ text: '변경된 데이터가 없습니다' });
                                             setChecked([]);
                                             return;
-                                          }
+                                        }
 
                                         let requestBody = [];
                                         Object.keys(checkedAndEdited).forEach(key => {
@@ -224,7 +237,7 @@ const BuyerItemPostPage = () => {
                                         });
                                         console.log('requestBody: ', requestBody);
                                         sendPatchMultiBuyerItemsRequest(state, requestBody, () => {
-                                            sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort:sortBy, setIsLoading: setIsLoading});
+                                            sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy, setIsLoading: setIsLoading });
                                             setChecked([]);
                                         });
                                     }}><Edit size={16} /> 수정</button>
@@ -253,7 +266,7 @@ const BuyerItemPostPage = () => {
                             >
                             </EditableTableWithCheckbox>
                         </div>
-                        {isLoading || isLoading2 || isLoading3? <div /> : <PageContainer
+                        {isLoading || isLoading2 || isLoading3 ? <div /> : <PageContainer
                             currentPage={page}
                             setPage={setPage}
                             pageInfo={data.pageInfo}
@@ -271,7 +284,7 @@ const BuyerItemPostPage = () => {
                                 sendPostBuyerItemsRequest(state, checkedData, () => {
                                     setChecked([]);
                                     setOpened(false);
-                                    sendGetMasterBuyerItemsRequest({state: state, page: page, size: 10, setData: resetData, sort: sortBy});
+                                    sendGetMasterBuyerItemsRequest({ state: state, page: page, size: 10, setData: resetData, sort: sortBy });
                                 });
                             }}
                             page={page}

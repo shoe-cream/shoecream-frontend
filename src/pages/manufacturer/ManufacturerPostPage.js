@@ -31,6 +31,7 @@ const ManufacturerPostPage = () => {
     const [isPostMode, setIsPostMode] = useState(false);
     const [edited, setEdited] = useState([]);
     const [sortBy, setSortBy] = useState('mfId');
+    const [searchCondition, setSearchCondition] = useState('');
 
     const resetData = (value) => {
         console.log('reset data: ', value);
@@ -39,7 +40,7 @@ const ManufacturerPostPage = () => {
     }
 
     useEffect(() => {
-        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
+        sendGetManufacturersRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, mfNm:searchCondition, setData: resetData, setIsLoading: setIsLoading });
         sendGetAllManufacturersRequest(state, setAllData, setIsLoading2);
     }, [page, sortBy]);
 
@@ -92,7 +93,7 @@ const ManufacturerPostPage = () => {
                             <div className='manufacturer-tool-container'>
                                 <select className='custom-select-class'
                                     onChange={(e) => setSortBy(e.target.value)}>
-                                    <option disabled='true'>정렬 기준 선택</option>
+                                    <option disabled selected>정렬 기준 선택</option>
                                     <option value={'mfId'}>ID</option>
                                     <option value={'region'}>지역</option>
                                     <option value={'email'}>이메일</option>
@@ -121,6 +122,7 @@ const ManufacturerPostPage = () => {
                                             { state: state, page: page, setPage: setPage, size: 10, sortBy: sortBy, setData: resetData, setIsLoading: setIsLoading }
                                         )
                                     }}
+                                    setSearchCondition={setSearchCondition}
                                 />
                                 <div />
                                 <div className='manufacturer-button-container'>

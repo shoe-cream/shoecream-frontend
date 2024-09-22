@@ -28,9 +28,10 @@ const ItemPostPage = () => {
   const [checked, setChecked] = useState([]);
   const [isPostMode, setIsPostMode] = useState(false);
   const [edited, setEdited] = useState([]);
-  const [sortBy, setSortBy] = useState('itemId');
+  const [sortBy, setSortBy] = useState('itemCd');
 
   const [allData, setAllData] = useState({ data: [] });
+  const [searchCondition, setSearchCondition] = useState('');
 
   /* console.log('edited: ', edited); */
   console.log('items in page: ', items);
@@ -43,7 +44,7 @@ const ItemPostPage = () => {
   }
 
   useEffect(() => {
-    sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading });
+    sendGetItemsRequest({ state: state, page: page, setPage: setPage, size: 10, sort: sortBy, itemNm: searchCondition, setData: resetData, setIsLoading: setIsLoading });
     sendGetAllItemsRequest(state, setAllData, setIsLoading2);
   }, [page, sortBy]);
 
@@ -138,7 +139,7 @@ const ItemPostPage = () => {
                 <div className='manufacturer-tool-container'>
                   <select className='custom-select-class'
                     onChange={(e) => setSortBy(e.target.value)}>
-                    <option disabled='true'>정렬 기준 선택</option>
+                    <option disabled selected>정렬 기준 선택</option>
                     <option value={'itemCd'}>제품코드</option>
                     <option value={'itemNm'}>제품명</option>
                     <option value={'createdAt'}>등록순</option>
@@ -150,7 +151,8 @@ const ItemPostPage = () => {
                       allData.data.map(data => ({
                         key: data.itemNm,
                         onSearch: () => {
-                          const itemNm = data.itemNm.replace(/\s+/g, '');
+                          /* const itemNm = data.itemNm.replace(/\s+/g, ''); */
+                          const itemNm = data.itemNm;
                           console.log('data: ', data);
                           console.log('itemNm: ', data.itemNm);
                           sendGetItemsRequest(
@@ -162,6 +164,7 @@ const ItemPostPage = () => {
                     defaultSearch={() => sendGetItemsRequest(
                       { state: state, page: page, setPage: setPage, size: 10, sort: sortBy, setData: resetData, setIsLoading: setIsLoading }
                     )}
+                    setSearchCondition={setSearchCondition}
                   />
                   <div />
                   <div className='manufacturer-button-container'>
