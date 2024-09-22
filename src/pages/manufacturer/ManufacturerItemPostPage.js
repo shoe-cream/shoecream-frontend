@@ -108,9 +108,9 @@ const ManufacturerItemPostPage = () => {
         setDbData(value);
     }
     useEffect(() => {
-        if (searchCondition === 'mfNm') {
+        if (searchType === 'mfNm') {
             sendGetManufacturerItemsRequest({ state: state, page: page, size: 10, setData: resetData, mfNm: searchCondition, sort: sortBy, setIsLoading: setIsLoading });
-        } else if (searchCondition === 'itemNm') {
+        } else if (searchType === 'itemNm') {
             sendGetManufacturerItemsRequest({ state: state, page: page, size: 10, setData: resetData, itemNm: searchCondition, sort: sortBy, setIsLoading: setIsLoading });
         }
         sendGetAllManufacturersRequest(state, setAllManufacturers, setIsLoading2);

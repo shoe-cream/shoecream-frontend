@@ -4,10 +4,12 @@ import Swal from 'sweetalert2';
 const sendGetManufacturerItemsRequest = async ({state, page, size, setData, sort, mfNm, itemNm, itemCd,setIsLoading }) => {
     try {
         /* console.log('state:', state.token); */
+        console.log('제조사 아이템 정보 요청 전송');
         const response = await axios.get(`http://localhost:8080/manufacture-items`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': state.token
+                'Authorization': state.token,
+                'Cache-Control': 'no-cache, no-store, must-revalidate'
             }   
             ,params: {
                 page: page,

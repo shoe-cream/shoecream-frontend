@@ -24,8 +24,16 @@ const sendPatchPasswordRequest = async(state, memberId, requestBody, executeAfte
             Swal.fire({text: `비밀번호가 틀립니다.`, icon: 'error'});
         }
     } catch(error){
+        const errorMessage = error.response.data.message.toLowerCase();
+        
         console.error('비밀번호 변경 실패(에러 발생): ', error);
-        Swal.fire({text: `요청 실패(${error.response?.status || 'Unknown'})`, icon: 'error'});
+        switch(error.status){
+            case 400:
+                Swal.fire({text: '현재 비밀번호를 확인해주세요', icon: 'error'});
+                break;
+            default:
+                Swal.fire({text: `요청 실패(${error.response?.status || 'Unknown'})`, icon: 'error'});
+        }
     }
 }
 
