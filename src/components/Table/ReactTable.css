@@ -71,7 +71,7 @@
   .cell-input {
     font-size: 14px !important;
     width: 100%;
-    padding: 6px 0px;
+    padding: 6px 3px;
     box-sizing: border-box;
     border: none;
     background-color: transparent;
@@ -84,8 +84,7 @@
   td:first-child {
     width: 25px !important;
     min-width: 25px;
-
-    /* text-align: center; */
+    text-align: center !important;
   }
   
   input[type="date"].cell-input {
@@ -110,7 +109,6 @@
     text-align: left !important;
     /* padding-right: 5px; */
   }
-
 
   /* 수량과 제품단가 입력 필드 스타일 */
     input[type="number"].cell-input {

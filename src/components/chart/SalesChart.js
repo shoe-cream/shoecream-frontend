@@ -121,7 +121,7 @@ const SalesChart = ({ amountData, quantityData }) => {
   };
 
   return (
-    <div style={{ width: '100%', height: '400px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+    <div style={{ width: '95%', height: '400px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
       <Bar data={chartData} options={options} />
     </div>
   );

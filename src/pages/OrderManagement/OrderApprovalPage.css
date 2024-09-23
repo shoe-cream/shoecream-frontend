@@ -27,8 +27,11 @@
   color: #2b538b;
   font-weight: bold;
   background-color: #fff;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1) !important;
+  position: relative;
+  z-index: 1;
 }
+
 .react-tabs__tab:hover {
     color: rgb(255, 255, 255);
     background-color: #2b538b;

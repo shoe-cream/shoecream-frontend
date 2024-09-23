@@ -89,11 +89,16 @@ const OrderPostPage = () => {
                 <Sidebar />
                 <div className='app-content-container'>
                     <div className='order-registration'>
-                        <ProductSearch onAddOrder={handleAddOrder}/>
-                        <OrderActions 
-                        onRegisterOrder={handleRegisterOrder} 
-                        selectedOrders={selectedOrders}
-                        />
+                        <h2 className="app-label">주문 등록</h2>
+                        <div className='order-registration-header'>
+                            <div className='order-post-product-search'>
+                                <ProductSearch onAddOrder={handleAddOrder} />
+                            </div>
+                            <OrderActions 
+                                onRegisterOrder={handleRegisterOrder} 
+                                selectedOrders={selectedOrders}
+                            />
+                        </div>
                         <OrderSheet
                             ogData={{ data: orderData }}
                             data={{ data: orderData }}
