@@ -3,6 +3,7 @@ import { useTable } from 'react-table';
 import './ReactTable.css';
 import Swal from 'sweetalert2';
 import { ChevronRight } from 'lucide-react';
+import './StatusBadge.css';
 
 const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited, onRowClick, onCheckboxChange }) => {
 
@@ -61,13 +62,13 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
 
   const EditableCell = React.memo(({ value: initialValue, row, row: { index }, column: { id, ...column } }) => {
     const inputRef = useRef(null);
-
+  
     useEffect(() => {
       if (inputRef.current) {
         inputRef.current.value = column.type === 'date' ? initialValue.slice(0, 10) : initialValue;
       }
     }, [initialValue, column.type]);
-
+  
     const onChange = useCallback((e) => {
       const newValue = e.target.value;
 
@@ -111,31 +112,65 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         });
       }
     }, [column.type, id, index, setData]);
-
+  
+    if (id === 'status') {
+      let badgeClass = 'status-badge ';
+      switch (initialValue) {
+        case 'REQUEST_TEMP':
+        case '대기':
+          badgeClass += 'waiting';
+          break;
+        case 'APPROVED':
+        case '승인':
+          badgeClass += 'approved';
+          break;
+        case 'REJECTED':
+        case '반려':
+          badgeClass += 'rejected';
+          break;
+        case 'CANCELLED':
+        case '취소':
+          badgeClass += 'cancelled';
+          break;
+        case 'PRODUCT_PASS':
+        case '합격':
+          badgeClass += 'passed';
+          break;
+        case 'PRODUCT_FAIL':
+        case '불합격':
+          badgeClass += 'failed';
+          break;
+        default:
+          badgeClass += 'unknown';
+      }
+      return <span className={badgeClass}>{initialValue}</span>;
+    }
+  
     if (id === '불용재고') {
       return <div className="unused-stock">{initialValue}</div>;
     }
-
+  
     if (column.type === undefined || column.type === 'cell') {
       return <span>{initialValue}</span>;
     }
+  
     const getCurrentDate = () => {
       const now = new Date();
       return now.toISOString().split('T')[0]; // YYYY-MM-DD 형식
     };
     const minDate = getCurrentDate();
-
+  
     if (column.type === 'clickable') {
       return (
         <div
           className='cell-clickable'
           onClick={() => onRowClick(row.original)}
         >
-          {initialValue}
+          {initialValue}  
         </div>
       )
     }
-
+  
     if (column.type === 'button') {
       return (
         <button
@@ -151,6 +186,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         </button>
       );
     }
+  
     return (
       <input
         ref={inputRef}

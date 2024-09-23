@@ -60,15 +60,13 @@
     display: flex;
     background-color: white;
     border-radius: 8px;
-    margin-bottom: 10px;
+    border-bottom: 0 !important;
 }
 
 .dashboard-tabs .react-tabs__tab {
     display: flex;
-  background-color: #f0f0f0;
   border-radius: 8px;
   padding: 8px !important;
-  margin-bottom: 24px;
   flex: 1;
   text-align: center;
   padding: 12px;
@@ -76,12 +74,12 @@
   background-color: transparent;
   color: #242424;
   transition: all 0.3s ease;
+  border-bottom: 1px solid #b2b2b2;
 }
 
 .dashboard-tabs .react-tabs__tab--selected {
     color: #2b538b;
   font-weight: bold;
-  background-color: #fff;
   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1) !important;
   position: relative;
   z-index: 1;
@@ -105,14 +103,4 @@
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-.loading-spinner::after {
-    content: "";
-    width: 40px;
-    height: 40px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #2b538b;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
 }
