@@ -5,8 +5,9 @@
 .centered-tabs {
     display: flex;
     justify-content: center;
-    width: 100%;
-    /* border-bottom: 1.5px solid #13263c; */
+    width: 100% !important;
+    padding-left: 0;
+    border-bottom: 1px solid #b2b2b2;
 }
 
 .react-tabs__tab {
@@ -14,7 +15,6 @@
   background-color: #f0f0f0;
   border-radius: 8px;
   padding: 8px !important;
-  margin-bottom: 24px;
   flex: 1;
   text-align: center;
   padding: 12px;
@@ -29,7 +29,7 @@
   background-color: #fff;
   box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1) !important;
   position: relative;
-  z-index: 1;
+  
 }
 
 .react-tabs__tab:hover {
@@ -42,6 +42,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px;
+    padding-top: 0px !important;
     margin-top: 0px;
     margin-bottom: px;
     font-size: 16px;
@@ -52,7 +53,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
-
+    padding-top: 0 !important;
 }
 .full-width-tabs {
     display: flex;
@@ -310,3 +311,24 @@ select.search-list {
     }
   }
 
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    color: #fff;
+}
+
+.status-badge.waiting { background-color: #ffc107; }
+.status-badge.approved { background-color: #28a745; }
+.status-badge.rejected { background-color: #dc3545; }
+.status-badge.cancelled { background-color: #6c757d; }
+.status-badge.passed { background-color: #296fd0; }
+.status-badge.failed { background-color: #dc3545; }
+.status-badge.unknown { background-color: #6c757d; }

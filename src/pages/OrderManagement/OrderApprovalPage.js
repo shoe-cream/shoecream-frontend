@@ -575,7 +575,7 @@ const OrderApprovalPage = () => {
             //     Header: '제품 단가 만료일',
             //     accessor: 'endDateV2'
             //   }
-            { Header: "상세 보기", accessor: "details", type: 'button', onClick: (row) => handleDetailClick(row), buttonTitle: '더 보기' },
+            { Header: "상세 보기", accessor: "details", type: 'button', onClick: (row) => handleDetailClick(row), buttonTitle: '더보기' },
         ];
 
         // // 조건부로 컬럼 추가
@@ -601,6 +601,7 @@ const OrderApprovalPage = () => {
         { accessor: 'orderDate', Header: '주문일', },
         { accessor: 'createdAt', Header: '등록일', },
         { accessor: 'employeeId', Header: '영업사원번호', },
+        { accessor: 'message', Header: '승인 메세지'},
     ]
 
     const handleRowClick = useCallback((value) => {
