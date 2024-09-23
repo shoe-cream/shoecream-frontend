@@ -129,7 +129,7 @@ const LandingPage = () => {
                         <Tabs className="dashboard-tabs">
                             <TabList>
                                 <Tab>제품 주문 총금액</Tab>
-                                <Tab>제품 코드별 주문 수량</Tab>
+                                <Tab>개인별 영업 실적</Tab>
                                 <Tab>월별 주문 금액</Tab>
                             </TabList>
 

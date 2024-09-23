@@ -81,6 +81,7 @@ const SalesHistoryPage = () => {
         setIsModalOpen: setIsHistoryModalOpen,
       }
     );
+    console.log("asdasdasda",historyData)
     setIsHistoryModalOpen(true);
   }, [state, setHistoryData, setIsHistoryModalOpen]);
 

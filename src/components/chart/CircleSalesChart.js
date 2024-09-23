@@ -39,19 +39,20 @@ const SalesPerformanceChart = ({ employee }) => {
           
           if (filteredData.length > 0) {
             const firstData = filteredData[0];
+            console.log("firstData", firstData);
             dailyReport.push({
               date: range.startDate,
               margin: firstData.marginRate,
               totalOrderCount: firstData.totalOrderCount,
               totalOrderPrice: firstData.totalOrderPrice
             });
-          } else {
-            dailyReport.push({
-              date: range.startDate,
-              margin: 0,
-              totalOrderCount: 0,
-              totalOrderPrice: 0
-            });
+          // } else {
+          //   dailyReport.push({
+          //     date: range.startDate,
+          //     margin: 0,
+          //     totalOrderCount: 0,
+          //     totalOrderPrice: 0
+          //   });
           }
         }, setIsLoading);
       }
@@ -82,7 +83,7 @@ const SalesPerformanceChart = ({ employee }) => {
         },
         {
           type: 'line',
-          label: '총 금액 (원)',
+          label: '총 금액 ($)',
           data: totalPrices,
           borderColor: 'rgba(255, 99, 132, 1)',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -94,7 +95,7 @@ const SalesPerformanceChart = ({ employee }) => {
           data: margins,
           borderColor: 'rgba(54, 162, 235, 1)',
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
-          yAxisID: 'y1',
+          yAxisID: 'y2',
         },
       ],
     };
@@ -122,15 +123,33 @@ const SalesPerformanceChart = ({ employee }) => {
         position: 'right',
         title: {
           display: true,
-          text: '총 금액 (원) / 마진율 (%)',
+          text: '총 금액 ($) / 마진율 (%)',
         },
         ticks: {
           callback: function (value, index, ticks) {
             if (index === 0) {
               return value + '%';
             }
-            return value.toLocaleString() + '원';
+            return value.toLocaleString() + '$';
           },
+        },
+      },
+      y2: {
+        type: 'linear',
+        position: 'right',
+        title: {
+          display: true,
+          text: '마진율 (%)',
+        },
+        min: 0,
+        max: 100,
+        ticks: {
+          callback: function (value) {
+            return value + '%';
+          },
+        },
+        grid: {
+          drawOnChartArea: false,
         },
       },
     },
@@ -140,8 +159,8 @@ const SalesPerformanceChart = ({ employee }) => {
           label: function (tooltipItem) {
             if (tooltipItem.dataset.label === '마진율 (%)') {
               return tooltipItem.raw + '%';
-            } else if (tooltipItem.dataset.label === '총 금액 (원)') {
-              return tooltipItem.raw.toLocaleString() + '원';
+            } else if (tooltipItem.dataset.label === '총 금액 ($)') {
+              return tooltipItem.raw.toLocaleString() + '$';
             }
             return tooltipItem.raw;
           },

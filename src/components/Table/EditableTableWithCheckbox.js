@@ -4,7 +4,7 @@ import './ReactTable.css';
 import Swal from 'sweetalert2';
 import { ChevronRight } from 'lucide-react';
 
-const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited, onRowClick ,onCheckboxChange}) => {
+const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, setChecked, edited, setEdited, onRowClick, onCheckboxChange }) => {
 
   useEffect(() => {
     if (ogData && data && ogData.data && data.data) {
@@ -39,27 +39,27 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
 
   const CheckboxCell = React.memo(({ row }) => (
     <div className="checkbox-column">
-    <input
-      type="checkbox"
-      checked={checked.includes(parseInt(row.id, 10))}
-      onChange={() => {
-        const rowId = parseInt(row.id, 10);
-        setChecked(prev =>
-          prev.includes(rowId)
-            ? prev.filter(id => id !== rowId)
-            : [...prev, rowId]
-        );
-        if (typeof onCheckboxChange === 'function') {
-          onCheckboxChange(row.original);
-        } else {
-          console.warn('onCheckboxChange는 함수가 아닙니다.');
-        }
-      }}
-    />
+      <input
+        type="checkbox"
+        checked={checked.includes(parseInt(row.id, 10))}
+        onChange={() => {
+          const rowId = parseInt(row.id, 10);
+          setChecked(prev =>
+            prev.includes(rowId)
+              ? prev.filter(id => id !== rowId)
+              : [...prev, rowId]
+          );
+          if (typeof onCheckboxChange === 'function') {
+            onCheckboxChange(row.original);
+          } else {
+            console.warn('onCheckboxChange는 함수가 아닙니다.');
+          }
+        }}
+      />
     </div>
   ));
 
-  const EditableCell = React.memo(({ value: initialValue, row ,row: { index }, column: { id, ...column } }) => {
+  const EditableCell = React.memo(({ value: initialValue, row, row: { index }, column: { id, ...column } }) => {
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -80,23 +80,23 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           };
           return { ...prevData, data: newData };
         });
-      } 
+      }
     }, [column.type, id, index, setData]);
 
     const onBlur = useCallback(() => {
       const currentValue = inputRef.current.value
       console.log('value in onBlur: ', currentValue);
-      if(column.type === 'number'){
+      if (column.type === 'number') {
         const max = column.max || 2147483647;
-        if(currentValue > max){
+        if (currentValue > max) {
           inputRef.current.value = '';
-          Swal.fire({text: `허용된 값(${max})을 초과하였습니다.`});
+          Swal.fire({ text: `허용된 값(${max})을 초과하였습니다.` });
           return;
         }
         const min = column.min || 0;
-        if(currentValue < min){
+        if (currentValue < min) {
           inputRef.current.value = '';
-          Swal.fire({text: `최소값(${min}) 미만입니다.`});
+          Swal.fire({ text: `최소값(${min}) 미만입니다.` });
           return;
         }
       }
@@ -116,7 +116,7 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
       return <div className="unused-stock">{initialValue}</div>;
     }
 
-    if(column.type === undefined || column.type === 'cell'){
+    if (column.type === undefined || column.type === 'cell') {
       return <span>{initialValue}</span>;
     }
     const getCurrentDate = () => {
@@ -125,13 +125,13 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
     };
     const minDate = getCurrentDate();
 
-    if(column.type === 'clickable'){
-      return(
+    if (column.type === 'clickable') {
+      return (
         <div
           className='cell-clickable'
           onClick={() => onRowClick(row.original)}
         >
-        {initialValue}  
+          {initialValue}
         </div>
       )
     }
@@ -162,8 +162,10 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         style={id === 'qty' || id === '수량' ? { textAlign: 'right', paddingRight: '5px' } : {}}
         min={column.type === 'date' ? minDate : column.type === 'number' ? '0' : undefined}
         onKeyDown={(e) => {
-          if (e.key === '-' || e.key === 'e') {
-            e.preventDefault();
+          if (column.type === 'number') {
+            if (e.key === '-' || e.key === 'e') {
+              e.preventDefault();
+            }
           }
         }}
       />
@@ -228,8 +230,8 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
         {headerGroups.map(headerGroup => (
           <tr className='header-r' {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th 
-                className='header-h' 
+              <th
+                className='header-h'
                 {...column.getHeaderProps()}
                 style={column.id === 'qty' || column.id === '수량' ? { width: '60px', minWidth: '60px', maxWidth: '60px' } : {}}
               >
@@ -244,11 +246,11 @@ const EditableTableWithCheckbox = ({ columns, ogData, data, setData, checked, se
           prepareRow(row);
           return (
             <tr className={getRowClassName(row)} {...row.getRowProps()}
-                /* onClick={(e) => handleRowClick(e, row)} */
+            /* onClick={(e) => handleRowClick(e, row)} */
             >
               {row.cells.map(cell => (
-                <td 
-                  className='body-d' 
+                <td
+                  className='body-d'
                   {...cell.getCellProps()}
                   style={cell.column.id === 'qty' || cell.column.id === '수량' ? { textAlign: 'right', paddingRight: '10px' } : {}}
                 >
