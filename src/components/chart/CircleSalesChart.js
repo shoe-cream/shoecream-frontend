@@ -122,7 +122,7 @@ const SalesPerformanceChart = ({ employee }) => {
         position: 'right',
         title: {
           display: true,
-          text: '총 금액 (원) / 마진율 (%)',
+          text: '총 금액 ($) / 마진율 (%)',
         },
         ticks: {
           callback: function (value, index, ticks) {
