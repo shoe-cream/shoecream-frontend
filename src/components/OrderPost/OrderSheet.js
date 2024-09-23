@@ -125,7 +125,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
  
   const ItemsCell2 = ({ items }) => (
     <div>
-      <button
+      <button className='viewitem'
         onClick={() => {
           setSelectedItems(items); // 클릭한 아이템을 저장
           setIsModalOpen(true); // 모달 열기

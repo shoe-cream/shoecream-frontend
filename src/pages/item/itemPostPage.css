@@ -101,6 +101,17 @@ select:focus {
   width: 20px;
 }
 
+.addrow-dropdown {
+  display: flex;
+  padding: 4px 1px !important;
+  width: 150px;
+}
+
+.post-modal-button {
+  width: 50px !important;
+  height: 35px !important;
+}
+
 
 
 /* 상품 코드 컬럼 */

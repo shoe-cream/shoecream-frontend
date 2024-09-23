@@ -106,7 +106,8 @@
 
 .add-items-button:hover {
     transition: background-color 0.3s ease, box-shadow 0.3s ease !important; /* 전환 효과 추가 */
-    color: #1f3750 !important;
+    color: white !important;
+    background-color: #1e3a62 !important;
 }
 
 .search-button {
@@ -218,4 +219,49 @@
 
 .product-search {
     
+}
+
+.order-post-product-search .orderPostInput,
+.order-post-product-search .header-search-input {
+    height: 31px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px; 
+    font-size: 14px;
+}
+
+.order-post-product-search .search-button,
+.order-post-product-search .add-items-button {
+    height: 38px;
+    padding: 0 15px;
+    background-color: #2b538b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.order-post-product-search .search-label {
+    background-color: #2b538b;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px 0 0 4px;
+    white-space: nowrap;
+}
+
+.viewitem {
+    background-color: #2b538b;
+    color: #FFFFFF;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+}
+
+.viewitem:hover {
+    background-color: #1e3a62;
 }

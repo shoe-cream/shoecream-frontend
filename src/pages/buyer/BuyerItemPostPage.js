@@ -140,8 +140,9 @@ const BuyerItemPostPage = () => {
                                     <option value='modifiedAt'>최신 수정순</option>
                                 </select>
                                 <div className='manufacturer-button-container'>
-                                    <DropdownSearchWindow
-                                        types={[
+                                <DropdownSearchWindow
+                                    className="buyer-item-search-window"
+                                    types={[
                                             {
                                                 value: 'buyerNm', display: '고객사명', placeholder: '고객사 이름으로 검색',
                                                 suggestions: allBuyers.data.map(buyer => (

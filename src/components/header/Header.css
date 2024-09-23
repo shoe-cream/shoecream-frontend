@@ -100,6 +100,7 @@
     max-height: 200px;
     overflow-y: auto;
     z-index: 1000;
+    font-size: 14px;
 }
 
 .header-suggestions li {
@@ -118,15 +119,14 @@
     border-radius: 4px;
     /* 모서리 둥글게 처리 */
     /* width: 60%; */
-    font-size: 13px;
     transition: width 0.3s ease;
     display: flex;
     flex-direction: column !important;
-    border-right: none;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
     font-size: 14px;
     min-width: 150px !important;
+    
 }
 
 .header-search-button:hover {
