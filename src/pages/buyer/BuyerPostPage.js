@@ -42,6 +42,10 @@ const BuyerPostPage = () => {
       Header: '고객사 명',
     },
     {
+      accessor: 'buyerCd',
+      Header: '고객사 코드',
+    },
+    {
       accessor: 'email',
       Header: '이메일',
       type: 'text',
