@@ -97,7 +97,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
   
     const minDate = id === 'requestDate' ? (() => {
       const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1); // 하루 더하기
+      tomorrow.setDate(tomorrow.getDate()); // 하루 더하기
       return tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
     })() : '';
     return (
@@ -107,7 +107,7 @@ const OrderSheet = ({ ogData, data, setData, checked, setChecked, edited, setEdi
           value={value || ''}
           onChange={onChange}
           onBlur={onBlur}
-          min={minDate} 
+          // min={minDate} 
           max={minEndDate}
         />
     );
