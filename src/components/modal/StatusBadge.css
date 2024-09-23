@@ -1,0 +1,20 @@
+.status-badge {
+    display: inline-block;
+    padding: 0.65em 1.3em;
+    font-size: 0.90em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    color: #fff;
+  }
+  
+  .status-badge.waiting { background-color: #ffc107 !important; }
+  .status-badge.approved { background-color: #28a745; }
+  .status-badge.rejected { background-color: #dc3545; }
+  .status-badge.cancelled { background-color: #6c757d; }
+  .status-badge.passed { background-color: #17a2b8; }
+  .status-badge.failed { background-color: #dc3545; }
+  .status-badge.unknown { background-color: #6c757d; }
