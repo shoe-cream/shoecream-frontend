@@ -90,6 +90,10 @@ const PasswordEditModal = ({ setOpened, state, memberId, onModify }) => {
                             Swal.fire({text: '비밀번호가 일치하지 않습니다.'});
                             return;
                         }
+                        if(passwordInput === currentPasswordInput){
+                            Swal.fire({text: '현재 비밀번호와 새 비밀번호가 달라야 합니다.'});
+                            return;
+                        }
                         sendPatchPasswordRequest(state, memberId, requestBody, () => setOpened(false))
 
                     }}>변경</button>
