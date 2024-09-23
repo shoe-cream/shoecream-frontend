@@ -163,12 +163,15 @@
   .cell-button {
     display: flex;
     justify-content: center !important;
+    align-items: center !important;
     white-space: nowrap !important;
     font-size: 12px;
     background-color: #2b538b;
     color: white;
     border: none;
-    padding: 3px 2px;
+    width: 60px;
+    padding: 5px 1.5px;
+    padding-left: 4px;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
