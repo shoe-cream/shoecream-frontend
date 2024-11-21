@@ -5,7 +5,7 @@ const sendGetBuyersRequest = async ({state ,page, setPage, size, sortBy, buyerNm
     console.log("state: ", state);
     console.log('sortBy in request: ', sortBy);
     try {
-        const response = await axios.get(`http://localhost:8080/buyers`, 
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/buyers`, 
             {
                 headers: {
                     'Content-Type': 'application/json',

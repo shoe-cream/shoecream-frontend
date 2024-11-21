@@ -9,7 +9,7 @@ const getOrderAllRequest = async (state, searchParams, page, size, setOrders, se
             size
         };
 
-        const response = await axios.get(`http://localhost:8080/orders`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token

@@ -13,7 +13,7 @@ const sendPostOrder = async(state, buyerCd, requestDate, orderItemDtoList) => {
             orderItems: orderItemDtoList
         }];
         console.log("dlkfsdjkfjsdklf",orderPostDtos);
-        const response = await axios.post('http://localhost:8080/orders',
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/orders`,
             orderPostDtos,
             {
                 headers: {

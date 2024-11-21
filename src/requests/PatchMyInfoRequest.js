@@ -6,7 +6,7 @@ const sendPatchMyInfoRequest = async(state, memberId, requestBody, executeAfter)
         console.log('memberId: ', memberId);
         console.log('state: ', state);
         console.log('requestBody in request: ', requestBody);
-        const response = await axios.patch(`http://localhost:8080/members/${memberId}`,
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/members/${memberId}`,
             requestBody,
             {
                 headers: {

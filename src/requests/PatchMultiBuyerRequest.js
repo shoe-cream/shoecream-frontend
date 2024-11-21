@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 const sendPatchMultiBuyerRequest = async(state, requestBody, executeAfter) => {
     try{
         console.log('requestBody in request: ', requestBody);
-        const response = await axios.patch('http://localhost:8080/buyers',
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/buyers`,
             requestBody,
             {
                 headers: {

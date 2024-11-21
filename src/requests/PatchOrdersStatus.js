@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 const sendPatchStatusRequest = async (state, requestBody, executeAfter) => {
     try {
         console.log('requestBody in request: ', requestBody);
-        const response = await axios.patch('http://localhost:8080/orders',
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/orders`,
             requestBody,
             {
                 headers: {

@@ -6,7 +6,7 @@ const sendDeleteManufacturersRequest = async (state, checkedData, setChecked, ex
         console.log('checkedData in request: ', checkedData);
         /* const selected = checkedItems.map(item => item + (pageInfo.page - 1) * pageInfo.size);
         console.log('selected: ', selected); */
-        const response = await axios.delete(`http://localhost:8080/manufacturers`, 
+        const response = await axios.delete(`${process.env.REACT_APP_API_URL}/manufacturers`, 
             {   
                 headers: {
                     'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 const sendPostBuyersRequest = async(state, requestBody, executeAfter) => {
     try{
         console.log('requestBody: ', requestBody);
-        const response = await axios.post('http://localhost:8080/buyers',
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/buyers`,
             requestBody,
             {
                 headers: {

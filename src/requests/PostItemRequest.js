@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const sendPostItemRequest = async(state, nameInput, codeInput, unitInput, unitpriceInput, sizeInput, colorInput, categoryInput, executeAfter) => {
     try{
-        const response = await axios.post('http://localhost:8080/items',
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/items`,
             {
                 "itemCd": codeInput,
                 "itemNm": nameInput,

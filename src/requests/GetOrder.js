@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 const sendGetOrderRequest = async (state, orderCd, setOrder, setIsLoading) => {
     try {
-        const response = await axios.get(`http://localhost:8080/orders/${orderCd}`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/${orderCd}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token

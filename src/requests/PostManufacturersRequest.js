@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const sendPostManufacturersRequest = async(state, requestBody, executeAfter) => {
     try{
-        const response = await axios.post('http://localhost:8080/manufacturers',
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/manufacturers`,
             requestBody,
             {
                 headers: {

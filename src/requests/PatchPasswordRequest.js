@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 const sendPatchPasswordRequest = async(state, memberId, requestBody, executeAfter) => {
     try{
         console.log('requestBody in request: ', requestBody);
-        const response = await axios.patch(`http://localhost:8080/members/password`,
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/members/password`,
             requestBody,
             {
                 headers: {

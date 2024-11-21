@@ -6,7 +6,7 @@ const sendDeleteItemRequest = async (state, pageInfo, checkedItems, setChecked, 
         console.log('checkedItems in request: ', checkedItems);
         /* const selected = checkedItems.map(item => item + (pageInfo.page - 1) * pageInfo.size);
         console.log('selected: ', selected); */
-        const response = await axios.delete(`http://localhost:8080/items`, 
+        const response = await axios.delete(`${process.env.REACT_APP_API_URL}/items`, 
             {
                 headers: {
                     'Content-Type': 'application/json',
