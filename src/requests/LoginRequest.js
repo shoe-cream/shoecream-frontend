@@ -4,7 +4,8 @@ import Swal from "sweetalert2";
 
 const sendLoginRequest = async (emailInput, passwordInput, navigate, login) => {
     try {
-        const response = await axios.post('http://localhost:8080/auth/login',
+        console.log("주소: ", process.env.REACT_APP_API_URL);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`,
             {
                 employeeId: emailInput,
                 password: passwordInput,

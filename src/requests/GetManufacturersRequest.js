@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 const sendGetManufacturersRequest = async ({state ,page, setPage, size, sort, mfNm, setData, setIsLoading}) => {
     console.log("state: ", state);
     try {
-        const response = await axios.get(`http://localhost:8080/manufacturers`, 
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/manufacturers`, 
             {
                 headers: {
                     'Content-Type': 'application/json',

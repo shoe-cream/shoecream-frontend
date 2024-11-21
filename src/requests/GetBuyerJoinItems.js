@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 const getBuyerJoinItemsRequest = async (state ,buyerCd, setBuyerItems, page, size, setIsLoading) => {
     try {
         console.log('buyerCd:', buyerCd);
-        const response = await axios.get(`http://localhost:8080/buyer-items`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/buyer-items`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token

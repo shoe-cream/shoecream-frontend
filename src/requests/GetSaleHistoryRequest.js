@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 const sendGetSaleHistoryRequest = async ({state, rowData, page, size, setData, setIsLoading, setIsModalOpen }) => {
     try {
         console.log("rowData: ", rowData);
-        const response = await axios.get(`http://localhost:8080/orders/${rowData.orderCd}/histories`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/${rowData.orderCd}/histories`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token

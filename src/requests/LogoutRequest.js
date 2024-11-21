@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 const sendLogoutRequest = async(state, logout, navigate) => {
     try{
         console.log('state: ', state); 
-        const response = await axios.post('http://localhost:8080/auth/logout',
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`,
             {},
             {   
                 headers: {

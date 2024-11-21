@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 const sendPostMultiItemRequest = async(state, requestBody, executeAfter) => {
     try{
         console.log('requestBody: ', requestBody);
-        const response = await axios.post('http://localhost:8080/items',
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/items`,
             requestBody,
             {
                 headers: {

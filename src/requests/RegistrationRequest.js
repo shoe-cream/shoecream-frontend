@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 const sendRegistrationRequest = async(emailInput, passwordInput, employeeIdInput) => {
     try{
-        const response = await axios.post('http://localhost:8080/members',
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/members`,
             {
                 email: emailInput,
                 password: passwordInput,

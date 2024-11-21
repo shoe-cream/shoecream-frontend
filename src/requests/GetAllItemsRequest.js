@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 const sendGetAllItemsRequest = async (state, setData, setIsLoading) => {
     try {
-        const response = await axios.get(`http://localhost:8080/items/all`, 
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/items/all`, 
             {
                 headers: {
                     'Content-Type': 'application/json',

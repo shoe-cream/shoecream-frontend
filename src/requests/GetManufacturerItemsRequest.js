@@ -5,7 +5,7 @@ const sendGetManufacturerItemsRequest = async ({state, page, size, setData, sort
     try {
         /* console.log('state:', state.token); */
         console.log('제조사 아이템 정보 요청 전송');
-        const response = await axios.get(`http://localhost:8080/manufacture-items`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/manufacture-items`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token,

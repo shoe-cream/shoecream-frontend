@@ -9,7 +9,7 @@ const sendGetEmployeeReportRequest = async (state, startDate, endDate, setReport
             endDate: endDate
         };
 
-        const response = await axios.get(`http://localhost:8080/orders/employees`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/employees`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': state.token

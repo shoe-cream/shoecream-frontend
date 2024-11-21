@@ -7,7 +7,7 @@ const sendGetMyInfoRequest = async(state, setData, setIsLoading, executeAfter) =
     }
     try{
         console.log('state: ', state);
-        const response = await axios.get('http://localhost:8080/members/my-info',
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/members/my-info`,
             {
                 headers: {
                     'Content-Type': 'application/json',
