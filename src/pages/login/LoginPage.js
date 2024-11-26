@@ -69,6 +69,8 @@ const LoginPage = () => {
                             <button className='login-button'
                                 onClick={handleLogin}
                             >로그인</button>
+                            <div>ID: "TL001"</div>
+                            <div>PW: "password"</div>
                         {/* <div className='login-options'>
                             <button type='button' className='option-button'>ID/PW 찾기</button>
                             <button type='button' className='option-button'
