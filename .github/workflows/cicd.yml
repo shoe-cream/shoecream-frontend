@@ -27,7 +27,7 @@ jobs:
           EOF
       
       - name: Build static file
-        run: CI=false npm run build
+        run: CI=false npm run build --reset-cache
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
