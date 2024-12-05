@@ -39,7 +39,7 @@ const SalesPerformanceChart = ({ employee }) => {
           
           if (filteredData.length > 0) {
             const firstData = filteredData[0];
-            console.log("firstData", firstData);
+            //console.log("firstData", firstData);
             dailyReport.push({
               date: range.startDate,
               margin: firstData.marginRate,

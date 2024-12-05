@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const sendPatchMultiBuyerRequest = async(state, requestBody, executeAfter) => {
     try{
-        console.log('requestBody in request: ', requestBody);
+        //console.log('requestBody in request: ', requestBody);
         const response = await axios.patch(`${process.env.REACT_APP_API_URL}/buyers`,
             requestBody,
             {
@@ -15,16 +15,16 @@ const sendPatchMultiBuyerRequest = async(state, requestBody, executeAfter) => {
         );
         if(response.status === 200 || response.status === 201){
             Swal.fire({text: '수정 완료', icon: 'success'});
-            console.log('고객사 일괄 수정 성공', response);
+            //console.log('고객사 일괄 수정 성공', response);
             if(executeAfter !== undefined){
                 executeAfter();
             }
         }else{
-            console.log('고객사 일괄 수정 실패: ', response.status);
+            //console.log('고객사 일괄 수정 실패: ', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch(error){
-        console.error('고객사 일괄 수정 실패(에러 발생): ', error);
+        //console.error('고객사 일괄 수정 실패(에러 발생): ', error);
         const errorMessage = error.response.data.message.toLowerCase();
         switch(error.status){
             case 409:

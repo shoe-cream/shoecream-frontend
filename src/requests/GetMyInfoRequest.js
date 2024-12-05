@@ -6,7 +6,7 @@ const sendGetMyInfoRequest = async(state, setData, setIsLoading, executeAfter) =
         return;
     }
     try{
-        console.log('state: ', state);
+        //console.log('state: ', state);
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/members/my-info`,
             {
                 headers: {
@@ -16,7 +16,7 @@ const sendGetMyInfoRequest = async(state, setData, setIsLoading, executeAfter) =
             }
         );
         if(response.status === 200){
-            console.log('내 정보 GET요청 성공: ', response.data);
+            //console.log('내 정보 GET요청 성공: ', response.data);
             setData(response.data);
             if(setIsLoading!==undefined){
                 setIsLoading(false);
@@ -26,11 +26,11 @@ const sendGetMyInfoRequest = async(state, setData, setIsLoading, executeAfter) =
                 executeAfter(response.data.data);
             }
         }else{
-            console.log('내 정보 GET요청 실패: ', response.status);
+            //console.log('내 정보 GET요청 실패: ', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch(error){
-        console.error('내 정보 GET요청 실패(에러 발생): ', error);
+        //console.error('내 정보 GET요청 실패(에러 발생): ', error);
         Swal.fire({text: `요청 실패(${error.status})`});
     }
 }

@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const sendPatchStatusRequest = async (state, requestBody, executeAfter) => {
     try {
-        console.log('requestBody in request: ', requestBody);
+        //console.log('requestBody in request: ', requestBody);
         const response = await axios.patch(`${process.env.REACT_APP_API_URL}/orders`,
             requestBody,
             {
@@ -40,16 +40,16 @@ const sendPatchStatusRequest = async (state, requestBody, executeAfter) => {
             }
             
             Swal.fire({text: successMessage, icon: 'success'});
-            console.log('주문 상태 변경 성공', response);
+            //console.log('주문 상태 변경 성공', response);
             if (executeAfter !== undefined) {
                 executeAfter();
             }
         } else {
-            console.log('주문 상태 변경 실패: ', response.status);
+            //console.log('주문 상태 변경 실패: ', response.status);
             Swal.fire({text: `주문 요청이 불가합니다. 선택을 다시 해주세요`, icon: 'error'});
         }
     } catch (error) {
-        console.error('주문 상태 변경 실패(에러 발생): ', error);
+        //console.error('주문 상태 변경 실패(에러 발생): ', error);
         Swal.fire({text: `주문 요청이 불가합니다. 선택을 다시 해주세요`, icon: 'error'});
     }
 }
