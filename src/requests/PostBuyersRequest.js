@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const sendPostBuyersRequest = async(state, requestBody, executeAfter) => {
     try{
-        console.log('requestBody: ', requestBody);
+        //console.log('requestBody: ', requestBody);
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/buyers`,
             requestBody,
             {
@@ -14,18 +14,18 @@ const sendPostBuyersRequest = async(state, requestBody, executeAfter) => {
             }
         );
         if(response.status === 200 || response.status === 201){
-            console.log('고객사 일괄 등록 성공', response);
+            //console.log('고객사 일괄 등록 성공', response);
             if(executeAfter !== undefined){
                 executeAfter();
             }
         }else{
-            console.log('고객사 일괄 등록 실패: ', response.status);
+            //console.log('고객사 일괄 등록 실패: ', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch(error){
-        console.error('고객사 일괄 등록 실패(에러 발생): ', error);
+        //console.error('고객사 일괄 등록 실패(에러 발생): ', error);
         const errorMessage = error.response.data.message.toLowerCase();
-        console.log(errorMessage);
+        //console.log(errorMessage);
         switch(error.status){
             case 400:
                 Swal.fire({text: '이메일을 올바른 형식으로 입력해주세요'});

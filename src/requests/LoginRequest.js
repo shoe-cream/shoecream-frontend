@@ -17,7 +17,7 @@ const sendLoginRequest = async (emailInput, passwordInput, navigate, login) => {
             }
         );
         if (response.status === 200) {
-            console.log('로그인 성공', response);
+            //console.log('로그인 성공', response);
             login(response.headers.authorization);
             navigate('/dashboard');
         } else {

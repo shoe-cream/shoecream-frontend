@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 const sendPatchManufacturerItemsRequest = async(state, requestBody, executeAfter) => {
     try{
-        console.log('requestBody in request: ', requestBody);
+        //console.log('requestBody in request: ', requestBody);
         const response = await axios.patch(`${process.env.REACT_APP_API_URL}/manufacture-items`,
             requestBody,
             {

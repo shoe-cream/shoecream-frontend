@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 const sendGetSaleHistoryRequest = async ({state, rowData, page, size, setData, setIsLoading, setIsModalOpen }) => {
     try {
-        console.log("rowData: ", rowData);
+        //console.log("rowData: ", rowData);
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/${rowData.orderCd}/histories`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ const sendGetSaleHistoryRequest = async ({state, rowData, page, size, setData, s
         });
 
         if (response.status === 200) {
-            console.log('주문 히스토리 GET요청 성공: ', response.data);
+            //console.log('주문 히스토리 GET요청 성공: ', response.data);
             setData(response.data);
             if(setIsLoading !== undefined){
                 setIsLoading(false);
@@ -25,11 +25,11 @@ const sendGetSaleHistoryRequest = async ({state, rowData, page, size, setData, s
                 setIsModalOpen(true);
             }
         } else {
-            console.log('주문 히스토리 GET요청 실패 :', response.status);
+            //console.log('주문 히스토리 GET요청 실패 :', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch (error) {
-        console.error('주문 히스토리 GET요청 실패 :', error);
+        //console.error('주문 히스토리 GET요청 실패 :', error);
         Swal.fire({ text: `요청 실패 (${error.status})` });
     } 
 };

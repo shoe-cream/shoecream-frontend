@@ -18,7 +18,7 @@ const getOrderAllRequest = async (state, searchParams, page, size, setOrders, se
         });
 
         if (response.status === 200) {
-            console.log('주문 GET요청 성공: ', response.data);
+            //console.log('주문 GET요청 성공: ', response.data);
             if (response.data.data && response.data.data.length > 0) {
                 setOrders(response.data);
             } else {
@@ -26,12 +26,12 @@ const getOrderAllRequest = async (state, searchParams, page, size, setOrders, se
             }
             setIsLoading(false);
         } else {
-            console.log('Failed to fetch orders data:', response.status);
+            //console.log('Failed to fetch orders data:', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});
             setOrders({ data: [] });
         }
     } catch (error) {
-        console.error('Error fetching buyer data:', error);
+        //console.error('Error fetching buyer data:', error);
         Swal.fire({ text: '데이터를 가져오는 중 오류가 발생했습니다.' });
         setOrders({ data: [] });
     } finally {

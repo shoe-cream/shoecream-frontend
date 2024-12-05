@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 const sendDeleteItemRequest = async (state, pageInfo, checkedItems, setChecked, executeAfter) => {
     try {
-        console.log('checkedItems in request: ', checkedItems);
+        //console.log('checkedItems in request: ', checkedItems);
         /* const selected = checkedItems.map(item => item + (pageInfo.page - 1) * pageInfo.size);
         console.log('selected: ', selected); */
         const response = await axios.delete(`${process.env.REACT_APP_API_URL}/items`, 

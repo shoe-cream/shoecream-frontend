@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 const getItemRequest= async (state ,itemCd, setItem, setIsLoading) => {
     try {
-        console.log('itemCd:', itemCd);
+        //console.log('itemCd:', itemCd);
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/items/${itemCd}`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -13,16 +13,16 @@ const getItemRequest= async (state ,itemCd, setItem, setIsLoading) => {
         });
 
         if (response.status === 200) {
-            console.log(response.data);
+            //console.log(response.data);
             setItem(response.data);
             setIsLoading(false);
         } else {
-            console.log('Failed to fetch buyer data:', response.status);
+            //console.log('Failed to fetch buyer data:', response.status);
             setIsLoading(false);
             Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch (error) {
-        console.error('Error fetching buyer data:', error);
+        //console.error('Error fetching buyer data:', error);
         setIsLoading(false);
         Swal.fire({text: `요청 실패(${error.status})`});
     }

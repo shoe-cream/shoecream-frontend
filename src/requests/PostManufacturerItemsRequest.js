@@ -13,16 +13,16 @@ const sendPostManufacturerItemsRequest = async(state, requestBody, executeAfter)
             }
         );
         if(response.status === 200 || response.status === 201){
-            console.log('제조사 아이템 등록 성공', response);
+            //console.log('제조사 아이템 등록 성공', response);
             if(executeAfter !== undefined){
                 executeAfter();
             }
         }else{
-            console.log('제조사 아이템 등록 실패: ', response.status);
+            //console.log('제조사 아이템 등록 실패: ', response.status);
             Swal.fire({text: `요청 실패(${response.status})`});
         }
     } catch(error){
-        console.error('제조사 아이템 등록 실패(에러 발생): ', error);
+        //console.error('제조사 아이템 등록 실패(에러 발생): ', error);
         Swal.fire({text: `요청 실패(${error.status})`});
     }
 }
