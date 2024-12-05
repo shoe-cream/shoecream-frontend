@@ -18,7 +18,7 @@ const sendGetEmployeeReportRequest = async (state, startDate, endDate, setReport
         });
 
         if (response.status === 200) {
-            console.log("직원별 report",response.data)
+            //console.log("직원별 report",response.data)
 ;            setReports(response.data);
             setIsLoading(false);
         } else {
